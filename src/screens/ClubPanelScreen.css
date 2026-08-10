@@ -1,0 +1,16 @@
+.club-panel-screen {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+
+.dashboard-card {
+  border: 1px solid #999;
+  padding: 16px;
+  background: white;
+}
+
+.dashboard-card h2 {
+  margin-top: 0;
+}
