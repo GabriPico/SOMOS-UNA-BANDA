@@ -25,7 +25,7 @@ export function AppShell({
       <header className="topbar">
         <div>
           <p>Somos una banda</p>
-          <h1>UE Montclar</h1>
+          <h1>FC Poblenou</h1>
         </div>
       </header>
       <aside className="sidebar">

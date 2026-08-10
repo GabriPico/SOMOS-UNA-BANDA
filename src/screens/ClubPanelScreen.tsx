@@ -1,4 +1,3 @@
-
 import "./ClubPanelScreen.css"
 
 export function ClubPanelScreen() {
@@ -13,7 +12,7 @@ export function ClubPanelScreen() {
       </section>
 
       <section className="dashboard-card">
-        <h2>Entrenador</h2>
+        <h2>Staff</h2>
       </section>
 
       <section className="dashboard-card">
@@ -25,12 +24,16 @@ export function ClubPanelScreen() {
       </section>
 
       <section className="dashboard-card">
+        <h2>Entrenamiento</h2>
+      </section>
+
+      <section className="dashboard-card">
         <h2>Estado del vestuario</h2>
       </section>
 
       <section className="dashboard-card">
-        <h2>Mensaje del presidente</h2>
-        <p>Este año queremos competir hasta el final.</p>
+        <h2>Buzón</h2>
+        <p>Tienes X Mensajes nuevos</p>
       </section>
 
       <section className="dashboard-card">

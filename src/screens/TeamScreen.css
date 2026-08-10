@@ -1,0 +1,32 @@
+.team-screen {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  padding: 20px;
+}
+
+.team-screen h2 {
+  margin-top: 0;
+}
+
+.team-table-wrapper {
+  overflow-x: auto;
+}
+
+.team-table {
+  border-collapse: collapse;
+  min-width: 900px;
+  width: 100%;
+}
+
+.team-table th,
+.team-table td {
+  border-bottom: 1px solid #dddddd;
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.team-table th {
+  background: #f7f7f7;
+  font-weight: 600;
+}

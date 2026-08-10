@@ -12,7 +12,7 @@
 
 ## Decisiones del Hito 1
 
-- El club provisional se llama UE Montclar.
+- El club provisional se llama FC Poblenou.
 - Los nombres de jugadores y equipos serán ficticios y provisionales.
 - La formación inicial mostrada será 4-2-3-1.
 - Las ideas de juego disponibles serán:
@@ -29,3 +29,13 @@
 - El diseño visual será funcional y provisional.
 - Se creará una carpeta src/domain para los tipos del juego, aunque todavía
   no contendrá lógica de simulación.
+
+## Decisiones de la pantalla Equipo
+
+- Un jugador puede tener una o varias posiciones. Cuando tenga varias, se
+  mostrarán separadas por una barra, por ejemplo `LD / DFC`.
+- La pantalla Equipo mostrará, en este orden: Pos, Nombre, Calidad, Forma, PJ,
+  G, Edad, Personalidad, Felicidad e Ingresos.
+- Los ingresos se expresan siempre desde el punto de vista del club: un importe
+  positivo es dinero que el jugador paga al club, cero indica que no paga ni
+  cobra y un importe negativo es dinero que el club paga al jugador.

@@ -15,6 +15,7 @@ export type PlayerPosition =
   | 'MCD'
   | 'MC'
   | 'MP'
+  | 'MCO'
   | 'ED'
   | 'EI'
   | 'DC'
@@ -50,6 +51,20 @@ export type Player = {
   fitness: number
   happiness: number
   attributes: PlayerAttributes
+}
+
+export type TeamPlayer = {
+  id: number
+  name: string
+  positions: PlayerPosition[]
+  quality: number
+  form: number
+  appearances: number
+  goals: number
+  age: number
+  personality: string
+  happiness: number
+  income: number
 }
 
 export type ClubStatus = {
