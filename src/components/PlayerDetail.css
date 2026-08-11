@@ -1,0 +1,23 @@
+.player-modal-backdrop { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 24px; background: rgb(0 0 0 / 45%); }
+.player-detail { background: #fff; border: 1px solid #bbb; width: min(900px, 100%); max-height: calc(100vh - 48px); overflow-y: auto; padding: 22px; box-sizing: border-box; }
+.player-detail-header { display: flex; justify-content: space-between; gap: 20px; align-items: start; border-bottom: 1px solid #ddd; padding-bottom: 14px; }
+.player-detail-header h3, .player-detail-header p { margin: 0 0 6px; }
+.player-detail-header button { padding: 7px 10px; }
+.player-rating-summary { display: flex; gap: 28px; align-items: center; padding: 18px 0; border-bottom: 1px solid #ddd; }
+.player-rating-summary div { display: grid; gap: 3px; }
+.player-rating-summary span { color: #666; font-size: .85rem; }
+.player-rating-summary strong { font-size: 1.65rem; }
+.player-rating-summary .player-context-text { font-size: .95rem; max-width: 150px; }
+.player-rating-summary ul { display: flex; gap: 10px; list-style: none; padding: 0; margin: 0 0 0 auto; }
+.player-rating-summary li { border: 1px solid #ccc; padding: 6px 9px; }
+.player-profile { padding: 14px 0; }
+.player-profile h4, .player-profile p { margin: 0 0 6px; }
+.player-existing-data { display: grid; grid-template-columns: repeat(6, 1fr); background: #f7f7f7; margin: 0 0 18px; padding: 12px; gap: 12px; }
+.player-existing-data div, .attribute-groups dl div { display: flex; justify-content: space-between; gap: 10px; }
+.player-existing-data dt, .attribute-groups dt { color: #555; }
+.player-existing-data dd, .attribute-groups dd { margin: 0; font-weight: 600; }
+.attribute-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.attribute-groups section { border: 1px solid #ddd; padding: 12px; }
+.attribute-groups h4 { text-transform: uppercase; font-size: .8rem; letter-spacing: .08em; margin: 0 0 10px; }
+.attribute-groups dl { display: grid; gap: 7px; margin: 0; }
+@media (max-width: 700px) { .player-existing-data { grid-template-columns: repeat(2, 1fr); } .attribute-groups { grid-template-columns: 1fr; } .player-rating-summary { align-items: start; flex-wrap: wrap; } .player-rating-summary ul { margin-left: 0; } }

@@ -20,4 +20,10 @@
   cursor: pointer;
   font: inherit;
   text-align: left;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.dashboard-card-action:hover {
+  background: #f7f7f7;
+  border-color: #666;
 }

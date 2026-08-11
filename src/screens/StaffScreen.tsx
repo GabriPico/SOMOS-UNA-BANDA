@@ -1,10 +1,19 @@
 import { staffMembers } from '../data/mockData'
 import './StaffScreen.css'
 
-export function StaffScreen() {
+type StaffScreenProps = {
+  onBack: () => void
+}
+
+export function StaffScreen({ onBack }: StaffScreenProps) {
   return (
     <section className="staff-screen">
-      <h2>Staff</h2>
+      <header className="screen-header">
+        <button className="screen-back-button" type="button" onClick={onBack}>
+          ← Panel del club
+        </button>
+        <h2>Staff</h2>
+      </header>
 
       <div className="staff-table-wrapper">
         <table className="staff-table" aria-label="Tabla del staff del club">

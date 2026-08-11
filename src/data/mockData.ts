@@ -2,15 +2,13 @@ import type {
   ClubEvent,
   ClubStatus,
   MatchPreview,
-  Player,
-  PlayerAttributes,
   PlayStyle,
   PostMatchSummary,
   StandingRow,
   StaffMember,
-  TeamPlayer,
   Tactics,
 } from '../domain/models'
+import { generatePlayer, type PlayerSeed } from '../domain/playerGeneration'
 
 const attributes = (
   porteria: number,
@@ -24,7 +22,7 @@ const attributes = (
   inteligencia: number,
   aereo: number,
   desborde: number,
-): PlayerAttributes => ({
+): Record<string, number> => ({
   Portería: porteria,
   Defensa: defensa,
   Técnica: tecnica,
@@ -50,7 +48,7 @@ export const clubStatus: ClubStatus = {
   budget: 'Ajustado',
 }
 
-export const players: Player[] = [
+const legacyPlayers = [
   {
     id: 1,
     name: 'Arnau Casals',
@@ -273,60 +271,50 @@ export const players: Player[] = [
   },
 ]
 
-export const teamPlayers: TeamPlayer[] = [
-  {
-    id: 1,
-    name: 'Arnau Casals',
-    positions: ['POR'],
-    quality: 65,
-    form: 71,
-    appearances: 4,
-    goals: 0,
-    age: 31,
-    personality: 'Sereno',
-    happiness: 72,
-    income: 500,
-  },
-  {
-    id: 3,
-    name: 'Nil Ferrer',
-    positions: ['LD', 'DFC'],
-    quality: 62,
-    form: 68,
-    appearances: 3,
-    goals: 0,
-    age: 27,
-    personality: 'Motivado',
-    happiness: 75,
-    income: 0,
-  },
-  {
-    id: 11,
-    name: 'Sergi Molina',
-    positions: ['MC', 'MCD'],
-    quality: 67,
-    form: 74,
-    appearances: 4,
-    goals: 1,
-    age: 26,
-    personality: 'Organizador',
-    happiness: 76,
-    income: 300,
-  },
-  {
-    id: 15,
-    name: 'Biel Torres',
-    positions: ['MCO', 'DC'],
-    quality: 66,
-    form: 63,
-    appearances: 3,
-    goals: 2,
-    age: 23,
-    personality: 'Ambicioso',
-    happiness: 73,
-    income: -200,
-  },
+const existingTeamMetadata = [
+  { id: 1, form: 71, appearances: 4, goals: 0, personality: 'Sereno', income: 500 },
+  { id: 3, form: 68, appearances: 3, goals: 0, personality: 'Motivado', income: 0 },
+  { id: 11, form: 74, appearances: 4, goals: 1, personality: 'Organizador', income: 300 },
+  { id: 15, form: 63, appearances: 3, goals: 2, personality: 'Ambicioso', income: -200 },
 ]
+
+const playerSeeds: PlayerSeed[] = [
+  [1, 'Arnau Casals', 31, 'POR', [], 'RIGHT', 'Parador', [], 72, 101],
+  [2, 'Pau Martí', 22, 'POR', [], 'LEFT', 'Dominador aéreo', [], 64, 102],
+  [3, 'Nil Ferrer', 27, 'DFC', [], 'RIGHT', 'Central dominante', ['POTENTE_POR_ARRIBA'], 76, 103],
+  [4, 'Marc Soler', 34, 'DFC', [], 'LEFT', 'Central marcador', ['VETERANO'], 72, 104],
+  [5, 'Oriol Roca', 24, 'DFC', [], 'RIGHT', 'Central rápido', ['RAPIDO'], 68, 105],
+  [6, 'Gerard Pons', 29, 'DFC', [], 'RIGHT', 'Central con salida', [], 63, 106],
+  [7, 'Víctor Sanz', 32, 'LD', ['CAD'], 'RIGHT', 'Lateral físico', ['VETERANO'], 74, 107],
+  [8, 'Iker Navarro', 25, 'LD', ['DFC'], 'RIGHT', 'Lateral defensivo', [], 67, 108],
+  [9, 'Dani Serra', 28, 'LI', ['CAI'], 'LEFT', 'Lateral ofensivo', [], 69, 109],
+  [10, 'Pol Vidal', 30, 'LI', ['CAI'], 'LEFT', 'Lateral equilibrado', [], 64, 110],
+  [11, 'Sergi Molina', 26, 'MCD', ['MC'], 'RIGHT', 'Destructor', ['MUY_FISICO'], 78, 111],
+  [12, 'Jordi Alemany', 33, 'MC', [], 'RIGHT', 'Organizador', ['VETERANO'], 73, 112],
+  [13, 'Àlex Costa', 21, 'MC', ['MCD'], 'BOTH', 'Todoterreno', [], 70, 113],
+  [14, 'Miquel Font', 29, 'MC', ['MCD'], 'RIGHT', 'MC físico', [], 66, 114],
+  [15, 'Biel Torres', 23, 'MP', ['MC'], 'LEFT', 'Creador', ['TALENTOSO'], 62, 115],
+  [16, 'Raúl Benítez', 27, 'ED', ['MD'], 'RIGHT', 'Extremo velocista', ['RAPIDO'], 75, 116],
+  [17, 'Joel Prat', 24, 'EI', ['MI'], 'LEFT', 'Extremo regateador', [], 69, 117],
+  [18, 'Hugo Vives', 30, 'DC', [], 'RIGHT', 'Hombre objetivo', ['POTENTE_POR_ARRIBA'], 81, 118],
+  [19, 'Adam Puig', 20, 'DC', ['ED'], 'RIGHT', 'Delantero rápido', ['BAJITO'], 71, 119],
+  [20, 'Enric Grau', 36, 'DC', [], 'LEFT', 'Delantero trabajador', ['VETERANO'], 65, 120],
+].map(([id, name, age, primaryPosition, secondaryPositions, preferredFoot, archetype, traits, targetRating, seed], index) => {
+  const old = legacyPlayers[index]
+  const table = existingTeamMetadata.find((entry) => entry.id === id)
+  return {
+    id, name, age, primaryPosition, secondaryPositions, preferredFoot, archetype, traits,
+    targetRating, seed, role: old.role, morale: old.morale, fitness: old.fitness,
+    form: table?.form ?? old.fitness, appearances: table?.appearances ?? (index % 5),
+    goals: table?.goals ?? (primaryPosition === 'DC' ? index % 3 : 0),
+    personality: table?.personality ?? old.morale, happiness: old.happiness,
+    income: table?.income ?? 0,
+  } as PlayerSeed
+})
+
+export const players = playerSeeds.map(generatePlayer)
+/** Alias temporal para consumidores existentes; ambas pantallas usan la misma fuente. */
+export const teamPlayers = players
 
 export const staffMembers: StaffMember[] = [
   {

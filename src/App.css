@@ -63,6 +63,26 @@
   padding: 20px;
 }
 
+.screen-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.screen-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.screen-back-button {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  color: #222222;
+  cursor: pointer;
+  padding: 7px 10px;
+}
+
 .club-panel-screen {
   background: #ffffff;
   border: 1px solid #dddddd;

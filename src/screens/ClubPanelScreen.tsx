@@ -2,9 +2,11 @@ import "./ClubPanelScreen.css"
 
 type ClubPanelScreenProps = {
   onOpenStaff: () => void
+  onOpenTeam: () => void
+  onOpenTactics: () => void
 }
 
-export function ClubPanelScreen({ onOpenStaff }: ClubPanelScreenProps) {
+export function ClubPanelScreen({ onOpenStaff, onOpenTeam, onOpenTactics }: ClubPanelScreenProps) {
   return (
     <main className="club-panel-screen">
       <section className="dashboard-card">
@@ -23,13 +25,21 @@ export function ClubPanelScreen({ onOpenStaff }: ClubPanelScreenProps) {
         <h2>Staff</h2>
       </button>
 
-      <section className="dashboard-card">
+      <button
+        className="dashboard-card dashboard-card-action"
+        type="button"
+        onClick={onOpenTeam}
+      >
         <h2>Equipo</h2>
-      </section>
+      </button>
 
-      <section className="dashboard-card">
+      <button
+        className="dashboard-card dashboard-card-action"
+        type="button"
+        onClick={onOpenTactics}
+      >
         <h2>Táctica</h2>
-      </section>
+      </button>
 
       <section className="dashboard-card">
         <h2>Entrenamiento</h2>

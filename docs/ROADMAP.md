@@ -1,38 +1,40 @@
 # Roadmap
 
-## Hito 0 — Preparación
+## Hito 0 — Preparación · Implementado
 
-- Entorno instalado.
-- Proyecto React y TypeScript creado.
-- Git inicializado.
-- Codex conectado.
-- Documentación inicial creada.
+- Proyecto React 19, TypeScript y Vite.
+- Git, documentación inicial y estructura de dominio.
 
-## Hito 1 — Maqueta navegable
+## Hito 1 — Maqueta navegable · En desarrollo
 
-- Menú principal.
-- Panel del club.
-- Plantilla.
-- Alineación.
-- Partido.
-- Resumen posterior.
-- Clasificación.
+Implementado:
 
-Todos los datos serán inicialmente estáticos.
+- Menú, panel del club, Equipo, Staff y navegación propia.
+- Plantilla mock determinista de 20 jugadores.
+- Sistema de atributos, ratings, arquetipos y rasgos.
+- Ficha reutilizable desde Equipo y Tácticas.
+- Cinco formaciones, once, banquillo e intercambios.
+- Rating táctico y familiaridad fuera de posición.
+- Controles de instrucciones tácticas como estado local de interfaz.
 
-## Hito 2 — Una jornada jugable
+Pendiente dentro de la maqueta o sin lógica de juego completa:
 
-- Selección de once.
-- Simulación de partido.
-- Resultado.
-- Consecuencias.
-- Clasificación.
-- Guardado.
+- Conectar instrucciones tácticas al motor de partido.
+- Integrar partido, resumen y clasificación en un flujo jugable real.
 
-## Hito 3 — Temporada completa
+## Hito 2 — Una jornada jugable · Planificado
 
-- Calendario.
-- 12 equipos.
-- Jornadas.
-- Playoff.
-- Ascenso, fracaso y despido.
+- Simulación de partido basada en plantilla y decisiones.
+- Resultado y consecuencias deportivas/humanas.
+- Actualización de clasificación y guardado.
+
+## Hito 3 — Temporada completa · Planificado
+
+- Calendario y jornadas para 12 equipos.
+- Ascenso, fracaso y posible despido.
+- Resolución de una única temporada beta.
+
+## Líneas futuras sin hito cerrado
+
+- Aprendizaje progresivo de posiciones mediante entrenamiento y minutos.
+- Persistencia separada del dominio.

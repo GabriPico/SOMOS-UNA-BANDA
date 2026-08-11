@@ -1,57 +1,41 @@
 # Diseño del juego
 
-## Identidad del juego
+## Identidad
 
-Nombre provisional: Somos una banda.
+**SOMOS UNA BANDA** es un simulador minimalista de entrenador de fútbol modesto
+ambientado en la 4a Catalana. “Banda” alude al grupo humano formado por plantilla,
+cuerpo técnico, directiva y entorno del club.
 
-Es un simulador minimalista de entrenador de fútbol modesto ambientado
-en la 4a Catalana. La palabra "banda" se refiere al grupo humano formado
-por jugadores, entrenador, ayudante y entorno del club. No es un juego
-sobre una banda musical.
+El tono debe ser realista, cercano y humorístico. La interfaz es funcional y
+deliberadamente sencilla; evolucionará mediante cambios incrementales.
+
 ## Alcance de la beta
 
-- Una única temporada.
-- Liga de 12 equipos.
-- El equipo inicial es de mitad de tabla.
-- El objetivo es conseguir el ascenso.
-- Si no se asciende, la partida termina.
+- Una temporada y liga de 12 equipos.
+- Plantilla inicial de 20 jugadores y nivel aproximado de media tabla.
+- Objetivo deportivo: ascenso.
+- Fútbol amateur con factores deportivos y humanos.
+- Autoridad, felicidad, cohesión, condición física y relación con el presidente.
+- Posibilidad de fracaso y despido del entrenador.
 
-## Plantilla
+**Estado:** la maqueta navegable, Equipo y Tácticas están implementados con datos
+mock. La temporada completa, simulación con consecuencias, guardado, ascenso y
+despido están planificados.
 
-- 20 jugadores.
-- 4 laterales.
-- 5 mediocentros.
-- Posibilidad de usar mediapunta o medio defensivo.
+## Plantilla y jugadores
 
-## Atributos
+El modelo actual usa 18 atributos en escala 1–20, posiciones naturales múltiples,
+pierna hábil, arquetipos y rasgos. La Calidad General es derivada; no es un dato
+arbitrario. La especificación canónica está en [PLAYER_SYSTEM.md](PLAYER_SYSTEM.md).
 
-- Portería
-- Defensa
-- Técnica
-- Pase
-- Velocidad
-- Resistencia
-- Fuerza
-- Definición
-- Inteligencia táctica
-- Juego aéreo
-- Desborde
+## Flujo objetivo de una jornada
 
-## Sistemas humanos
+1. Consultar el estado del equipo y eventos.
+2. Elegir alineación, formación e instrucciones.
+3. Simular el partido.
+4. Mostrar resultado y consecuencias.
+5. Actualizar clasificación y estado humano.
+6. Guardar la partida.
 
-- Autoridad del entrenador.
-- Felicidad individual.
-- Cohesión del vestuario.
-- Condición física.
-- Relación con el presidente.
-
-## Flujo básico de una jornada
-
-1. Consultar el estado del equipo.
-2. Revisar eventos o conversaciones.
-3. Elegir alineación.
-4. Elegir formación e idea de juego.
-5. Simular el partido.
-6. Mostrar resultado y consecuencias.
-7. Actualizar clasificación.
-8. Guardar la partida.
+Este flujo completo está **planificado**; la navegación y la edición táctica son
+actualmente una maqueta funcional.
