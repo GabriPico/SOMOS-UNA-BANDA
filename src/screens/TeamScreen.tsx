@@ -19,9 +19,15 @@ export function TeamScreen() {
   return (
     <section className="team-screen">
       <h2>Equipo</h2>
+      <p className="team-description">
+        Plantilla actual con posiciones, personalidad y los ingresos desde el punto de vista del club.
+      </p>
 
       <div className="team-table-wrapper">
-        <table className="team-table">
+        <table className="team-table" aria-label="Tabla de jugadores del equipo">
+          <caption className="team-table-caption">
+            + significa que el jugador paga al club; - significa que el club paga al jugador.
+          </caption>
           <thead>
             <tr>
               <th scope="col">Pos</th>

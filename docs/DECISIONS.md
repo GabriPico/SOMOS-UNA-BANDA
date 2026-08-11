@@ -39,3 +39,10 @@
 - Los ingresos se expresan siempre desde el punto de vista del club: un importe
   positivo es dinero que el jugador paga al club, cero indica que no paga ni
   cobra y un importe negativo es dinero que el club paga al jugador.
+
+## Decisiones de la pantalla Staff
+
+- La pantalla Staff mostrará, en este orden: Rol, Nombre, Calidad y
+  Personalidad.
+- Staff estará disponible desde la navegación principal y desde su bloque en
+  el Panel del Club.

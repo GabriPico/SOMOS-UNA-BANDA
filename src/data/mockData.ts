@@ -7,6 +7,7 @@ import type {
   PlayStyle,
   PostMatchSummary,
   StandingRow,
+  StaffMember,
   TeamPlayer,
   Tactics,
 } from '../domain/models'
@@ -324,6 +325,51 @@ export const teamPlayers: TeamPlayer[] = [
     personality: 'Ambicioso',
     happiness: 73,
     income: -200,
+  },
+]
+
+export const staffMembers: StaffMember[] = [
+  {
+    id: 1,
+    role: '1r Entrenador',
+    name: 'Miquel Ferrer',
+    quality: 64,
+    personality: 'Pragmático',
+  },
+  {
+    id: 2,
+    role: '2o Entrenador',
+    name: 'Toni Casals',
+    quality: 58,
+    personality: 'Leal',
+  },
+  {
+    id: 3,
+    role: 'Preparador',
+    name: 'Jordi Pujol',
+    quality: 61,
+    personality: 'Exigente',
+  },
+  {
+    id: 4,
+    role: 'Entrenador de porteros',
+    name: 'Pere Vidal',
+    quality: 57,
+    personality: 'Paciente',
+  },
+  {
+    id: 5,
+    role: 'Fisio',
+    name: 'Laia Serra',
+    quality: 63,
+    personality: 'Atenta',
+  },
+  {
+    id: 6,
+    role: 'Encargado del campo',
+    name: 'Ramon Puig',
+    quality: 55,
+    personality: 'Resolutivo',
   },
 ]
 

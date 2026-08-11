@@ -1,6 +1,10 @@
 import "./ClubPanelScreen.css"
 
-export function ClubPanelScreen() {
+type ClubPanelScreenProps = {
+  onOpenStaff: () => void
+}
+
+export function ClubPanelScreen({ onOpenStaff }: ClubPanelScreenProps) {
   return (
     <main className="club-panel-screen">
       <section className="dashboard-card">
@@ -11,9 +15,13 @@ export function ClubPanelScreen() {
         <h2>La liga</h2>
       </section>
 
-      <section className="dashboard-card">
+      <button
+        className="dashboard-card dashboard-card-action"
+        type="button"
+        onClick={onOpenStaff}
+      >
         <h2>Staff</h2>
-      </section>
+      </button>
 
       <section className="dashboard-card">
         <h2>Equipo</h2>

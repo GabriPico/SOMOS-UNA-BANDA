@@ -14,3 +14,10 @@
 .dashboard-card h2 {
   margin-top: 0;
 }
+
+.dashboard-card-action {
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}

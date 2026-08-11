@@ -1,6 +1,7 @@
 export type ScreenId =
   | 'main-menu'
   | 'club-panel'
+  | 'staff'
   | 'squad'
   | 'tactics'
   | 'match'
@@ -65,6 +66,14 @@ export type TeamPlayer = {
   personality: string
   happiness: number
   income: number
+}
+
+export type StaffMember = {
+  id: number
+  role: string
+  name: string
+  quality: number
+  personality: string
 }
 
 export type ClubStatus = {

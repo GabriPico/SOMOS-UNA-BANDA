@@ -1,0 +1,32 @@
+.staff-screen {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  padding: 20px;
+}
+
+.staff-screen h2 {
+  margin-top: 0;
+}
+
+.staff-table-wrapper {
+  overflow-x: auto;
+}
+
+.staff-table {
+  border-collapse: collapse;
+  min-width: 600px;
+  width: 100%;
+}
+
+.staff-table th,
+.staff-table td {
+  border-bottom: 1px solid #dddddd;
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.staff-table th {
+  background: #f7f7f7;
+  font-weight: 600;
+}
