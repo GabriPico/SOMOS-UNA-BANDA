@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { Player, PlayerAttribute, PlayerPosition } from '../domain/models'
+import type { Player, PlayerAttribute, PlayerPosition, ProvisionalAttributeProgress } from '../domain/models'
 import { ARCHETYPE_DESCRIPTIONS, PREFERRED_FOOT_LABELS } from '../domain/playerGeneration'
 import { POSITION_FAMILIARITY_LABELS, calculateTacticalRating, getPositionFamiliarity, getPositionPenalty } from '../domain/positionFamiliarity'
 import { calculateGeneralRating, getBestRatedPosition, getPlayerPositions, getRatingsByPosition } from '../domain/playerRatings'
@@ -18,12 +18,15 @@ type PlayerDetailProps = {
   player: Player
   onClose: () => void
   currentTacticalPosition?: PlayerPosition
+  provisionalProgress?: ProvisionalAttributeProgress
 }
 
-export function PlayerDetail({ player, onClose, currentTacticalPosition }: PlayerDetailProps) {
+export function PlayerDetail({ player, onClose, currentTacticalPosition, provisionalProgress }: PlayerDetailProps) {
   const naturalPositions = getPlayerPositions(player)
   const visibleAttributeGroups = naturalPositions.includes('POR')
-    ? ATTRIBUTE_GROUPS
+    ? ATTRIBUTE_GROUPS.map(([group, attributes]) => group === 'Físicos'
+      ? [group, attributes.filter(([key]) => key !== 'alcanceAereo')] as const
+      : [group, attributes] as const)
     : ATTRIBUTE_GROUPS.filter(([, attributes]) => attributes[0][0] !== 'paradas')
   const ratings = getRatingsByPosition(player)
   const familiarity = currentTacticalPosition
@@ -58,7 +61,7 @@ export function PlayerDetail({ player, onClose, currentTacticalPosition }: Playe
         <div><dt>Forma</dt><dd>{player.form}</dd></div><div><dt>PJ</dt><dd>{player.appearances}</dd></div><div><dt>G</dt><dd>{player.goals}</dd></div>
         <div><dt>Personalidad</dt><dd>{player.personality}</dd></div><div><dt>Felicidad</dt><dd>{player.happiness}</dd></div><div><dt>Ingresos</dt><dd>{formatIncome(player.income)}</dd></div>
       </dl>
-      <div className="attribute-groups">{visibleAttributeGroups.map(([group, attributes]) => <section key={group}><h4>{group}</h4><dl>{attributes.map(([key, label]) => <div key={key}><dt>{label}</dt><dd>{player.attributes[key]}</dd></div>)}</dl></section>)}</div>
+      <div className="attribute-groups">{visibleAttributeGroups.map(([group, attributes]) => <section key={group}><h4>{group}</h4><dl>{attributes.map(([key, label]) => { const progress = provisionalProgress?.[key] ?? 0; return <div key={key}><dt>{label}</dt><dd>{player.attributes[key]} {progress > 0 && (progress < 1 ? '↑' : `(+${Math.floor(progress)})`)}</dd></div> })}</dl></section>)}</div>
     </article>
   </div>
 }

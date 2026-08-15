@@ -82,3 +82,17 @@
   Personalidad.
 - Staff estará disponible desde la navegación principal y desde su bloque en
   el Panel del Club.
+
+## Decisiones de la pantalla Entrenamiento
+
+- La planificación semanal contiene dos sesiones (martes y jueves), con dos bloques cada una e intensidad Baja, Media o Alta aplicada a toda la sesión.
+- Completo, Lúdico y Descanso ocupan los dos bloques. Entrenamiento «De mínimos» no es seleccionable: será un resultado futuro cuando asistan 12 jugadores o menos; el mínimo para una sesión normal será 13.
+- Las variables generales e individuales del entrenamiento usan internamente una escala 0–100. Felicidad y calidad pueden representarse mediante etiquetas.
+- La Familiaridad Táctica General se calculará en el futuro con un 80% de instrucciones y un 20% de formación. Cada opción táctica y cada formación podrán conservar su familiaridad 0–100.
+- Existe una única familiaridad de Balón parado, independiente de la familiaridad táctica.
+- Los bonus provisionales decimales por atributo, su decadencia, continuidad y consolidación permanente se procesan al cerrar la semana. El valor efectivo nunca supera 20 y el bonus tiene un máximo provisional de +2.
+- La calidad de sesión pondera asistencia, autoridad, staff y estado del grupo. Solo los asistentes reciben efectos y con menos de 13 la sesión se resuelve De mínimos.
+- La familiaridad táctica conserva valor actual y máximo histórico por opción y formación. Su memoria acelera la recuperación y limita la decadencia; Balón parado mantiene memoria independiente.
+- Las doce personalidades beta se implementan mediante modificadores compartidos, no mediante ramas específicas por jugador. Afectan satisfacción con entrenamientos y autoridad individual.
+- La felicidad individual es la media de relación con compañeros, tiempo de juego, satisfacción con entrenamientos y resultados. En esta fase solo entrenamiento y Lúdico actualizan componentes; partido y minutos quedan por conectar.
+- El riesgo de lesión y de conflicto están calculados y encapsulados, pero todavía no generan lesiones médicas ni eventos narrativos.

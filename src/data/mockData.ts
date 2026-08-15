@@ -7,6 +7,8 @@ import type {
   StandingRow,
   StaffMember,
   Tactics,
+  TacticalPlan,
+  TacticalFamiliarity,
 } from '../domain/models'
 import { generatePlayer, type PlayerSeed } from '../domain/playerGeneration'
 
@@ -395,6 +397,25 @@ export const tactics: Tactics = {
   availableStyles: playStyles,
   startingEleven: [1, 3, 7, 8, 4, 10, 11, 16, 15, 17, 18],
   bench: [2, 5, 6, 9, 13, 19, 20],
+}
+
+export const initialTacticalPlan: TacticalPlan = {
+  formation: '4-4-2', mentality: 'Equilibrada', passingStyle: 'Mixto', tempo: 'Medio',
+  afterRecovery: 'Contraataque', pressingHeight: 'Media', pressingIntensity: 'Alta',
+  afterLoss: 'Presión tras pérdida', timeWasting: 'No', aggression: 'Sí',
+}
+
+/** Mock preparado para memoria por opción; todavía no evoluciona. */
+export const tacticalFamiliarity: TacticalFamiliarity = {
+  overall: 68,
+  formation: { '4-4-2': 78, '4-3-3': 42, '4-2-3-1': 65, '3-5-2': 12, '5-4-1': 18 },
+  instructions: {
+    mentality: { Ofensiva: 30, Equilibrada: 82, Cauta: 51 },
+    passingStyle: { 'En corto': 48, Mixto: 74, Directo: 39 }, tempo: { Alto: 44, Medio: 71, Bajo: 35 },
+    afterRecovery: { Contraataque: 66, Equilibrada: 58, 'Mantener posición': 29 },
+    pressingHeight: { Alta: 41, Media: 72, Baja: 37 }, pressingIntensity: { Alta: 69, Media: 57, Baja: 25 },
+    afterLoss: { 'Presión tras pérdida': 64, Mixto: 56, Repliegue: 31 },
+  },
 }
 
 export const matchPreview: MatchPreview = {

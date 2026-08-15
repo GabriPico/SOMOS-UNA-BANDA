@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
 import { players, tactics } from '../data/mockData'
-import type { Player, PlayerPosition } from '../domain/models'
+import type { Formation, Player, PlayerPosition, TacticalPlan } from '../domain/models'
 import { calculateTacticalRating, getPositionFamiliarity } from '../domain/positionFamiliarity'
 import { calculateGeneralRating, getPlayerPositions } from '../domain/playerRatings'
 import './TacticsScreen.css'
 
 const formations = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '5-4-1'] as const
-type Formation = (typeof formations)[number]
 type FormationSlot = { position: PlayerPosition; x: number; y: number }
 
 const formationLayouts: Record<Formation, FormationSlot[]> = {
@@ -78,7 +77,7 @@ const formationLayouts: Record<Formation, FormationSlot[]> = {
   ],
 }
 
-type TacticsScreenProps = { onBack: () => void }
+type TacticsScreenProps = { onBack: () => void; tacticalPlan: TacticalPlan; onTacticalPlanChange: (plan: TacticalPlan) => void }
 type PlayerSelection =
   | { group: 'field'; slot: number }
   | { group: 'reserve'; playerId: number }
@@ -111,20 +110,12 @@ function OptionGroup({ label, options, value, onChange }: OptionGroupProps) {
   )
 }
 
-export function TacticsScreen({ onBack }: TacticsScreenProps) {
-  const [formation, setFormation] = useState<Formation>('4-4-2')
+export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange }: TacticsScreenProps) {
+  const formation = tacticalPlan.formation
+  const updatePlan = <K extends keyof TacticalPlan>(key: K, value: TacticalPlan[K]) => onTacticalPlanChange({ ...tacticalPlan, [key]: value })
   const [lineupIds, setLineupIds] = useState(() => [...tactics.startingEleven])
   const [selection, setSelection] = useState<PlayerSelection>(null)
   const [detail, setDetail] = useState<{ player: Player; position?: PlayerPosition } | null>(null)
-  const [mentality, setMentality] = useState('Equilibrada')
-  const [passingStyle, setPassingStyle] = useState('Mixto')
-  const [tempo, setTempo] = useState('Medio')
-  const [afterRecovery, setAfterRecovery] = useState('Equilibrada')
-  const [pressingHeight, setPressingHeight] = useState('Media')
-  const [pressingIntensity, setPressingIntensity] = useState('Media')
-  const [afterLoss, setAfterLoss] = useState('Mixto')
-  const [timeWasting, setTimeWasting] = useState('No')
-  const [aggression, setAggression] = useState('No')
   const startingPlayers = lineupIds
     .map((id) => players.find((player) => player.id === id))
     .filter((player) => player !== undefined)
@@ -188,7 +179,7 @@ export function TacticsScreen({ onBack }: TacticsScreenProps) {
           <div className="formation-options">
             {formations.map((option) => (
               <label key={option}>
-                <input type="radio" name="formation" checked={formation === option} onChange={() => setFormation(option)} />
+                <input type="radio" name="formation" checked={formation === option} onChange={() => updatePlan('formation', option)} />
                 {option}
               </label>
             ))}
@@ -259,19 +250,19 @@ export function TacticsScreen({ onBack }: TacticsScreenProps) {
         <div className="tactics-controls">
           <section className="tactics-panel tactics-with-ball">
             <h3>Con balón</h3>
-            <OptionGroup label="Mentalidad" options={['Ofensiva', 'Equilibrada', 'Cauta']} value={mentality} onChange={setMentality} />
-            <OptionGroup label="Estilo de pase" options={['En corto', 'Mixto', 'Directo']} value={passingStyle} onChange={setPassingStyle} />
-            <OptionGroup label="Ritmo" options={['Alto', 'Medio', 'Bajo']} value={tempo} onChange={setTempo} />
-            <OptionGroup label="Tras recuperación" options={['Contraataque', 'Equilibrada', 'Mantener posición']} value={afterRecovery} onChange={setAfterRecovery} />
+            <OptionGroup label="Mentalidad" options={['Ofensiva', 'Equilibrada', 'Cauta']} value={tacticalPlan.mentality} onChange={(v) => updatePlan('mentality', v as TacticalPlan['mentality'])} />
+            <OptionGroup label="Estilo de pase" options={['En corto', 'Mixto', 'Directo']} value={tacticalPlan.passingStyle} onChange={(v) => updatePlan('passingStyle', v as TacticalPlan['passingStyle'])} />
+            <OptionGroup label="Ritmo" options={['Alto', 'Medio', 'Bajo']} value={tacticalPlan.tempo} onChange={(v) => updatePlan('tempo', v as TacticalPlan['tempo'])} />
+            <OptionGroup label="Tras recuperación" options={['Contraataque', 'Equilibrada', 'Mantener posición']} value={tacticalPlan.afterRecovery} onChange={(v) => updatePlan('afterRecovery', v as TacticalPlan['afterRecovery'])} />
           </section>
 
           <section className="tactics-panel tactics-without-ball">
             <h3>Sin balón</h3>
-            <OptionGroup label="Altura de presión" options={['Alta', 'Media', 'Baja']} value={pressingHeight} onChange={setPressingHeight} />
-            <OptionGroup label="Intensidad de presión" options={['Alta', 'Media', 'Baja']} value={pressingIntensity} onChange={setPressingIntensity} />
-            <OptionGroup label="Tras pérdida" options={['Presión tras pérdida', 'Mixto', 'Repliegue']} value={afterLoss} onChange={setAfterLoss} />
-            <OptionGroup label="Perder tiempo" options={['Sí', 'No']} value={timeWasting} onChange={setTimeWasting} />
-            <OptionGroup label="Ser agresivos" options={['Sí', 'No']} value={aggression} onChange={setAggression} />
+            <OptionGroup label="Altura de presión" options={['Alta', 'Media', 'Baja']} value={tacticalPlan.pressingHeight} onChange={(v) => updatePlan('pressingHeight', v as TacticalPlan['pressingHeight'])} />
+            <OptionGroup label="Intensidad de presión" options={['Alta', 'Media', 'Baja']} value={tacticalPlan.pressingIntensity} onChange={(v) => updatePlan('pressingIntensity', v as TacticalPlan['pressingIntensity'])} />
+            <OptionGroup label="Tras pérdida" options={['Presión tras pérdida', 'Mixto', 'Repliegue']} value={tacticalPlan.afterLoss} onChange={(v) => updatePlan('afterLoss', v as TacticalPlan['afterLoss'])} />
+            <OptionGroup label="Perder tiempo" options={['Sí', 'No']} value={tacticalPlan.timeWasting} onChange={(v) => updatePlan('timeWasting', v as TacticalPlan['timeWasting'])} />
+            <OptionGroup label="Ser agresivos" options={['Sí', 'No']} value={tacticalPlan.aggression} onChange={(v) => updatePlan('aggression', v as TacticalPlan['aggression'])} />
           </section>
         </div>
       </div>

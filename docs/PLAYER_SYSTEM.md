@@ -207,3 +207,15 @@ cambian.
 - Selección probabilística automática de arquetipos desde la configuración.
 - Sesgos detallados para todos los arquetipos catalogados.
 - Efecto de pierna hábil y Balón Parado en sistemas de juego.
+
+## Integración con entrenamiento
+
+El entrenamiento conserva una copia guardable de los atributos base y estados
+decimales por atributo. El valor efectivo suma el bonus provisional, nunca supera
+20 y puede recibir penalizaciones físicas temporales antes de integrarse en el
+futuro motor de partido. La ficha abierta desde Entrenamiento muestra `↑` para
+bonus menores que uno y `(+N)` desde el primer punto efectivo.
+
+La consolidación puede elevar el atributo base al cerrar una semana. Para
+porteros, el entrenamiento sustituye cualquier trabajo aéreo de campo por
+`juegoAereoPortero`; nunca entrena `alcanceAereo` como equivalente.

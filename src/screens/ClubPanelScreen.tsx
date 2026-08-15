@@ -4,9 +4,10 @@ type ClubPanelScreenProps = {
   onOpenStaff: () => void
   onOpenTeam: () => void
   onOpenTactics: () => void
+  onOpenTraining: () => void
 }
 
-export function ClubPanelScreen({ onOpenStaff, onOpenTeam, onOpenTactics }: ClubPanelScreenProps) {
+export function ClubPanelScreen({ onOpenStaff, onOpenTeam, onOpenTactics, onOpenTraining }: ClubPanelScreenProps) {
   return (
     <main className="club-panel-screen">
       <section className="dashboard-card">
@@ -41,9 +42,9 @@ export function ClubPanelScreen({ onOpenStaff, onOpenTeam, onOpenTactics }: Club
         <h2>Táctica</h2>
       </button>
 
-      <section className="dashboard-card">
-        <h2>Entrenamiento</h2>
-      </section>
+      <button className="dashboard-card dashboard-card-action" type="button" onClick={onOpenTraining}>
+        <h2>Preparación de entrenamiento</h2>
+      </button>
 
       <section className="dashboard-card">
         <h2>Estado del vestuario</h2>
