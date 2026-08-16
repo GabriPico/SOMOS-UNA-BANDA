@@ -1,6 +1,6 @@
 export type ScreenId =
   | 'main-menu' | 'club-panel' | 'staff' | 'squad' | 'tactics' | 'training'
-  | 'match' | 'post-match' | 'standings'
+  | 'match' | 'next-match' | 'post-match' | 'standings' | 'league-results' | 'league-scorers' | 'league-sanctions' | 'dressing-room' | 'inbox'
 
 export type PlayerPosition =
   | 'POR' | 'DFC' | 'LD' | 'LI' | 'CAD' | 'CAI' | 'MCD'
@@ -44,7 +44,6 @@ export type Player = {
 }
 
 export type PlayStyle = 'Equilibrada' | 'Juego directo' | 'Posesión' | 'Repliegue y contraataque'
-export type StaffMember = { id: number; role: string; name: string; quality: number; personality: string }
 export type ClubStatus = { name: string; seasonGoal: string; league: string; matchday: number; authority: number; dressingRoomCohesion: number; physicalCondition: number; presidentRelationship: number; budget: string }
 export type ClubEvent = { title: string; speaker: string; detail: string }
 export type Tactics = { formation: '4-2-3-1'; selectedStyle: PlayStyle; availableStyles: PlayStyle[]; startingEleven: number[]; bench: number[] }
@@ -70,4 +69,22 @@ export type TacticalFamiliarity = { overall: number; formation: Record<Formation
 export type ProvisionalAttributeProgress = Partial<Record<PlayerAttribute, number>>
 export type MatchPreview = { homeTeam: string; awayTeam: string; venue: string; context: string; opponentNote: string }
 export type PostMatchSummary = { score: string; headline: string; notes: string[] }
-export type StandingRow = { position: number; team: string; played: number; won: number; drawn: number; lost: number; goalsFor: number; goalsAgainst: number; points: number }
+export type LeagueTeam = { id: string; name: string }
+export type MatchOutcome = 'G' | 'E' | 'P'
+export type StandingRow = { position: number; teamId: LeagueTeam['id']; played: number; won: number; drawn: number; lost: number; goalsFor: number; goalsAgainst: number; goalDifference: number; points: number; recentForm: MatchOutcome[] }
+export type MatchStatus = 'played' | 'scheduled'
+export type LeagueMatch = { id: string; matchday: number; homeTeamId: LeagueTeam['id']; awayTeamId: LeagueTeam['id']; homeGoals: number; awayGoals: number; status: MatchStatus; date: string; time: string }
+export type GoalEvent = { id: string; matchId: string; teamId: LeagueTeam['id']; scorerId: number; minute: number; isPenalty: boolean }
+export type RivalPlayer = Pick<Player, 'id' | 'name' | 'primaryPosition' | 'secondaryPositions' | 'archetype' | 'attributes'> & { teamId: LeagueTeam['id'] }
+export type RivalTeamProfile = {
+  teamId: LeagueTeam['id']
+  previousSeasonPosition: number
+  preferredFormation: Formation
+  scouting: { withBall: string; withoutBall: string; observedPattern?: string }
+  collectiveWeaknesses?: string[]
+}
+export type TopScorerRow = { position: number; playerId: number; playerName: string; teamId: LeagueTeam['id']; goals: number; penaltyGoals: number }
+export type SanctionReason = 'Roja directa' | 'Doble amarilla' | 'Acumulación de amarillas'
+export type LeagueSanction = { id: string; playerId: number; teamId: LeagueTeam['id']; reason: SanctionReason; startMatchday: number; matches: number; originMatchId?: string }
+export type ActiveSanction = LeagueSanction & { remainingMatches: number }
+export type LeagueSeasonData = { totalMatchdays: number; currentMatchday: number; matches: LeagueMatch[]; goalEvents: GoalEvent[]; sanctions: LeagueSanction[] }

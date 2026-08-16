@@ -1,0 +1,10 @@
+.sanctions-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
+.sanctions-table-wrapper { overflow-x: auto; }
+.sanctions-table { border-collapse: collapse; min-width: 680px; width: 100%; }
+.sanctions-table th, .sanctions-table td { border-bottom: 1px solid #ddd; padding: 10px 12px; text-align: left; white-space: nowrap; }
+.sanctions-table thead th { background: #f7f7f7; font-size: 12px; font-weight: 600; }
+.sanctions-table tbody th { font-weight: 500; }
+.sanctions-table tr.is-user-team { background: #f2f6f3; }
+.sanctions-table tr.is-user-team th { font-weight: 700; }
+.sanctions-empty { border: 1px solid #ddd; color: #666; margin: 0; padding: 24px; text-align: center; }
+@media (max-width: 720px) { .sanctions-screen { padding: 14px; } }

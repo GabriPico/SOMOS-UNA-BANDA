@@ -1,0 +1,5 @@
+.matchday-selector { align-items: center; display: flex; gap: 4px; margin: -8px 0 20px; overflow-x: auto; padding: 8px 0; }
+.matchday-selector span { color: #666; font-size: 12px; font-weight: 600; margin-right: 4px; text-transform: uppercase; }
+.matchday-selector button { background: #fff; border: 1px solid #ddd; border-radius: 3px; color: #333; cursor: pointer; flex: 0 0 30px; height: 30px; padding: 0; }
+.matchday-selector button.is-active { background: #333; border-color: #333; color: #fff; font-weight: 600; }
+.matchday-selector button:disabled { background: #f5f5f5; color: #aaa; cursor: default; }

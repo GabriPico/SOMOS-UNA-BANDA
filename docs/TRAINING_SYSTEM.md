@@ -20,8 +20,11 @@ decadencia (30%, o 15% con mantenimiento Completo), continuidad y consolidación
 
 Solo los asistentes reciben efectos individuales. Menos de 13 asistentes produce
 una sesión De mínimos. Con 13 o más, la calidad pondera asistencia 35%, autoridad
-30%, staff 20% y estado del grupo 15%. Los multiplicadores y umbrales están
-centralizados en `trainingBalance.ts`.
+30%, aportación del staff disponible 20% y estado del grupo 15%. La aportación
+ya no procede de una calidad general visible: deriva de entrenamiento,
+organización, compromiso, fiabilidad, disponibilidad y modificadores leves de
+personalidad. Los multiplicadores y umbrales están centralizados en
+`trainingBalance.ts`.
 
 Condición y cansancio se procesan individualmente. Resistencia reduce la fatiga;
 Físico amplifica condición y carga. Táctica, Balón parado, Lúdico y Descanso usan

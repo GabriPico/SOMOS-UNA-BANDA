@@ -1,16 +1,26 @@
 import type {
   ClubEvent,
   ClubStatus,
+  LeagueTeam,
+  LeagueSeasonData,
+  LeagueMatch,
+  GoalEvent,
+  RivalPlayer,
+  RivalTeamProfile,
+  LeagueSanction,
   MatchPreview,
   PlayStyle,
   PostMatchSummary,
-  StandingRow,
-  StaffMember,
   Tactics,
   TacticalPlan,
   TacticalFamiliarity,
 } from '../domain/models'
 import { generatePlayer, type PlayerSeed } from '../domain/playerGeneration'
+import { validateGoalEvents } from '../domain/leagueScorers'
+import { validateSanctionPlayers } from '../domain/leagueSanctions'
+
+export const TOTAL_LEAGUE_MATCHDAYS = 22
+export const CURRENT_MATCHDAY = 10
 
 const attributes = (
   porteria: number,
@@ -42,7 +52,7 @@ export const clubStatus: ClubStatus = {
   name: 'FC Poblenou',
   seasonGoal: 'Pelear el ascenso en una liga de 12 equipos',
   league: '4a Catalana',
-  matchday: 1,
+  matchday: CURRENT_MATCHDAY,
   authority: 62,
   dressingRoomCohesion: 58,
   physicalCondition: 71,
@@ -318,51 +328,6 @@ export const players = playerSeeds.map(generatePlayer)
 /** Alias temporal para consumidores existentes; ambas pantallas usan la misma fuente. */
 export const teamPlayers = players
 
-export const staffMembers: StaffMember[] = [
-  {
-    id: 1,
-    role: '1r Entrenador',
-    name: 'Miquel Ferrer',
-    quality: 64,
-    personality: 'Pragmático',
-  },
-  {
-    id: 2,
-    role: '2o Entrenador',
-    name: 'Toni Casals',
-    quality: 58,
-    personality: 'Leal',
-  },
-  {
-    id: 3,
-    role: 'Preparador',
-    name: 'Jordi Pujol',
-    quality: 61,
-    personality: 'Exigente',
-  },
-  {
-    id: 4,
-    role: 'Entrenador de porteros',
-    name: 'Pere Vidal',
-    quality: 57,
-    personality: 'Paciente',
-  },
-  {
-    id: 5,
-    role: 'Fisio',
-    name: 'Laia Serra',
-    quality: 63,
-    personality: 'Atenta',
-  },
-  {
-    id: 6,
-    role: 'Encargado del campo',
-    name: 'Ramon Puig',
-    quality: 55,
-    personality: 'Resolutivo',
-  },
-]
-
 export const clubEvents: ClubEvent[] = [
   {
     title: 'El presidente pide calma',
@@ -437,137 +402,143 @@ export const postMatchSummary: PostMatchSummary = {
   ],
 }
 
-export const standings: StandingRow[] = [
-  {
-    position: 1,
-    team: 'CF Can Riera',
-    played: 1,
-    won: 1,
-    drawn: 0,
-    lost: 0,
-    goalsFor: 3,
-    goalsAgainst: 0,
-    points: 3,
-  },
-  {
-    position: 2,
-    team: 'UD Sant Roc',
-    played: 1,
-    won: 1,
-    drawn: 0,
-    lost: 0,
-    goalsFor: 2,
-    goalsAgainst: 0,
-    points: 3,
-  },
-  {
-    position: 3,
-    team: 'Atlètic Les Planes',
-    played: 1,
-    won: 1,
-    drawn: 0,
-    lost: 0,
-    goalsFor: 2,
-    goalsAgainst: 1,
-    points: 3,
-  },
-  {
-    position: 4,
-    team: 'CE Fontfreda',
-    played: 1,
-    won: 1,
-    drawn: 0,
-    lost: 0,
-    goalsFor: 1,
-    goalsAgainst: 0,
-    points: 3,
-  },
-  {
-    position: 5,
-    team: 'UE Montclar',
-    played: 1,
-    won: 0,
-    drawn: 1,
-    lost: 0,
-    goalsFor: 1,
-    goalsAgainst: 1,
-    points: 1,
-  },
-  {
-    position: 6,
-    team: 'Atlètic Vallirana',
-    played: 1,
-    won: 0,
-    drawn: 1,
-    lost: 0,
-    goalsFor: 1,
-    goalsAgainst: 1,
-    points: 1,
-  },
-  {
-    position: 7,
-    team: 'Sporting Bellpuig',
-    played: 1,
-    won: 0,
-    drawn: 1,
-    lost: 0,
-    goalsFor: 0,
-    goalsAgainst: 0,
-    points: 1,
-  },
-  {
-    position: 8,
-    team: 'Racing Lledoner',
-    played: 1,
-    won: 0,
-    drawn: 1,
-    lost: 0,
-    goalsFor: 0,
-    goalsAgainst: 0,
-    points: 1,
-  },
-  {
-    position: 9,
-    team: 'CD Mas Clar',
-    played: 1,
-    won: 0,
-    drawn: 0,
-    lost: 1,
-    goalsFor: 1,
-    goalsAgainst: 2,
-    points: 0,
-  },
-  {
-    position: 10,
-    team: 'Penya Barri Nord',
-    played: 1,
-    won: 0,
-    drawn: 0,
-    lost: 1,
-    goalsFor: 0,
-    goalsAgainst: 1,
-    points: 0,
-  },
-  {
-    position: 11,
-    team: 'EF La Sagrera',
-    played: 1,
-    won: 0,
-    drawn: 0,
-    lost: 1,
-    goalsFor: 0,
-    goalsAgainst: 2,
-    points: 0,
-  },
-  {
-    position: 12,
-    team: 'CF Ravalet',
-    played: 1,
-    won: 0,
-    drawn: 0,
-    lost: 1,
-    goalsFor: 0,
-    goalsAgainst: 3,
-    points: 0,
-  },
+export const leagueTeams: LeagueTeam[] = [
+  { id: 'fc-poblenou', name: 'FC Poblenou' },
+  { id: 'ona-sant-adria', name: 'Ona Sant Adrià FC' },
+  { id: 'la-salut-pere-gol', name: 'La Salut Pere Gol AE' },
+  { id: 'pomar', name: 'Pomar CD' },
+  { id: 'sistrells', name: 'Sistrells CF' },
+  { id: 'torre-fuerte-cervello', name: 'Torre Fuerte Cervelló FC' },
+  { id: 'legion', name: 'Legión CF' },
+  { id: 'pena-pasion-xeneize', name: 'Peña Pasión Xeneize Barcelona' },
+  { id: 'pujadas', name: 'Pujadas CD' },
+  { id: 'young-talent-badalona', name: 'Young Talent Badalona' },
+  { id: 'besos-baro-de-viver', name: 'Besòs Baró de Viver' },
+  { id: 'gramenet', name: 'Gramenet UD' },
 ]
+
+function createMockLeagueMatches(teams: LeagueTeam[], matchdays: number): LeagueMatch[] {
+  const rotationOffset = 4
+  const rotation = teams.map((_, index) => teams[(index + rotationOffset) % teams.length].id)
+  const teamIndexes = new Map(teams.map((team, index) => [team.id, index]))
+  const matches: LeagueMatch[] = []
+
+  for (let matchday = 1; matchday <= matchdays; matchday += 1) {
+    for (let pairing = 0; pairing < rotation.length / 2; pairing += 1) {
+      const firstTeamId = rotation[pairing]
+      const secondTeamId = rotation[rotation.length - 1 - pairing]
+      const homeTeamId = matchday % 2 === 0 ? secondTeamId : firstTeamId
+      const awayTeamId = matchday % 2 === 0 ? firstTeamId : secondTeamId
+      const homeIndex = teamIndexes.get(homeTeamId) ?? 0
+      const awayIndex = teamIndexes.get(awayTeamId) ?? 0
+      const played = matchday <= CURRENT_MATCHDAY
+      const kickoff = new Date(Date.UTC(2026, 8, 6 + (matchday - 1) * 7))
+      matches.push({
+        id: `j${matchday}-p${pairing + 1}`,
+        matchday,
+        homeTeamId,
+        awayTeamId,
+        homeGoals: played ? (matchday + homeIndex * 2 + awayIndex) % 4 : 0,
+        awayGoals: played ? (matchday * 2 + awayIndex + homeIndex) % 3 : 0,
+        status: played ? 'played' : 'scheduled',
+        date: kickoff.toISOString().slice(0, 10),
+        time: ['12:00', '16:00', '17:00', '18:30', '19:00', '20:00'][pairing],
+      })
+    }
+    rotation.splice(1, 0, rotation.pop() as string)
+  }
+
+  return matches
+}
+
+export const leagueMatches = createMockLeagueMatches(leagueTeams, TOTAL_LEAGUE_MATCHDAYS)
+
+const rivalFirstNames = ['Adrià', 'Eric', 'Jan', 'Kevin']
+const rivalLastNames = ['Moreno', 'Campos', 'Ruiz', 'Santos', 'López', 'García', 'Navarro', 'Romero', 'Torres', 'Vega', 'Cano']
+
+export const rivalPlayers: RivalPlayer[] = leagueTeams
+  .filter((team) => team.id !== 'fc-poblenou')
+  .flatMap((team, teamIndex) => rivalFirstNames.map((firstName, playerIndex) => {
+    const positions = ['POR', 'DFC', 'MC', 'DC'] as const
+    const archetypes = ['Parador', 'Central dominante', 'Organizador', 'Delantero rápido']
+    const generated = generatePlayer({
+      id: 1000 + teamIndex * 10 + playerIndex,
+      name: `${firstName} ${rivalLastNames[(teamIndex + playerIndex * 3) % rivalLastNames.length]}`,
+      age: 22 + ((teamIndex + playerIndex * 3) % 14),
+      primaryPosition: positions[playerIndex], secondaryPositions: [], preferredFoot: playerIndex % 2 ? 'LEFT' : 'RIGHT',
+      archetype: archetypes[playerIndex], traits: [], targetRating: 58 + ((teamIndex * 3 + playerIndex * 7) % 18),
+      seed: 2000 + teamIndex * 10 + playerIndex, role: '', morale: '', fitness: 75, form: 65,
+      appearances: 0, goals: 0, personality: '', happiness: 60, income: 0,
+    })
+    return {
+      id: generated.id, name: generated.name, teamId: team.id,
+      primaryPosition: generated.primaryPosition, secondaryPositions: generated.secondaryPositions,
+      archetype: generated.archetype, attributes: generated.attributes,
+    }
+  }))
+
+const rivalProfileVariants: Omit<RivalTeamProfile, 'teamId' | 'previousSeasonPosition'>[] = [
+  { preferredFormation: '4-4-2', scouting: { withBall: 'Buscan jugar directo hacia los delanteros y no arriesgan demasiado en salida.', withoutBall: 'Defienden en bloque medio y no acostumbran a presionar demasiado arriba.', observedPattern: 'Tienden a atacar especialmente por su banda derecha.' }, collectiveWeaknesses: ['Sus centrales dominan el juego aéreo, pero dejan espacio a la espalda cuando adelantan la línea.'] },
+  { preferredFormation: '4-3-3', scouting: { withBall: 'Intentan progresar con pases cortos y amplitud de los extremos.', withoutBall: 'Presionan arriba durante tramos cortos y después se ordenan en campo propio.' }, collectiveWeaknesses: ['Cuando pierden el balón con los laterales arriba conceden espacios en las bandas.'] },
+  { preferredFormation: '4-2-3-1', scouting: { withBall: 'Buscan al mediapunta entre líneas y aceleran al llegar a tres cuartos.', withoutBall: 'Juntan dos líneas estrechas y protegen bien el carril central.', observedPattern: 'Sufren para salir cuando el rival les presiona desde el saque de portería.' }, collectiveWeaknesses: ['Su salida de balón se vuelve imprecisa ante una presión coordinada.'] },
+  { preferredFormation: '3-5-2', scouting: { withBall: 'Cargan las bandas con los carrileros y buscan centros tempranos.', withoutBall: 'Repliegan con cinco defensas y conceden la iniciativa.' }, collectiveWeaknesses: ['El espacio junto a los carrileros aparece si se les obliga a retroceder rápido.'] },
+]
+
+export const rivalTeamProfiles: RivalTeamProfile[] = leagueTeams
+  .filter((team) => team.id !== 'fc-poblenou')
+  .map((team, index) => ({ teamId: team.id, previousSeasonPosition: 1 + ((index + 4) % 12), ...rivalProfileVariants[index % rivalProfileVariants.length] }))
+
+function createMockGoalEvents(matches: LeagueMatch[]): GoalEvent[] {
+  const clubScorers = [18, 18, 19, 15, 17, 18, 16, 19, 13]
+  const rivalsByTeam = new Map<string, number[]>()
+  rivalPlayers.forEach((player) => {
+    const scorers = rivalsByTeam.get(player.teamId) ?? []
+    scorers.push(player.id)
+    rivalsByTeam.set(player.teamId, scorers)
+  })
+  const events: GoalEvent[] = []
+
+  matches.forEach((match, matchIndex) => {
+    const addGoals = (teamId: string, total: number, side: 'home' | 'away') => {
+      const basePool = teamId === 'fc-poblenou' ? clubScorers : (rivalsByTeam.get(teamId) ?? [])
+      const scorerPool = basePool.length === 4 ? [basePool[0], basePool[0], basePool[1], basePool[2], basePool[0], basePool[3], basePool[1]] : basePool
+      for (let goalIndex = 0; goalIndex < total; goalIndex += 1) {
+        const scorerId = scorerPool[(matchIndex + goalIndex * 2) % scorerPool.length]
+        const eventNumber = events.length + 1
+        events.push({
+          id: `${match.id}-${side}-${goalIndex + 1}`,
+          matchId: match.id,
+          teamId,
+          scorerId,
+          minute: 7 + ((match.matchday * 3 + goalIndex * 17 + matchIndex) % 82),
+          isPenalty: eventNumber % 11 === 0,
+        })
+      }
+    }
+    addGoals(match.homeTeamId, match.homeGoals, 'home')
+    addGoals(match.awayTeamId, match.awayGoals, 'away')
+  })
+  return events
+}
+
+export const goalEvents = createMockGoalEvents(leagueMatches)
+const goalEventErrors = validateGoalEvents(leagueMatches, goalEvents, players, rivalPlayers)
+if (goalEventErrors.length > 0) throw new Error(goalEventErrors.join('\n'))
+
+export const leagueSanctions: LeagueSanction[] = [
+  { id: 'sanction-1', playerId: 7, teamId: 'fc-poblenou', reason: 'Roja directa', startMatchday: 3, matches: 1 },
+  { id: 'sanction-2', playerId: 16, teamId: 'fc-poblenou', reason: 'Doble amarilla', startMatchday: 7, matches: 2 },
+  { id: 'sanction-3', playerId: 1000, teamId: 'ona-sant-adria', reason: 'Roja directa', startMatchday: 2, matches: 2 },
+  { id: 'sanction-4', playerId: 1021, teamId: 'pomar', reason: 'Acumulación de amarillas', startMatchday: 7, matches: 1 },
+  { id: 'sanction-5', playerId: 1092, teamId: 'besos-baro-de-viver', reason: 'Doble amarilla', startMatchday: 9, matches: 1 },
+]
+const sanctionErrors = validateSanctionPlayers(leagueSanctions, players, rivalPlayers)
+if (sanctionErrors.length > 0) throw new Error(sanctionErrors.join('\n'))
+
+export const leagueSeason: LeagueSeasonData = {
+  totalMatchdays: TOTAL_LEAGUE_MATCHDAYS,
+  currentMatchday: CURRENT_MATCHDAY,
+  matches: leagueMatches,
+  goalEvents,
+  sanctions: leagueSanctions,
+}

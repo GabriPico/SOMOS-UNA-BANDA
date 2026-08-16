@@ -15,6 +15,17 @@
   margin-top: 0;
 }
 
+.dashboard-card p { margin: 0; }
+.card-description { color: #555; line-height: 1.45; max-width: 30ch; }
+.card-main-value { font-size: 17px; margin-bottom: 10px !important; }
+.card-lines { color: #444; line-height: 1.6; white-space: pre-line; }
+.card-facts { margin: 0; }
+.card-facts div { display: flex; justify-content: space-between; gap: 16px; margin-top: 6px; }
+.card-facts dt { color: #555; }
+.card-facts dd { font-weight: 600; margin: 0; }
+.card-warning { color: #8a4b18; font-weight: 600; margin-top: 12px !important; }
+.message-preview { color: #555; display: -webkit-box; line-height: 1.45; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+
 .dashboard-card-action {
   color: inherit;
   cursor: pointer;
@@ -27,3 +38,17 @@
   background: #f7f7f7;
   border-color: #666;
 }
+
+.dashboard-card-action:disabled { cursor: default; opacity: .7; }
+
+.league-summary-card { cursor: pointer; transition: background-color 120ms ease, border-color 120ms ease; }
+.league-summary-card:hover, .league-summary-card:focus-visible { background: #f7f7f7; border-color: #888; outline: none; }
+.league-summary-card h2 { margin-bottom: 4px; }
+.league-position-summary { font-size: 17px; margin: 0 0 10px; }
+.mini-standings { border-collapse: collapse; font-size: 13px; width: 100%; }
+.mini-standings th, .mini-standings td { border-bottom: 1px solid #e5e5e5; padding: 4px 6px; text-align: left; }
+.mini-standings thead th { color: #666; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.mini-standings th:last-child, .mini-standings td:last-child { text-align: right; }
+.mini-standings tbody th { font-weight: 400; }
+.mini-standings tr.is-user-team { background: #eef2ef; }
+.mini-standings tr.is-user-team th, .mini-standings tr.is-user-team td { font-weight: 700; }

@@ -1,42 +1,22 @@
-import { staffMembers } from '../data/mockData'
+import { useState } from 'react'
+import { StaffDetail } from '../components/StaffDetail'
+import type { ClubPersonnel, StaffCandidate, StaffPerson, StaffSearchRole, StaffState } from '../domain/staff'
+import { AVAILABILITY_LABELS, STAFF_ROLE_LABELS, calculateStaffBudget, canDismissStaffMember, canHireCandidate, describePersonality, formatCompensation } from '../domain/staff'
 import './StaffScreen.css'
 
-type StaffScreenProps = {
-  onBack: () => void
-}
-
-export function StaffScreen({ onBack }: StaffScreenProps) {
-  return (
-    <section className="staff-screen">
-      <header className="screen-header">
-        <button className="screen-back-button" type="button" onClick={onBack}>
-          ← Panel del club
-        </button>
-        <h2>Staff</h2>
-      </header>
-
-      <div className="staff-table-wrapper">
-        <table className="staff-table" aria-label="Tabla del staff del club">
-          <thead>
-            <tr>
-              <th scope="col">Rol</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Calidad</th>
-              <th scope="col">Personalidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            {staffMembers.map((member) => (
-              <tr key={member.id}>
-                <td>{member.role}</td>
-                <td>{member.name}</td>
-                <td>{member.quality}</td>
-                <td>{member.personality}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  )
+type Props = { staffState: StaffState; onStaffStateChange: (state: StaffState) => void; onBack: () => void }
+const SEARCH_OPTIONS: { value: StaffSearchRole; label: string }[] = [{ value: 'SEGUNDO_ENTRENADOR', label: 'Segundo entrenador' }, { value: 'DELEGADO', label: 'Delegado' }, { value: 'FISIO', label: 'Fisio' }, { value: 'ENTRENADOR_PORTEROS', label: 'Entrenador de porteros' }, { value: 'ANY_HELP', label: 'Cualquiera que pueda echar una mano' }]
+export function StaffScreen({ staffState, onStaffStateChange, onBack }: Props) {
+  const [selected, setSelected] = useState<StaffPerson | ClubPersonnel | null>(null); const [talking, setTalking] = useState(false); const [searchRole, setSearchRole] = useState<StaffSearchRole>('ANY_HELP')
+  const budget = calculateStaffBudget(staffState); const candidates = staffState.candidates.filter((candidate) => searchRole === 'ANY_HELP' || candidate.role === searchRole); const dismiss = selected && selected.role !== 'ENCARGADO_DEL_CAMPO' ? canDismissStaffMember(selected) : null
+  const hire = (candidate: StaffCandidate) => { if (canHireCandidate(staffState, candidate).allowed) onStaffStateChange({ ...staffState, members: [...staffState.members, candidate], candidates: staffState.candidates.filter((person) => person.id !== candidate.id) }) }
+  const dismissSelected = () => { if (selected && selected.role !== 'ENCARGADO_DEL_CAMPO' && canDismissStaffMember(selected).allowed) { onStaffStateChange({ ...staffState, members: staffState.members.filter((person) => person.id !== selected.id) }); setSelected(null) } }
+  return <section className="staff-screen"><header className="screen-header"><button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button><h2>Staff</h2></header>
+    <div className="staff-intro"><div><h3>Cuerpo técnico</h3><p>Somos pocos. Aquí cada uno acaba echando una mano donde haga falta.</p></div><button className="staff-primary-button" type="button" onClick={() => setTalking((value) => !value)}>Hablar con el presidente</button></div>
+    <div className="staff-table-wrapper"><table className="staff-table" aria-label="Cuerpo técnico del club"><thead><tr><th>Rol</th><th>Nombre</th><th>Carácter</th><th>Disponibilidad</th><th>Coste</th></tr></thead><tbody>{staffState.members.map((person) => <tr key={person.id} tabIndex={0} onClick={() => setSelected(person)} onKeyDown={(event) => { if (event.key === 'Enter') setSelected(person) }}><td>{STAFF_ROLE_LABELS[person.role]}</td><td><button type="button">{person.name}</button></td><td>{describePersonality(person)}</td><td>{AVAILABILITY_LABELS[person.availability]}</td><td>{formatCompensation(person.compensation)}</td></tr>)}</tbody></table></div>
+    <section className="staff-budget"><h3>Presupuesto</h3><dl><div><dt>Presupuesto staff</dt><dd>{budget.total} €/mes</dd></div><div><dt>Tu compensación</dt><dd>{budget.headCoach} €/mes</dd></div><div><dt>Comprometido</dt><dd>{budget.committed} €/mes</dd></div><div><dt>Disponible</dt><dd>{budget.available} €/mes</dd></div></dl><p>Los pagos por asistencia y los acuerdos que arregla el presidente no cuentan como salario mensual comprometido.</p></section>
+    {talking && <section className="staff-search"><h3>¿Qué necesitas?</h3><p>“Dime qué te falta y preguntaré por ahí. No te prometo nada.”</p><label>Tipo de ayuda<select value={searchRole} onChange={(event) => setSearchRole(event.target.value as StaffSearchRole)}>{SEARCH_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label><div className="staff-candidates">{candidates.length ? candidates.map((candidate) => { const hiring = canHireCandidate(staffState, candidate); return <article key={candidate.id}><header><div><h4>{candidate.name}</h4><p>{STAFF_ROLE_LABELS[candidate.role]}</p></div><strong>{formatCompensation(candidate.compensation)}</strong></header><p><b>Cómo ha llegado:</b> {candidate.arrivalStory}</p><p><b>Lo que sabes:</b> {candidate.knownClues.join(' ')}</p><p><b>Disponibilidad:</b> {candidate.availabilityNotes.join(' ')}</p>{!hiring.allowed && <p className="staff-warning">{hiring.reason}</p>}<div><button type="button" onClick={() => setSelected(candidate)}>Ver ficha</button><button className="staff-primary-button" type="button" disabled={!hiring.allowed} onClick={() => hire(candidate)}>Contar con {candidate.name.split(' ')[0]}</button></div></article> }) : <p>No ha aparecido nadie con ese perfil. Puedes pedir que pregunte por cualquiera que pueda echar una mano.</p>}</div></section>}
+    <section className="club-personnel"><h3>Personal del club</h3><p>No forma parte de tu cuerpo técnico ni consume su presupuesto.</p><button type="button" onClick={() => setSelected(staffState.clubPersonnel)}><span>{STAFF_ROLE_LABELS[staffState.clubPersonnel.role]}</span><strong>{staffState.clubPersonnel.name}</strong><small>{staffState.clubPersonnel.currentDescription}</small></button></section>
+    {selected && <StaffDetail person={selected} onClose={() => setSelected(null)} onDismiss={dismiss?.allowed ? dismissSelected : undefined} dismissReason={dismiss && !dismiss.allowed ? dismiss.reason : undefined} />}
+  </section>
 }

@@ -45,6 +45,13 @@ incrementales coherentes con el estilo existente.
   posible.
 - Preservar compatibilidad con el estado existente al ampliar modelos.
 
+### Conversaciones y escenas
+
+- Las escenas viven como datos o funciones fuera de React y forman grafos de nodos tipados.
+- La UI de conversaciones representa el nodo actual y lanza acciones; no codificar secuencias mediante cadenas de pasos o `if` dentro del componente.
+- Los efectos persistentes de una escena actualizan el estado de partida. Una escena completada no debe reiniciarse al navegar.
+- Los personajes recurrentes se definen una sola vez con identificadores estables.
+
 ### Entrenamiento
 
 La lógica principal de entrenamiento está separada de React y actualmente se

@@ -1,0 +1,28 @@
+.inbox-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
+.inbox-description { color: #555; margin: 14px 0 18px; }
+.inbox-counts { display: flex; gap: 8px; margin: 16px 0 12px; }
+.inbox-layout { display: grid; grid-template-columns: minmax(250px, 34%) minmax(0, 1fr); min-height: 430px; }
+.inbox-list { border: 1px solid #ddd; }
+.inbox-list > h3, .inbox-message-detail > h3 { background: #f7f7f7; font-size: 12px; letter-spacing: .05em; margin: 0; padding: 9px 12px; text-transform: uppercase; }
+.inbox-list-item { background: #fff; border: 0; border-top: 1px solid #e4e4e4; cursor: pointer; display: flex; flex-direction: column; padding: 11px 12px; text-align: left; width: 100%; }
+.inbox-list-item:hover { background: #f7f7f7; }
+.inbox-list-item.is-selected { background: #eef2ef; box-shadow: inset 3px 0 #4d6b54; }
+.inbox-list-item.is-requires-response { box-shadow: inset 3px 0 #a36516; }
+.inbox-list-item.is-selected.is-requires-response { background: #faf5ec; }
+.inbox-list-sender { color: #555; font-size: 13px; }
+.new-message-dot { color: #3f684b; font-size: 9px; margin-right: 6px; }
+.inbox-list-item strong { margin: 3px 0; }
+.inbox-list-item small, .message-status-line { color: #777; }
+.inbox-message-detail { border: 1px solid #ddd; border-left: 0; min-width: 0; padding: 0 20px 20px; }
+.inbox-message-detail > h3 { margin: 0 -20px 20px; }
+.message-sender-type { color: #555; font-size: 12px; margin-bottom: 3px; text-transform: uppercase; }
+.inbox-message-detail h4 { font-size: 20px; margin: 0; }
+.message-status-line { font-size: 13px; margin-top: 5px; }
+.message-player-link { background: none; border: 0; color: #244d31; cursor: pointer; padding: 0; text-decoration: underline; }
+.message-body { line-height: 1.65; max-width: 75ch; white-space: pre-line; }
+.message-responses { border-top: 1px solid #ddd; display: grid; gap: 8px; margin-top: 24px; padding-top: 16px; }
+.message-responses h5 { font-size: 13px; margin: 0; text-transform: uppercase; }
+.message-responses button { background: #fff; border: 1px solid #bbb; cursor: pointer; padding: 8px 10px; text-align: left; }
+.message-responses button:hover { background: #f5f5f5; }
+.message-responses small, .message-resolved-note { color: #666; }
+@media (max-width: 760px) { .inbox-layout { grid-template-columns: 1fr; } .inbox-message-detail { border-left: 1px solid #ddd; border-top: 0; } }

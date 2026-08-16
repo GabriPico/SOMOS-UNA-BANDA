@@ -1,5 +1,7 @@
 import type { Player, PlayerAttribute, TacticalPlan, TrainingBlock, TrainingIntensity, TrainingQualityLabel } from './models'
-import { staffMembers, tacticalFamiliarity } from '../data/mockData'
+import { tacticalFamiliarity } from '../data/mockData'
+import { initialStaffState } from '../data/staffData'
+import { calculateTrainingStaffImpact } from './staff'
 import { FULL_SESSION_BLOCKS } from './training'
 import { PERSONALITY_MODIFIERS, BETA_PERSONALITIES } from './trainingPersonality'
 import { POSITION_RATING_WEIGHTS, POSITION_TO_RATING_PROFILE } from './playerRatings'
@@ -43,7 +45,7 @@ export function getPhysicalPenalty(fitness: number, fatigue: number) { const fit
 export function getEffectiveMatchAttributes(state: TrainingPlayerState) { const penalty = getPhysicalPenalty(state.fitness, state.fatigue); return Object.fromEntries(Object.keys(state.baseAttributes).map((key) => { const attribute = key as PlayerAttribute; const physicalFactor = PHYSICAL_ATTRIBUTES.includes(attribute) ? 1 : attribute === 'intensidad' ? .5 : 0; return [attribute, clamp20(getEffectiveAttribute(state, attribute) + penalty * physicalFactor)] })) as TrainingPlayerState['baseAttributes'] }
 
 function qualityLabel(value: number, attendance: number): TrainingQualityLabel { if (attendance < TRAINING_BALANCE.minimumAttendance) return 'De mínimos'; return value >= 85 ? 'Excelente' : value >= 70 ? 'Buena' : value >= 50 ? 'Correcta' : value >= 30 ? 'Floja' : 'Mala' }
-export function calculateSessionQuality(state: TrainingGameState, attendance: number) { if (attendance < TRAINING_BALANCE.minimumAttendance) return { value: 10, label: 'De mínimos' as const }; const attendanceScore = 55 + ((attendance - 13) / 7) * 45; const staffQuality = mean(staffMembers.map((member) => member.quality)); const group = mean([getTeamHappiness(state), getTeamFitness(state), 100 - getTeamFatigue(state)]); const value = clamp100(attendanceScore * .35 + getTeamAuthority(state) * .3 + staffQuality * .2 + group * .15); return { value, label: qualityLabel(value, attendance) } }
+export function calculateSessionQuality(state: TrainingGameState, attendance: number) { if (attendance < TRAINING_BALANCE.minimumAttendance) return { value: 10, label: 'De mínimos' as const }; const attendanceScore = 55 + ((attendance - 13) / 7) * 45; const staffQuality = calculateTrainingStaffImpact(initialStaffState.members).quality; const group = mean([getTeamHappiness(state), getTeamFitness(state), 100 - getTeamFatigue(state)]); const value = clamp100(attendanceScore * .35 + getTeamAuthority(state) * .3 + staffQuality * .2 + group * .15); return { value, label: qualityLabel(value, attendance) } }
 function attributeState(player: TrainingPlayerState, attribute: PlayerAttribute): AttributeTrainingState { return player.attributes[attribute] ??= { bonus: 0, consolidation: 0, consecutiveWeeks: 0, trainedThisWeek: false, maintainedThisWeek: false, exposuresThisWeek: 0 } }
 
 function processAttribute(state: TrainingGameState, player: Player, trainingPlayer: TrainingPlayerState, attribute: PlayerAttribute, intensity: TrainingIntensity, qualityMultiplier: number, complete = false) {

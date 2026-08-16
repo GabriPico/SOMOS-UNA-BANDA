@@ -1,0 +1,39 @@
+.dressing-room-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
+.dressing-room-description { color: #555; line-height: 1.5; margin: 16px 0 20px; max-width: 900px; }
+.dressing-room-summary { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dressing-room-summary article { border: 1px solid #ddd; padding: 14px; }
+.dressing-room-summary h3, .dressing-room-section > h3 { font-size: 13px; letter-spacing: .04em; margin: 0 0 8px; text-transform: uppercase; }
+.dressing-room-summary strong { display: block; font-size: 20px; }
+.dressing-room-summary p, .dressing-room-issue p { color: #666; margin: 4px 0 0; }
+.dressing-room-section { margin-top: 24px; }
+.dressing-room-issues { display: grid; gap: 8px; }
+.dressing-room-issue { border: 1px solid #ddd; border-left-width: 4px; padding: 11px 12px; }
+.dressing-room-issue.is-positive { border-left-color: #4d6b54; }
+.dressing-room-issue.is-warning { border-left-color: #b7791f; }
+.dressing-room-issue.is-negative { border-left-color: #9b3a32; }
+.dressing-room-table-wrapper { overflow-x: auto; }
+.dressing-room-table { border-collapse: collapse; min-width: 760px; width: 100%; }
+.dressing-room-table th, .dressing-room-table td { border-bottom: 1px solid #ddd; padding: 10px 12px; text-align: left; white-space: nowrap; }
+.dressing-room-table th { background: #f7f7f7; font-weight: 600; }
+.dressing-room-table tbody tr { cursor: pointer; }
+.dressing-room-table tbody tr:hover, .dressing-room-table tbody tr:focus { background: #f4f7f4; outline: 2px solid #4d6b54; outline-offset: -2px; }
+.dressing-room-voices { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dressing-room-voices article { border: 1px solid #ddd; display: flex; flex-direction: column; padding: 12px; }
+.dressing-room-voices span { color: #555; margin-top: 3px; }
+.dressing-room-voices small { color: #244d31; font-weight: 600; margin-top: 8px; }
+.dressing-room-section-description { color: #555; margin: -2px 0 14px; }
+.dressing-room-president-trust { border: 1px solid #ddd; display: flex; justify-content: space-between; margin-bottom: 12px; padding: 14px; }
+.dressing-room-expectation-list { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dressing-room-expectation-list article { border: 1px solid #ddd; padding: 14px; }
+.dressing-room-expectation-list h4 { font-size: 13px; margin: 0 0 12px; text-transform: uppercase; }
+.dressing-room-expectation-list dl { margin: 0; }
+.dressing-room-expectation-list dl div { margin-top: 10px; }
+.dressing-room-expectation-list dt { color: #666; font-size: 12px; }
+.dressing-room-expectation-list dd { font-weight: 600; margin: 2px 0 0; }
+.dressing-room-changes { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.dressing-room-changes li { border-bottom: 1px solid #eee; display: flex; gap: 9px; padding: 7px 0; }
+.dressing-room-changes li span { font-weight: 700; }
+.dressing-room-changes .is-positive span { color: #416249; }
+.dressing-room-changes .is-negative span { color: #9b3a32; }
+@media (max-width: 800px) { .dressing-room-summary { grid-template-columns: 1fr; } .dressing-room-voices { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dressing-room-expectation-list { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .dressing-room-voices { grid-template-columns: 1fr; } }

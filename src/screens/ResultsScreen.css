@@ -1,0 +1,16 @@
+.results-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
+.match-results { border: 1px solid #ddd; }
+.match-result { align-items: center; border-bottom: 1px solid #ddd; display: grid; grid-template-columns: minmax(180px, 1fr) 72px minmax(180px, 1fr) 60px; min-height: 58px; padding: 8px 14px; }
+.match-result:last-child { border-bottom: 0; }
+.match-result.is-user-match { background: #f2f6f3; }
+.match-team { min-width: 0; }
+.home-team { text-align: right; }
+.away-team { text-align: left; }
+.match-score { font-size: 17px; text-align: center; }
+.match-status { color: #777; text-align: right; }
+
+@media (max-width: 720px) {
+  .results-screen { padding: 14px; }
+  .match-result { grid-template-columns: minmax(110px, 1fr) 54px minmax(110px, 1fr); padding: 8px; }
+  .match-status { grid-column: 1 / -1; margin-top: 3px; text-align: center; }
+}
