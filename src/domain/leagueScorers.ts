@@ -9,7 +9,7 @@ export function calculateTopScorers(
   rivalPlayers: RivalPlayer[],
   throughMatchday: number,
 ): TopScorerRow[] {
-  const eligibleMatchIds = new Set(matches.filter((match) => match.status === 'played' && match.matchday <= throughMatchday).map((match) => match.id))
+  const eligibleMatchIds = new Set(matches.filter((match) => match.competitionType !== 'FRIENDLY' && match.status === 'played' && match.matchday <= throughMatchday).map((match) => match.id))
   const playersById = new Map<number, { name: string; teamId: string }>()
   clubPlayers.forEach((player) => playersById.set(player.id, { name: player.name, teamId: USER_TEAM_ID }))
   rivalPlayers.forEach((player) => playersById.set(player.id, { name: player.name, teamId: player.teamId }))

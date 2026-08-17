@@ -1,0 +1,9 @@
+.training-event-screen { min-height: 70vh; display: grid; place-items: center; padding: 2rem; background: linear-gradient(150deg,#263d2e,#14251c); }
+.training-event-screen article { width: min(680px,100%); min-height: 320px; padding: 2rem; background: #f8f5ec; border-top: 5px solid #c8952e; display: flex; flex-direction: column; justify-content: center; }
+.training-event-screen article>span { color: #806322; font-size: .75rem; font-weight: 800; letter-spacing: .13em; }
+.training-event-screen h2 { margin: .5rem 0 1.5rem; font-size: 2rem; }
+.training-event-screen article button { align-self: flex-end; margin-top: auto; }
+.training-event-screen nav { display: flex; gap: .4rem; margin-top: -3rem; }
+.training-event-screen nav i { width: 32px; height: 4px; background: #738078; }
+.training-event-screen nav i.is-complete { background: #d9a83f; }
+.next-session-plan{display:grid;gap:4px;margin:14px 0;padding:12px;border-left:3px solid #c8952e;background:#f1ede2}.training-plan-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.training-plan-actions button{margin-top:0}.next-session-changes p{margin:.35rem 0}

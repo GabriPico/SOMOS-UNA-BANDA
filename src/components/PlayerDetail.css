@@ -10,6 +10,7 @@
 .player-rating-summary .player-context-text { font-size: .95rem; max-width: 150px; }
 .player-rating-summary ul { display: flex; gap: 10px; list-style: none; padding: 0; margin: 0 0 0 auto; }
 .player-rating-summary li { border: 1px solid #ccc; padding: 6px 9px; }
+.player-rating-summary li{display:grid;gap:3px}.player-rating-summary .star-rating{font-size:1rem}.player-state-sections{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.player-state-sections section,.player-performance{border:1px solid #ddd;padding:13px}.player-state-sections h4,.player-performance h4{margin:0 0 10px;text-transform:uppercase;font-size:.8rem;letter-spacing:.08em}.player-state-sections dl,.player-performance dl{display:grid;gap:7px;margin:0}.player-state-sections dl div,.player-performance dl div{display:flex;justify-content:space-between;gap:12px}.player-state-sections dd,.player-performance dd{margin:0;font-weight:700}.player-performance dl{grid-template-columns:repeat(4,1fr);gap:16px}.player-performance dl div{display:grid}.player-performance h5{margin:14px 0 4px;text-transform:uppercase;font-size:.72rem;letter-spacing:.07em}.player-performance p{margin:0;font-variant-numeric:tabular-nums}
 .player-profile { padding: 14px 0; }
 .player-profile h4, .player-profile p { margin: 0 0 6px; }
 .player-existing-data { display: grid; grid-template-columns: repeat(6, 1fr); background: #f7f7f7; margin: 0 0 18px; padding: 12px; gap: 12px; }
@@ -20,4 +21,4 @@
 .attribute-groups section { border: 1px solid #ddd; padding: 12px; }
 .attribute-groups h4 { text-transform: uppercase; font-size: .8rem; letter-spacing: .08em; margin: 0 0 10px; }
 .attribute-groups dl { display: grid; gap: 7px; margin: 0; }
-@media (max-width: 700px) { .player-existing-data { grid-template-columns: repeat(2, 1fr); } .attribute-groups { grid-template-columns: 1fr; } .player-rating-summary { align-items: start; flex-wrap: wrap; } .player-rating-summary ul { margin-left: 0; } }
+@media (max-width: 700px) { .player-existing-data { grid-template-columns: repeat(2, 1fr); } .attribute-groups,.player-state-sections { grid-template-columns: 1fr; } .player-performance dl{grid-template-columns:repeat(2,1fr)} .player-rating-summary { align-items: start; flex-wrap: wrap; } .player-rating-summary ul { margin-left: 0; } }

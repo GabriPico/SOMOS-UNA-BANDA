@@ -1,7 +1,7 @@
 import type { LeagueMatch, LeagueTeam, MatchOutcome, StandingRow } from './models'
 
 export function getMatchesByMatchday(matches: LeagueMatch[], matchday: number): LeagueMatch[] {
-  return matches.filter((match) => match.matchday === matchday)
+  return matches.filter((match) => match.competitionType !== 'FRIENDLY' && match.matchday === matchday)
 }
 
 export function calculateStandings(teams: LeagueTeam[], matches: LeagueMatch[], throughMatchday: number): StandingRow[] {
@@ -12,7 +12,7 @@ export function calculateStandings(teams: LeagueTeam[], matches: LeagueMatch[], 
   }]))
 
   matches
-    .filter((match) => match.status === 'played' && match.matchday <= throughMatchday)
+    .filter((match) => match.competitionType !== 'FRIENDLY' && match.status === 'played' && match.matchday <= throughMatchday)
     .sort((a, b) => a.matchday - b.matchday || a.id.localeCompare(b.id))
     .forEach((match) => {
       const home = rows.get(match.homeTeamId)

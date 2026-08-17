@@ -1,0 +1,11 @@
+.tactics-screen{display:grid;gap:14px;padding-bottom:14px}
+.tactics-screen>.tactical-workspace,.tactics-screen>.tactical-instructions,.tactics-screen>.tactics-selection-hint,.tactics-screen>.tactics-selected-player{margin-inline:14px}
+.tactics-header>div{display:grid;gap:5px}.tactics-header h2{margin:0}
+.tactics-selection-hint{margin-block:0;padding:9px 12px;background:#f1f3e8;color:#5d6b62}
+.tactics-selected-player{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border:1px solid #d7dcd7;background:#fff}
+.tactics-selected-player>div{display:grid}.tactics-selected-player span{color:#69746d;font-size:.82rem}
+.assistant-lineup-proposal,.assistant-lineup-preview { margin: 0 0 1rem; padding: 1rem; border: 1px solid #b6a06f; background: #fff9e9; }
+.assistant-lineup-proposal { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.assistant-lineup-proposal div { display: grid; gap: .2rem; }
+.assistant-lineup-proposal span { font-size: .72rem; letter-spacing: .1em; color: #7e692f; }
+.assistant-lineup-preview div { display: flex; justify-content: flex-end; gap: .6rem; }

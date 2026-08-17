@@ -7,7 +7,8 @@ export type AvailabilityLevel = 'VERY_HIGH' | 'HIGH' | 'MEDIUM' | 'LOW'
 export type CompensationType = 'MONTHLY' | 'FREE' | 'PRESIDENT_FAVOR' | 'PRESIDENT_PAYS' | 'PAY_PER_ATTENDANCE'
 export type PresidentProtection = 'NONE' | 'RECOMMENDED' | 'PROTECTED' | 'INITIALLY_IMPOSED'
 export type CandidateSource = 'PRESIDENT_CONTACT' | 'PLAYER_RECOMMENDATION' | 'STAFF_RECOMMENDATION' | 'FORMER_CLUB_MEMBER' | 'SPONTANEOUS'
-export type StaffSearchRole = Exclude<StaffRole, 'PRIMER_ENTRENADOR'> | 'ANY_HELP'
+export type StaffSearchRequestRole = 'SEGUNDO_ENTRENADOR' | 'DELEGADO' | 'ANY_HELP'
+export type StaffSearchRequest = { id: string; requestedRole: StaffSearchRequestRole; status: 'PENDING' | 'CANDIDATES_FOUND' | 'CLOSED'; origin: 'MANOLO'; candidateIds: string[]; requestedAt?: string; resolvesAt?: string }
 
 export type StaffCapabilities = {
   training: number
@@ -28,7 +29,6 @@ export type StaffPerson = {
   id: string
   role: StaffRole
   name: string
-  age?: number
   personality?: StaffPersonality
   personalityKnowledge: PersonalityKnowledge
   knownClues: string[]
@@ -51,8 +51,7 @@ export type ClubPersonnel = Omit<StaffPerson, 'role' | 'compensation' | 'preside
   groupRelationship: number
 }
 export type StaffCandidate = StaffPerson & { source: CandidateSource }
-export type StaffBudget = { monthlyTotal: number; headCoachMonthlyCompensation: number }
-export type StaffState = { members: StaffPerson[]; clubPersonnel: ClubPersonnel; budget: StaffBudget; candidates: StaffCandidate[] }
+export type StaffState = { members: StaffPerson[]; clubPersonnel: ClubPersonnel; candidates: StaffCandidate[] }
 
 export type StaffImpact = {
   trainingQuality: number
@@ -92,12 +91,6 @@ const personalityEffects: Record<StaffPersonality, Partial<Record<keyof StaffImp
 export function monthlyBudgetCost(person: StaffPerson): number {
   return person.compensation.type === 'MONTHLY' ? person.compensation.amount : 0
 }
-export function calculateStaffBudget(state: Pick<StaffState, 'members' | 'budget'>) {
-  const headCoach = state.members.find((person) => person.role === 'PRIMER_ENTRENADOR')
-  const headCoachCost = headCoach ? monthlyBudgetCost(headCoach) : state.budget.headCoachMonthlyCompensation
-  const committed = state.members.reduce((sum, person) => sum + monthlyBudgetCost(person), 0)
-  return { total: state.budget.monthlyTotal, headCoach: headCoachCost, committed, available: Math.max(0, state.budget.monthlyTotal - committed) }
-}
 export function ensureHeadCoach(members: StaffPerson[], headCoach: StaffPerson): StaffPerson[] {
   return members.some((person) => person.role === 'PRIMER_ENTRENADOR') ? members : [headCoach, ...members]
 }
@@ -106,11 +99,15 @@ export const canDismissStaffMember = (person: StaffPerson) => {
   if (person.presidentProtection === 'PROTECTED' || person.presidentProtection === 'INITIALLY_IMPOSED') return { allowed: false, reason: 'El presidente no autoriza este cambio sin hablarlo antes.' }
   return { allowed: true }
 }
-export function canHireCandidate(state: StaffState, candidate: StaffCandidate) {
+export function canHireCandidate(availableBudget: number, candidate: StaffCandidate) {
   const cost = monthlyBudgetCost(candidate)
-  return cost <= calculateStaffBudget(state).available
+  return cost === 0 || cost <= availableBudget
     ? { allowed: true }
     : { allowed: false, reason: 'No queda suficiente presupuesto mensual para este acuerdo.' }
+}
+export function resolveStaffSearchRequest(request: StaffSearchRequest, candidateIds: string[]): StaffSearchRequest {
+  if (request.status !== 'PENDING') return request
+  return { ...request, status: 'CANDIDATES_FOUND', candidateIds: [...candidateIds] }
 }
 
 function availableStaff(members: StaffPerson[]) {

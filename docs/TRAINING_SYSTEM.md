@@ -1,12 +1,38 @@
 # Sistema de entrenamiento
 
 La fuente ejecutable está en `src/domain/trainingEngine.ts`, `trainingBalance.ts`,
-`trainingPersonality.ts` y `trainingTypes.ts`. La pantalla solo planifica, ejecuta
-y representa los resultados.
+`trainingPersonality.ts`, `trainingSessionResolver.ts` y `trainingTypes.ts`. La
+pantalla de Entrenamiento solo planifica y consulta resultados. La resolución se
+produce al alcanzar el checkpoint temporal y se representa en una escena aparte.
+
+## Planificación, resolución y resultado
+
+Cada sesión distingue la planificación (`TrainingSessionPlan` y previsiones), el
+resultado persistente (`SessionResult`) y sus eventos tipados. Antes del checkpoint
+no existe resultado. `resolveTrainingSession` resuelve una sola vez asistencia y
+Staff reales, incidencias, calidad y efectos; una sesión ya resuelta se devuelve
+sin nuevas tiradas.
+
+Las fases visuales de llegada, bloques, incidencias y resumen se derivan del
+resultado. El índice de fase pertenece a React y no se persiste como hecho de la
+partida.
+
+La disponibilidad prevista se presenta al inicio y no se clasifica como
+incidencia. Las incidencias quedan reservadas para hechos que alteran la sesión
+(lesión, molestias, falta excepcional sin avisar); el rendimiento cotidiano,
+los retrasos leves y los comentarios del Staff son observaciones. Una sesión
+normal puede terminar sin incidencias. Tras la primera sesión se muestra el plan
+guardado para la segunda y se permite mantenerlo o abrirlo para modificarlo.
+`PLANNED` sigue siendo editable; solo `COMPLETED` es inmutable.
+
+Los valores humanos y físicos se conservan numéricamente en dominio, pero la UI
+los presenta mediante escalas cualitativas compartidas. La autoridad representa
+la percepción general del entrenador; el estado individual se expresa como
+relación con el entrenador, no como un porcentaje de autoridad personal.
 
 ## Estado guardable
 
-`TrainingGameState` conserva semana, semilla reproducible, sesiones, resultados,
+`GameState.training` (`TrainingGameState`) conserva semana, semilla reproducible, sesiones, resultados,
 estado físico y humano individual, atributos base, bonus provisional,
 consolidación, continuidad y memoria táctica. Actualmente vive en `App.tsx`; no
 existe todavía persistencia a disco.

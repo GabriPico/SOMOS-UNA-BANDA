@@ -32,6 +32,11 @@ incrementales coherentes con el estilo existente.
 
 ## Arquitectura y convenciones
 
+- El motor de partido resuelve acciones mediante atributos individuales y contexto futbolístico; no mediante una comparación única de medias ni modificadores humanos globales.
+- La velocidad, el cronómetro y la pausa visual del partido nunca deben alterar la simulación determinista ni actuar como fuente de verdad temporal.
+- Cada gol es una interrupción automática del partido: se presenta una vez, ofrece mantener o modificar mediante el workspace táctico existente y conserva su estado serializable hasta reanudar.
+- `TacticsScreen` y la intervención de partido deben reutilizar el mismo workspace táctico y las mismas operaciones de alineación.
+
 - `src/domain` contiene modelos y lógica independiente de React.
 - `src/data` contiene datos mock y datos iniciales.
 - `src/screens` compone pantallas.
@@ -51,6 +56,14 @@ incrementales coherentes con el estilo existente.
 - La UI de conversaciones representa el nodo actual y lanza acciones; no codificar secuencias mediante cadenas de pasos o `if` dentro del componente.
 - Los efectos persistentes de una escena actualizan el estado de partida. Una escena completada no debe reiniciarse al navegar.
 - Los personajes recurrentes se definen una sola vez con identificadores estables.
+- El onboarding forma parte del `GameState` y de la pretemporada real; no debe implementarse como un modo tutorial paralelo.
+
+### Economía deportiva
+
+- El presupuesto deportivo mensual es una caja común para entrenador, staff y jugadores; no pertenece a `StaffState`.
+- Las cuotas de jugadores pertenecen a las finanzas del club y nunca aumentan el presupuesto deportivo controlado por el entrenador.
+- Los planes de cuota y las compensaciones a jugadores viven en las finanzas de la partida. El presupuesto deportivo solo contabiliza compensaciones financiadas desde ese presupuesto; no inferirlas de la cuota.
+- Los resúmenes económicos se derivan mediante lógica de dominio; no duplicar gastos calculados en el estado ni en React.
 
 ### Entrenamiento
 
@@ -96,6 +109,10 @@ personalidades.
   `src/domain/positionFamiliarity.ts`.
 - La Calidad General, la mejor posición y los ratings son valores derivados; no
   guardarlos como números editables o duplicados.
+- La Calidad General y la calidad por posición se presentan al usuario mediante
+  estrellas; Forma, Felicidad, Condición y Cansancio mediante etiquetas
+  cualitativas. Los atributos deportivos 1–20 y las estadísticas objetivas de
+  partido permanecen numéricos.
 - Equipo y Tácticas reutilizan `src/components/PlayerDetail.tsx`.
 
 ### Atributos efectivos y entrenamiento
@@ -127,6 +144,14 @@ Las mejoras permanentes deben pasar por el sistema de consolidación.
 - Un portero no debe entrenar ni utilizar `alcanceAereo` como equivalente a su
   juego aéreo.
 - El bloque específico de portería solo se muestra si `POR` es posición natural.
+
+### Convocatorias
+
+- Los partidos oficiales de Liga requieren una convocatoria anunciada de 11 a 18 jugadores antes de poder comenzar.
+- Solo los convocados pueden formar el once y el banquillo de un partido oficial.
+- Los jugadores `TRIAL` pueden entrenar y jugar amistosos, pero no son elegibles para Liga.
+- Lesión, sanción, indisponibilidad o falta de inscripción nunca cuentan como descarte técnico.
+- Cada convocatoria conserva historial por partido. Las consecuencias humanas se aplican una sola vez al anunciarla y dependen del contexto individual.
 
 Consultar `docs/PLAYER_SYSTEM.md` antes de cambiar jugadores, ratings,
 generación, atributos, ficha o Tácticas.
@@ -292,8 +317,11 @@ Si documentación y código parecen contradecirse:
 - Limitar cada tarea estrictamente a su alcance.
 - No hacer refactorizaciones masivas salvo que sean necesarias.
 - No rediseñar pantallas por iniciativa propia.
+- Los escenarios DEV deben reutilizar la lógica real de dominio, ser reproducibles y permanecer excluidos de producción.
 - Registrar decisiones nuevas en `docs/DECISIONS.md`.
 - Actualizar documentación específica cuando cambie un sistema de dominio.
+- El avance temporal no depende de volver al Panel; cualquier actividad temporal
+  completada debe poder invocar la acción común hacia el siguiente checkpoint.
 
 ## Verificación
 

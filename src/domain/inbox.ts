@@ -1,5 +1,6 @@
 export type MessageSenderType = 'president' | 'staff' | 'player' | 'club' | 'competition'
 export type MessageStatus = 'new' | 'read' | 'requires-response' | 'resolved'
+export type MessageAttention = 'NORMAL' | 'IMPORTANT' | 'REQUIRES_ATTENTION'
 export type ExpectationAssessment = 'far-above' | 'above' | 'on-track' | 'below' | 'far-below'
 export type ClubExpectationType = 'league' | 'dressing-room'
 
@@ -13,6 +14,8 @@ export type InboxMessage = {
   body: string
   matchday: number
   status: MessageStatus
+  attention: MessageAttention
+  createdAt: string
   responseOptions?: MessageResponseOption[]
 }
 export type ClubExpectation = {
@@ -44,3 +47,5 @@ export function getPresidentTrustLabel(value: number) {
 
 export const countNewMessages = (messages: InboxMessage[]) => messages.filter((message) => message.status === 'new').length
 export const countMessagesRequiringResponse = (messages: InboxMessage[]) => messages.filter((message) => message.status === 'requires-response').length
+export const countMessagesRequiringAttention = (messages: InboxMessage[]) => messages.filter((message) => message.attention === 'REQUIRES_ATTENTION' && message.status !== 'read' && message.status !== 'resolved').length
+export const getNextMessageRequiringAttention = (messages: InboxMessage[]) => messages.find((message) => message.attention === 'REQUIRES_ATTENTION' && message.status !== 'read' && message.status !== 'resolved')

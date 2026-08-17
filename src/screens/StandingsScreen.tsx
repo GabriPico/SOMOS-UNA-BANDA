@@ -1,16 +1,16 @@
 import { MatchdaySelector } from '../components/MatchdaySelector'
 import { LeagueTabs } from '../components/LeagueTabs'
 import { leagueSeason, leagueTeams } from '../data/mockData'
-import type { MatchOutcome } from '../domain/models'
+import type { LeagueMatch, MatchOutcome } from '../domain/models'
 import { calculateStandings } from '../domain/leagueStandings'
 import './StandingsScreen.css'
 
-type StandingsScreenProps = { onBack: () => void; onOpenResults: () => void; onOpenSanctions: () => void; onOpenScorers: () => void; selectedMatchday: number; onMatchdayChange: (matchday: number) => void }
+type StandingsScreenProps = { matches: LeagueMatch[]; currentMatchday: number; onBack: () => void; onOpenResults: () => void; onOpenSanctions: () => void; onOpenScorers: () => void; selectedMatchday: number; onMatchdayChange: (matchday: number) => void }
 const outcomeLabels: Record<MatchOutcome, string> = { G: 'Victoria', E: 'Empate', P: 'Derrota' }
 
-export function StandingsScreen({ onBack, onOpenResults, onOpenSanctions, onOpenScorers, selectedMatchday, onMatchdayChange }: StandingsScreenProps) {
+export function StandingsScreen({ matches, currentMatchday, onBack, onOpenResults, onOpenSanctions, onOpenScorers, selectedMatchday, onMatchdayChange }: StandingsScreenProps) {
   const teamNames = new Map(leagueTeams.map((team) => [team.id, team.name]))
-  const standings = calculateStandings(leagueTeams, leagueSeason.matches, selectedMatchday)
+  const standings = calculateStandings(leagueTeams, matches, selectedMatchday)
 
   return (
     <section className="standings-screen">
@@ -22,7 +22,7 @@ export function StandingsScreen({ onBack, onOpenResults, onOpenSanctions, onOpen
       <LeagueTabs activeTab="standings" onSelect={(tab) => { if (tab === 'results') onOpenResults(); if (tab === 'sanctions') onOpenSanctions(); if (tab === 'scorers') onOpenScorers() }} />
 
       <MatchdaySelector
-        currentMatchday={leagueSeason.currentMatchday}
+        currentMatchday={currentMatchday}
         selectedMatchday={selectedMatchday}
         totalMatchdays={leagueSeason.totalMatchdays}
         onSelect={onMatchdayChange}

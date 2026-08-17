@@ -1,5 +1,5 @@
 export type ScreenId =
-  | 'main-menu' | 'club-panel' | 'staff' | 'squad' | 'tactics' | 'training'
+  | 'main-menu' | 'club-panel' | 'staff' | 'squad' | 'tactics' | 'training' | 'training-event'
   | 'match' | 'next-match' | 'post-match' | 'standings' | 'league-results' | 'league-scorers' | 'league-sanctions' | 'dressing-room' | 'inbox'
 
 export type PlayerPosition =
@@ -41,6 +41,8 @@ export type Player = {
   happiness: number
   income: number
   attributes: PlayerAttributes
+  clubStatus?: 'SQUAD' | 'TRIAL'
+  origin?: 'PREVIOUS_SEASON' | 'PRESEASON_TRIAL'
 }
 
 export type PlayStyle = 'Equilibrada' | 'Juego directo' | 'Posesión' | 'Repliegue y contraataque'
@@ -73,7 +75,8 @@ export type LeagueTeam = { id: string; name: string }
 export type MatchOutcome = 'G' | 'E' | 'P'
 export type StandingRow = { position: number; teamId: LeagueTeam['id']; played: number; won: number; drawn: number; lost: number; goalsFor: number; goalsAgainst: number; goalDifference: number; points: number; recentForm: MatchOutcome[] }
 export type MatchStatus = 'played' | 'scheduled'
-export type LeagueMatch = { id: string; matchday: number; homeTeamId: LeagueTeam['id']; awayTeamId: LeagueTeam['id']; homeGoals: number; awayGoals: number; status: MatchStatus; date: string; time: string }
+export type CompetitionType = 'LEAGUE' | 'FRIENDLY'
+export type LeagueMatch = { id: string; matchday: number; competitionType?: CompetitionType; homeTeamId: LeagueTeam['id']; awayTeamId: LeagueTeam['id']; homeGoals: number; awayGoals: number; status: MatchStatus; date: string; time: string }
 export type GoalEvent = { id: string; matchId: string; teamId: LeagueTeam['id']; scorerId: number; minute: number; isPenalty: boolean }
 export type RivalPlayer = Pick<Player, 'id' | 'name' | 'primaryPosition' | 'secondaryPositions' | 'archetype' | 'attributes'> & { teamId: LeagueTeam['id'] }
 export type RivalTeamProfile = {

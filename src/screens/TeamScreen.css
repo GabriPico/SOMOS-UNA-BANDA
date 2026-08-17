@@ -34,3 +34,5 @@
 .team-table tbody tr { cursor: pointer; }
 .team-table tbody tr:hover, .team-table tbody tr:focus { background: #f4f7f4; outline: 2px solid #4d6b54; outline-offset: -2px; }
 .player-name-button { border: 0; background: none; color: #244d31; font: inherit; font-weight: 600; padding: 0; text-decoration: underline; cursor: pointer; }
+.trial-player-badge { display: inline-block; margin-left: .55rem; padding: .15rem .4rem; border: 1px solid #c8952e; border-radius: 999px; color: #8a6418; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.star-rating{color:#9a6b16;letter-spacing:.02em;white-space:nowrap;font-weight:800}.recent-ratings{font-variant-numeric:tabular-nums;font-size:.86rem}.team-table{font-size:.92rem}.team-table th,.team-table td{padding:9px 8px}

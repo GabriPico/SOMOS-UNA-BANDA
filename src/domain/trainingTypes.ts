@@ -20,6 +20,16 @@ export type TacticalFamiliarityState = {
   setPieces: FamiliarityMemory
   setPieceWeeksWithoutTraining: number
 }
+export type TrainingPlanningStatus = 'UNPLANNED' | 'PLANNED' | 'COMPLETED'
+export type TrainingSessionEvent =
+  | { type: 'PLAYER_ABSENCE'; playerId: number; planned: boolean; warned: boolean; reason?: string }
+  | { type: 'PLAYER_LATE'; playerId: number; minutes: number }
+  | { type: 'PLAYER_DISCOMFORT'; playerId: number; area: string }
+  | { type: 'PLAYER_INJURY'; playerId: number; severity: 'MINOR' | 'SERIOUS' }
+  | { type: 'PLAYER_PERFORMANCE'; playerId: number; level: 'GOOD' | 'POOR' }
+  | { type: 'STAFF_EVENT'; staffId: string; note: string }
+export type TrainingAppliedEffects = { teamFitnessDelta: number; teamFatigueDelta: number; teamHappinessDelta: number; teamAuthorityDelta: number; tacticalFamiliarityDelta: number; individualPlayerIds: number[] }
+export type TrainingSessionPlan = { id: string; date?: string; sessionNumber: number; status: TrainingPlanningStatus; intensity: TrainingSession['intensity']; blocks: TrainingSession['blocks']; tacticalPlan?: TacticalPlan; expectedPlayerIds: number[]; expectedStaffIds: string[] }
 export type SessionResult = {
   quality: number
   qualityLabel: TrainingSession['qualityLabel']
@@ -28,6 +38,12 @@ export type SessionResult = {
   effects: string[]
   highlights: string[]
   injuryRisk: 'Bajo' | 'Moderado' | 'Alto'
+  absentPlayerIds?: number[]
+  presentStaffIds?: string[]
+  events?: TrainingSessionEvent[]
+  appliedEffects?: TrainingAppliedEffects
+  summary?: string
 }
-export type FunctionalTrainingSession = TrainingSession & { absentPlayerIds: number[]; result?: SessionResult }
+export type TrainingSessionState = { plan: TrainingSessionPlan; result: SessionResult | null }
+export type FunctionalTrainingSession = TrainingSession & { planningStatus?: TrainingPlanningStatus; plannedTacticalPlan?: TacticalPlan; plannedAbsentPlayerIds?: number[]; plannedAbsenceReasons?: Record<number, string>; plannedStaffIds?: string[]; absentPlayerIds: number[]; availableStaffIds?: string[]; staffAbsenceNotes?: string[]; result?: SessionResult }
 export type TrainingGameState = { week: number; seed: number; players: Record<number, TrainingPlayerState>; familiarity: TacticalFamiliarityState; sessions: FunctionalTrainingSession[]; weekClosed: boolean }

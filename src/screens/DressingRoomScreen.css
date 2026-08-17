@@ -11,6 +11,18 @@
 .dressing-room-issue.is-positive { border-left-color: #4d6b54; }
 .dressing-room-issue.is-warning { border-left-color: #b7791f; }
 .dressing-room-issue.is-negative { border-left-color: #9b3a32; }
+.dressing-room-fees { border: 1px solid #ddd; padding: 14px; }
+.dressing-room-fee-assessment { display: block; font-size: 18px; margin-bottom: 12px; }
+.dressing-room-fee-assessment.is-minor, .dressing-room-fee-assessment.is-relevant { color: #8a611b; }
+.dressing-room-fee-assessment.is-severe { color: #9b3a32; }
+.dressing-room-fee-counts { display: flex; flex-wrap: wrap; gap: 8px; }
+.dressing-room-fee-counts span { background: #f7f7f7; border: 1px solid #e2e2e2; padding: 7px 10px; }
+.dressing-room-fee-attention { border-top: 1px solid #ddd; display: grid; gap: 7px; margin-top: 14px; padding-top: 12px; }
+.dressing-room-fee-attention h4 { font-size: 12px; margin: 0; text-transform: uppercase; }
+.dressing-room-fee-attention button { align-items: center; background: #fff; border: 0; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; padding: 8px 0; text-align: left; }
+.dressing-room-fee-attention button span { color: #8a611b; }
+.dressing-room-fee-pressure { background: #f7f4ec; display: flex; flex-direction: column; margin: 14px 0 0; padding: 11px 12px; }
+.dressing-room-fee-pressure b { font-size: 12px; text-transform: uppercase; }
 .dressing-room-table-wrapper { overflow-x: auto; }
 .dressing-room-table { border-collapse: collapse; min-width: 760px; width: 100%; }
 .dressing-room-table th, .dressing-room-table td { border-bottom: 1px solid #ddd; padding: 10px 12px; text-align: left; white-space: nowrap; }

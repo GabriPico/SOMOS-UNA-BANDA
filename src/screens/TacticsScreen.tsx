@@ -1,272 +1,51 @@
 import { useState } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
-import { players, tactics } from '../data/mockData'
-import type { Formation, Player, PlayerPosition, TacticalPlan } from '../domain/models'
-import { calculateTacticalRating, getPositionFamiliarity } from '../domain/positionFamiliarity'
+import { TacticalBoard, TacticalInstructions, TacticalSquadList, TacticalSummary, type TacticalPlayerView, type TacticalSelection } from '../components/TacticalWorkspace'
+import { players } from '../data/mockData'
+import type { Player, PlayerPosition, TacticalPlan } from '../domain/models'
+import { FORMATION_SLOTS } from '../domain/matchTactics'
+import { calculateTacticalRating, getPositionFamiliarity, POSITION_FAMILIARITY_LABELS } from '../domain/positionFamiliarity'
 import { calculateGeneralRating, getPlayerPositions } from '../domain/playerRatings'
+import { calculateOverallFamiliarity, getEffectiveMatchAttributes } from '../domain/trainingEngine'
+import type { TrainingGameState } from '../domain/trainingTypes'
 import './TacticsScreen.css'
+import './TacticsWorkspaceScreen.css'
+import type { StaffPerson } from '../domain/staff'
+import { createAssistantLineupProposal, type AssistantLineupProposal } from '../domain/assistantLineup'
+import { moveLineupPlayer, type LineupSource } from '../domain/tacticalLineup'
+import { getTacticalHumanLabels } from '../domain/trainingPresentation'
 
-const formations = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '5-4-1'] as const
-type FormationSlot = { position: PlayerPosition; x: number; y: number }
-
-const formationLayouts: Record<Formation, FormationSlot[]> = {
-  '4-4-2': [
-    { position: 'POR', x: 50, y: 91 },
-    { position: 'LD', x: 84, y: 73 },
-    { position: 'DFC', x: 61, y: 79 },
-    { position: 'DFC', x: 39, y: 79 },
-    { position: 'LI', x: 16, y: 73 },
-    { position: 'MC', x: 61, y: 49 },
-    { position: 'MC', x: 39, y: 49 },
-    { position: 'MD', x: 84, y: 43 },
-    { position: 'DC', x: 38, y: 17 },
-    { position: 'MI', x: 16, y: 43 },
-    { position: 'DC', x: 62, y: 17 },
-  ],
-  '4-3-3': [
-    { position: 'POR', x: 50, y: 91 },
-    { position: 'LD', x: 84, y: 73 },
-    { position: 'DFC', x: 61, y: 79 },
-    { position: 'DFC', x: 39, y: 79 },
-    { position: 'LI', x: 16, y: 73 },
-    { position: 'MC', x: 50, y: 53 },
-    { position: 'MC', x: 30, y: 47 },
-    { position: 'ED', x: 82, y: 19 },
-    { position: 'MC', x: 70, y: 47 },
-    { position: 'EI', x: 18, y: 19 },
-    { position: 'DC', x: 50, y: 15 },
-  ],
-  '4-2-3-1': [
-    { position: 'POR', x: 50, y: 91 },
-    { position: 'LD', x: 84, y: 73 },
-    { position: 'DFC', x: 61, y: 79 },
-    { position: 'DFC', x: 39, y: 79 },
-    { position: 'LI', x: 16, y: 73 },
-    { position: 'MC', x: 63, y: 56 },
-    { position: 'MC', x: 37, y: 56 },
-    { position: 'ED', x: 82, y: 34 },
-    { position: 'MP', x: 50, y: 36 },
-    { position: 'EI', x: 18, y: 34 },
-    { position: 'DC', x: 50, y: 14 },
-  ],
-  '3-5-2': [
-    { position: 'POR', x: 50, y: 91 },
-    { position: 'CAD', x: 86, y: 48 },
-    { position: 'DFC', x: 70, y: 75 },
-    { position: 'DFC', x: 50, y: 79 },
-    { position: 'DFC', x: 30, y: 75 },
-    { position: 'MC', x: 67, y: 49 },
-    { position: 'MC', x: 50, y: 53 },
-    { position: 'MC', x: 33, y: 49 },
-    { position: 'DC', x: 62, y: 17 },
-    { position: 'CAI', x: 14, y: 48 },
-    { position: 'DC', x: 38, y: 17 },
-  ],
-  '5-4-1': [
-    { position: 'POR', x: 50, y: 91 },
-    { position: 'LD', x: 88, y: 72 },
-    { position: 'DFC', x: 69, y: 78 },
-    { position: 'DFC', x: 50, y: 81 },
-    { position: 'LI', x: 12, y: 72 },
-    { position: 'DFC', x: 31, y: 78 },
-    { position: 'MC', x: 39, y: 49 },
-    { position: 'MD', x: 84, y: 43 },
-    { position: 'MC', x: 61, y: 49 },
-    { position: 'MI', x: 16, y: 43 },
-    { position: 'DC', x: 50, y: 16 },
-  ],
-}
-
-type TacticsScreenProps = { onBack: () => void; tacticalPlan: TacticalPlan; onTacticalPlanChange: (plan: TacticalPlan) => void }
-type PlayerSelection =
-  | { group: 'field'; slot: number }
-  | { group: 'reserve'; playerId: number }
-  | null
-type OptionGroupProps = {
-  label: string
-  options: readonly string[]
-  value: string
-  onChange: (value: string) => void
-}
-
-function OptionGroup({ label, options, value, onChange }: OptionGroupProps) {
-  return (
-    <fieldset className="tactics-option-group">
-      <legend>{label}</legend>
-      <div className="tactics-segmented-control">
-        {options.map((option) => (
-          <button
-            className={option === value ? 'is-selected' : ''}
-            key={option}
-            type="button"
-            aria-pressed={option === value}
-            onClick={() => onChange(option)}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    </fieldset>
-  )
-}
-
-export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange }: TacticsScreenProps) {
-  const formation = tacticalPlan.formation
-  const updatePlan = <K extends keyof TacticalPlan>(key: K, value: TacticalPlan[K]) => onTacticalPlanChange({ ...tacticalPlan, [key]: value })
-  const [lineupIds, setLineupIds] = useState(() => [...tactics.startingEleven])
-  const [selection, setSelection] = useState<PlayerSelection>(null)
-  const [detail, setDetail] = useState<{ player: Player; position?: PlayerPosition } | null>(null)
-  const startingPlayers = lineupIds
-    .map((id) => players.find((player) => player.id === id))
-    .filter((player) => player !== undefined)
-  const reservePlayers = players.filter((player) => !lineupIds.includes(player.id))
-  const activeLayout = formationLayouts[formation]
-
-  function swapPlayer(slot: number, reserveId: number) {
-    setLineupIds((currentLineup) =>
-      currentLineup.map((id, index) => index === slot ? reserveId : id),
-    )
-    setSelection(null)
+type Props = { onBack: () => void; tacticalPlan: TacticalPlan; onTacticalPlanChange: (plan: TacticalPlan) => void; lineupIds: number[]; onLineupChange: (ids: number[]) => void; trainingState: TrainingGameState; staffMembers?: StaffPerson[]; seed?: number; preseason?: boolean; selectablePlayerIds?: number[] }
+export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange, lineupIds, onLineupChange, trainingState, staffMembers = [], seed = 0, preseason = false, selectablePlayerIds }: Props) {
+  const [selection, setSelection] = useState<TacticalSelection>(null)
+  const [detail, setDetail] = useState<{player: Player; position?: PlayerPosition} | null>(null)
+  const [proposal, setProposal] = useState<AssistantLineupProposal | null>(null)
+  const [lineupError, setLineupError] = useState<string>()
+  const assistant = staffMembers.find((member) => member.role === 'SEGUNDO_ENTRENADOR' && member.isUsuallyAvailable)
+  const slots = FORMATION_SLOTS[tacticalPlan.formation]
+  const selectablePlayers = selectablePlayerIds ? players.filter((player) => selectablePlayerIds.includes(player.id)) : players
+  const starters = lineupIds.map(id => selectablePlayers.find(player => player.id === id)).filter((player): player is Player => Boolean(player))
+  const reserves = selectablePlayers.filter(player => !lineupIds.includes(player.id))
+  const view = (player: Player, slot?: number): TacticalPlayerView => {
+    const training = trainingState.players[player.id]
+    const current = training ? {...player, attributes:getEffectiveMatchAttributes(training)} : player
+    const human = training ? getTacticalHumanLabels(training) : undefined
+    return { id:player.id, name:player.name, positions:getPlayerPositions(player).join('/'), rating:Math.round(slot === undefined ? calculateGeneralRating(current) : calculateTacticalRating(current, slots[slot])), secondary:slot===undefined ? undefined : POSITION_FAMILIARITY_LABELS[getPositionFamiliarity(player, slots[slot])], fatigueLabel:human?.fatigue, conditionAlert:human?.conditionAlert ?? undefined }
   }
-
-  function selectFieldPlayer(slot: number) {
-    if (selection?.group === 'reserve') {
-      swapPlayer(slot, selection.playerId)
-      return
-    }
-
-    if (selection?.group === 'field') {
-      if (selection.slot === slot) {
-        setSelection(null)
-        return
-      }
-      setLineupIds((currentLineup) => {
-        const nextLineup = [...currentLineup]
-        ;[nextLineup[selection.slot], nextLineup[slot]] = [nextLineup[slot], nextLineup[selection.slot]]
-        return nextLineup
-      })
-      setSelection(null)
-      return
-    }
-
-    setSelection({ group: 'field', slot })
-  }
-
-  function selectReservePlayer(playerId: number) {
-    if (selection?.group === 'field') {
-      swapPlayer(selection.slot, playerId)
-      return
-    }
-
-    setSelection({ group: 'reserve', playerId })
-  }
-
-  function getNaturalPositions(playerId: number, fallbackPosition: string) {
-    const player = players.find((candidate) => candidate.id === playerId)
-    return player ? getPlayerPositions(player).join('/') : fallbackPosition
-  }
-
-  return (
-    <section className="tactics-screen">
-      <header className="tactics-header screen-header">
-        <button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>
-        <h2>Táctica</h2>
-      </header>
-
-      <div className="tactics-layout">
-        <aside className="tactics-panel tactics-formations">
-          <h3>Formación</h3>
-          <div className="formation-options">
-            {formations.map((option) => (
-              <label key={option}>
-                <input type="radio" name="formation" checked={formation === option} onChange={() => updatePlan('formation', option)} />
-                {option}
-              </label>
-            ))}
-          </div>
-        </aside>
-
-        <section className="tactics-pitch-zone">
-          <div className="pitch-area">
-            <div className="football-pitch" aria-label={`Once titular en formación ${formation}`}>
-              <div className="pitch-circle" />
-              <div className="pitch-halfway-line" />
-              <div className="penalty-area penalty-area-top" />
-              <div className="penalty-area penalty-area-bottom" />
-              {startingPlayers.map((player, index) => {
-                const tacticalPosition = activeLayout[index].position
-                const familiarity = getPositionFamiliarity(player, tacticalPosition)
-                const tacticalRating = Math.round(calculateTacticalRating(player, tacticalPosition))
-                const isOutOfPosition = familiarity !== 'NATURAL'
-                return <div
-                  className={`pitch-player${selection?.group === 'field' && selection.slot === index ? ' is-selected' : ''}`}
-                  key={player.id}
-                  style={{ left: `${activeLayout[index].x}%`, top: `${activeLayout[index].y}%` }}
-                >
-                  <button className="pitch-player-select" type="button" aria-label={`${player.name}, posición táctica ${tacticalPosition}, valoración ${tacticalRating}${isOutOfPosition ? ', fuera de posición' : ''}, posición natural ${getNaturalPositions(player.id, player.primaryPosition)}`} aria-pressed={selection?.group === 'field' && selection.slot === index} onClick={() => selectFieldPlayer(index)}>
-                    <span>{tacticalPosition}</span>
-                    <strong>{player.name.split(' ')[0]} <b>{tacticalRating}{isOutOfPosition && <span className="out-of-position-marker" aria-hidden="true"> ↓</span>}</b></strong>
-                    <small>{getNaturalPositions(player.id, player.primaryPosition)}</small>
-                  </button>
-                  <button className="player-detail-trigger" type="button" aria-label={`Abrir ficha de ${player.name}`} title="Abrir ficha" onClick={() => setDetail({ player, position: tacticalPosition })}>i</button>
-                </div>
-              })}
-            </div>
-          </div>
-
-          <aside className="reserve-players" aria-label="Jugadores fuera del once">
-            <div className="reserve-players-header">
-              <h3>Resto de la plantilla</h3>
-              <p>
-                {selection?.group === 'field'
-                  ? `Elige quién ocupará el slot ${activeLayout[selection.slot].position}.`
-                  : selection?.group === 'reserve'
-                    ? 'Elige el titular con quien intercambiarlo.'
-                    : 'Selecciona un jugador del campo o de esta lista.'}
-              </p>
-            </div>
-            <div className="reserve-player-list">
-              {reservePlayers.map((player) => (
-                <div
-                  className={`reserve-player${selection?.group === 'reserve' && selection.playerId === player.id ? ' is-selected' : ''}`}
-                  key={player.id}
-                >
-                <button
-                  className="reserve-player-select"
-                  type="button"
-                  aria-pressed={selection?.group === 'reserve' && selection.playerId === player.id}
-                  onClick={() => selectReservePlayer(player.id)}
-                >
-                  <span>{player.name} <b>{Math.round(calculateGeneralRating(player))}</b></span>
-                  <small>{getNaturalPositions(player.id, player.primaryPosition)}</small>
-                </button>
-                <button className="player-detail-trigger" type="button" aria-label={`Abrir ficha de ${player.name}`} title="Abrir ficha" onClick={() => setDetail({ player })}>i</button>
-                </div>
-              ))}
-            </div>
-          </aside>
-        </section>
-
-        <div className="tactics-controls">
-          <section className="tactics-panel tactics-with-ball">
-            <h3>Con balón</h3>
-            <OptionGroup label="Mentalidad" options={['Ofensiva', 'Equilibrada', 'Cauta']} value={tacticalPlan.mentality} onChange={(v) => updatePlan('mentality', v as TacticalPlan['mentality'])} />
-            <OptionGroup label="Estilo de pase" options={['En corto', 'Mixto', 'Directo']} value={tacticalPlan.passingStyle} onChange={(v) => updatePlan('passingStyle', v as TacticalPlan['passingStyle'])} />
-            <OptionGroup label="Ritmo" options={['Alto', 'Medio', 'Bajo']} value={tacticalPlan.tempo} onChange={(v) => updatePlan('tempo', v as TacticalPlan['tempo'])} />
-            <OptionGroup label="Tras recuperación" options={['Contraataque', 'Equilibrada', 'Mantener posición']} value={tacticalPlan.afterRecovery} onChange={(v) => updatePlan('afterRecovery', v as TacticalPlan['afterRecovery'])} />
-          </section>
-
-          <section className="tactics-panel tactics-without-ball">
-            <h3>Sin balón</h3>
-            <OptionGroup label="Altura de presión" options={['Alta', 'Media', 'Baja']} value={tacticalPlan.pressingHeight} onChange={(v) => updatePlan('pressingHeight', v as TacticalPlan['pressingHeight'])} />
-            <OptionGroup label="Intensidad de presión" options={['Alta', 'Media', 'Baja']} value={tacticalPlan.pressingIntensity} onChange={(v) => updatePlan('pressingIntensity', v as TacticalPlan['pressingIntensity'])} />
-            <OptionGroup label="Tras pérdida" options={['Presión tras pérdida', 'Mixto', 'Repliegue']} value={tacticalPlan.afterLoss} onChange={(v) => updatePlan('afterLoss', v as TacticalPlan['afterLoss'])} />
-            <OptionGroup label="Perder tiempo" options={['Sí', 'No']} value={tacticalPlan.timeWasting} onChange={(v) => updatePlan('timeWasting', v as TacticalPlan['timeWasting'])} />
-            <OptionGroup label="Ser agresivos" options={['Sí', 'No']} value={tacticalPlan.aggression} onChange={(v) => updatePlan('aggression', v as TacticalPlan['aggression'])} />
-          </section>
-        </div>
-      </div>
-      {detail && <PlayerDetail player={detail.player} currentTacticalPosition={detail.position} onClose={() => setDetail(null)} />}
-    </section>
-  )
+  const replace = (slot: number, id: number) => { onLineupChange(lineupIds.map((current,index) => index === slot ? id : current)); setSelection(null) }
+  const selectField = (slot: number) => { if (selection?.group === 'reserve') return replace(slot, selection.playerId); if (selection?.group === 'field' && selection.slot !== slot) { const next=[...lineupIds]; [next[selection.slot],next[slot]]=[next[slot],next[selection.slot]]; onLineupChange(next); setSelection(null); return } setSelection(selection?.group === 'field' && selection.slot === slot ? null : {group:'field',slot}) }
+  const selectReserve = (id: number) => { if (selection?.group === 'field') return replace(selection.slot,id); setSelection(selection?.group === 'reserve' && selection.playerId === id ? null : {group:'reserve',playerId:id}) }
+  const movePlayer = (source: LineupSource, target: LineupSource) => { const result=moveLineupPlayer(lineupIds,source,target,slots,selectablePlayers); setLineupError(result.error); if(!result.error)onLineupChange(result.lineupIds) }
+  const selectedPlayer = selection?.group === 'field' ? starters[selection.slot] : selection?.group === 'reserve' ? reserves.find(player => player.id === selection.playerId) : undefined
+  return <section className="tactics-screen">
+    <header className="tactics-header screen-header"><button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button><div><h2>Táctica</h2><TacticalSummary plan={tacticalPlan} familiarity={calculateOverallFamiliarity(trainingState.familiarity,tacticalPlan)}/></div></header>
+    {assistant && <section className="assistant-lineup-proposal"><div><span>OPINIÓN DEL SEGUNDO</span><strong>Propuesta de {assistant.name.split(' ')[0]}</strong></div><button type="button" onClick={() => setProposal(createAssistantLineupProposal(assistant, selectablePlayers, trainingState, tacticalPlan, seed, preseason))}>VER PROPUESTA</button></section>}
+    {proposal && <section className="assistant-lineup-preview"><h3>{proposal.assistantName} propone {proposal.plan.formation}</h3>{proposal.reasons.map((reason) => <p key={reason}>{reason}</p>)}<p>{proposal.lineupIds.map((id) => players.find((player) => player.id === id)?.name.split(' ')[0]).join(' · ')}</p><div><button type="button" onClick={() => setProposal(null)}>CANCELAR</button><button className="primary-action" type="button" onClick={() => { onTacticalPlanChange(proposal.plan); onLineupChange(proposal.lineupIds); setProposal(null) }}>APLICAR</button></div></section>}
+    <div className="tactical-workspace"><TacticalBoard formation={tacticalPlan.formation} players={starters.map((player,index)=>view(player,index))} selection={selection} onSelect={selectField} onMove={movePlayer}/><TacticalSquadList title="Resto de la plantilla" players={reserves.map(player=>view(player))} selection={selection} onSelect={selectReserve} onMove={movePlayer}/></div>
+    {lineupError && <p className="tactics-selection-error">{lineupError}</p>}
+    <p className="tactics-selection-hint">{selection ? 'Elige el jugador con quien intercambiarlo.' : 'Selecciona dos jugadores para intercambiar sus puestos. La valoración refleja el puesto ocupado.'}</p>
+    {selectedPlayer && <section className="tactics-selected-player"><div><strong>{selectedPlayer.name}</strong><span>{getPlayerPositions(selectedPlayer).join(' / ')}</span></div><button type="button" onClick={()=>setDetail({player:selectedPlayer,position:selection?.group === 'field' ? slots[selection.slot] : undefined})}>VER FICHA</button></section>}
+    <TacticalInstructions plan={tacticalPlan} onChange={onTacticalPlanChange}/>
+    {detail && <PlayerDetail player={detail.player} trainingState={trainingState.players[detail.player.id]} currentTacticalPosition={detail.position} onClose={()=>setDetail(null)}/>}
+  </section>
 }

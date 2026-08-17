@@ -151,12 +151,26 @@ que está tipado pero todavía no aplica dispersión adicional.
 
 ## Ficha y pantalla Equipo
 
-Equipo muestra Pos, Nombre, Calidad General, Forma, PJ, G, Edad, Personalidad,
-Felicidad e Ingresos para 20 jugadores. Al seleccionar una fila abre
+Equipo muestra Pos, Nombre, Calidad, Forma, PJ, G, valoración media, últimas
+cinco valoraciones, Edad, Personalidad, Felicidad y estado de Cuota para 20
+jugadores. Calidad General y calidad por posición siguen siendo cálculos internos
+0–100, pero se presentan mediante una escala compartida de 1–5 estrellas con
+medias estrellas. Forma, Felicidad, Condición y Cansancio se presentan mediante
+etiquetas cualitativas; los atributos deportivos 1–20 y las estadísticas
+objetivas de partido permanecen numéricos. El estado de cuota procede del plan de
+cuota del club y no expone importes ni aumenta el presupuesto deportivo. Al seleccionar una fila abre
 `src/components/PlayerDetail.tsx`, compartido con Tácticas.
 
+Estado del vestuario reutiliza esos mismos planes para derivar un resumen social
+de cuotas y mostrar solo casos pendientes. Cobrar del club es excepcional,
+determinista, de importe modesto y conserva el contexto del acuerdo; exenciones
+y acuerdos especiales son más habituales.
+
 La ficha muestra datos personales, humanos y deportivos, Calidad General, mejor
-posición, rating de posiciones naturales, perfil y atributos base. Los atributos
+posición, calidad de posiciones naturales, perfil, rendimiento de temporada y
+atributos base. Las valoraciones válidas se guardan en `PlayerSeasonStats` cuando
+el jugador disputa minutos; de ahí se derivan la media y las últimas cinco sin
+inventar datos para el histórico previo. Los atributos
 de portería se ocultan para jugadores de campo. Desde Tácticas puede añadir el
 contexto del puesto actual sin reemplazar los atributos reales mostrados.
 
@@ -165,9 +179,10 @@ contexto del puesto actual sin reemplazar los atributos reales mostrados.
 Las formaciones implementadas son 4-4-2, 4-3-3, 4-2-3-1, 3-5-2 y 5-4-1. Se
 pueden intercambiar titulares y suplentes, y también dos slots del once.
 
-Un suplente muestra Calidad General. Un titular muestra
+Un suplente muestra Calidad General mediante estrellas. Un titular muestra
 `calculateTacticalRating(player, tacticalPosition)`, nunca un valor almacenado.
-La ficha contextual muestra posición, rating, familiaridad y penalización.
+La ficha contextual y la tarjeta representan ese resultado mediante la misma
+escala de estrellas, junto con familiaridad y adaptación cualitativa.
 
 Las instrucciones visibles son:
 
@@ -199,6 +214,12 @@ penalización únicamente a los atributos con peso positivo en la fórmula del s
 con mínimo temporal 1. `calculateTacticalRating` aplica la fórmula normal a esa
 copia. Ni los atributos base, ni las posiciones naturales, ni la Calidad General
 cambian.
+
+## Convocatoria oficial
+
+Próximo partido permite anunciar entre 11 y 18 jugadores para Liga. La lista distingue convocados, descartes técnicos, lesionados, sancionados, indisponibles y no inscritos. Los jugadores a prueba son no inscritos para Liga, aunque siguen disponibles en amistosos. Tras anunciar, Tácticas restringe el workspace a los convocados y el historial queda guardado por partido.
+
+Quedarse fuera solo modifica el componente humano de tiempo de juego cuando el jugador era elegible. La magnitud considera apariciones recientes, calidad, personalidad, felicidad, autoridad y descartes consecutivos.
 
 ## Planificado / pendiente
 

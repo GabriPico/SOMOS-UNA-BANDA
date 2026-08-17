@@ -14,6 +14,7 @@ import type {
   Tactics,
   TacticalPlan,
   TacticalFamiliarity,
+  Player,
 } from '../domain/models'
 import { generatePlayer, type PlayerSeed } from '../domain/playerGeneration'
 import { validateGoalEvents } from '../domain/leagueScorers'
@@ -50,7 +51,7 @@ const attributes = (
 
 export const clubStatus: ClubStatus = {
   name: 'FC Poblenou',
-  seasonGoal: 'Pelear el ascenso en una liga de 12 equipos',
+  seasonGoal: 'Ascender a 3a Catalana',
   league: '4a Catalana',
   matchday: CURRENT_MATCHDAY,
   authority: 62,
@@ -284,10 +285,10 @@ const legacyPlayers = [
 ]
 
 const existingTeamMetadata = [
-  { id: 1, form: 71, appearances: 4, goals: 0, personality: 'Sereno', income: 500 },
+  { id: 1, form: 71, appearances: 4, goals: 0, personality: 'Sereno', income: 0 },
   { id: 3, form: 68, appearances: 3, goals: 0, personality: 'Motivado', income: 0 },
-  { id: 11, form: 74, appearances: 4, goals: 1, personality: 'Organizador', income: 300 },
-  { id: 15, form: 63, appearances: 3, goals: 2, personality: 'Ambicioso', income: -200 },
+  { id: 11, form: 74, appearances: 4, goals: 1, personality: 'Organizador', income: 0 },
+  { id: 15, form: 63, appearances: 3, goals: 2, personality: 'Ambicioso', income: 0 },
 ]
 
 const playerSeeds: PlayerSeed[] = [
@@ -324,7 +325,12 @@ const playerSeeds: PlayerSeed[] = [
   } as PlayerSeed
 })
 
-export const players = playerSeeds.map(generatePlayer)
+const TRIAL_PLAYER_IDS = new Set([13, 19, 20])
+export const players: Player[] = playerSeeds.map(generatePlayer).map((player) => ({
+  ...player,
+  clubStatus: TRIAL_PLAYER_IDS.has(player.id) ? 'TRIAL' as const : 'SQUAD' as const,
+  origin: TRIAL_PLAYER_IDS.has(player.id) ? 'PRESEASON_TRIAL' as const : 'PREVIOUS_SEASON' as const,
+}))
 /** Alias temporal para consumidores existentes; ambas pantallas usan la misma fuente. */
 export const teamPlayers = players
 
@@ -432,7 +438,8 @@ function createMockLeagueMatches(teams: LeagueTeam[], matchdays: number): League
       const homeIndex = teamIndexes.get(homeTeamId) ?? 0
       const awayIndex = teamIndexes.get(awayTeamId) ?? 0
       const played = matchday <= CURRENT_MATCHDAY
-      const kickoff = new Date(Date.UTC(2026, 8, 6 + (matchday - 1) * 7))
+      const playsOnSaturday = (matchday + pairing) % 5 === 0
+      const kickoff = new Date(Date.UTC(2026, 8, 6 + (matchday - 1) * 7 - (playsOnSaturday ? 1 : 0)))
       matches.push({
         id: `j${matchday}-p${pairing + 1}`,
         matchday,
@@ -442,7 +449,7 @@ function createMockLeagueMatches(teams: LeagueTeam[], matchdays: number): League
         awayGoals: played ? (matchday * 2 + awayIndex + homeIndex) % 3 : 0,
         status: played ? 'played' : 'scheduled',
         date: kickoff.toISOString().slice(0, 10),
-        time: ['12:00', '16:00', '17:00', '18:30', '19:00', '20:00'][pairing],
+        time: (playsOnSaturday ? ['16:00', '17:00', '18:00'] : ['10:00', '12:00', '16:00', '17:00', '18:00', '11:00'])[pairing % (playsOnSaturday ? 3 : 6)],
       })
     }
     rotation.splice(1, 0, rotation.pop() as string)

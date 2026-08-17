@@ -13,7 +13,8 @@ deliberadamente sencilla; evolucionará mediante cambios incrementales.
 
 - Una temporada y liga de 12 equipos.
 - Plantilla inicial de 20 jugadores y nivel aproximado de media tabla.
-- Objetivo deportivo: ascenso.
+- Objetivo definitivo: ascender a 3a Catalana, directamente o mediante playoff.
+- Ascender resuelve la beta como victoria; terminar la temporada sin ascender la resuelve como derrota.
 - Fútbol amateur con factores deportivos y humanos.
 - Autoridad, felicidad, cohesión, condición física y relación con el presidente.
 - Posibilidad de fracaso y despido del entrenador.
@@ -21,6 +22,14 @@ deliberadamente sencilla; evolucionará mediante cambios incrementales.
 **Estado:** la maqueta navegable, Equipo y Tácticas están implementados con datos
 mock. La temporada completa, simulación con consecuencias, guardado, ascenso y
 despido están planificados.
+
+Las expectativas temporales del presidente sirven para evaluar la marcha del
+equipo, pero no cambian la condición final de victoria o derrota.
+
+La economía distingue el presupuesto deportivo que gestiona el entrenador, las
+cuotas de temporada que administra el club y los gastos personales de cada
+jugador. Un contacto externo de fisioterapia se paga normalmente por jugador y
+sesión; no equivale a incorporar un fisio al Staff.
 
 ## Plantilla y jugadores
 

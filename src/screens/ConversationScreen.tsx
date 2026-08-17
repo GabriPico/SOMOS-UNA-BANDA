@@ -55,7 +55,7 @@ export function ConversationScreen({ scene, gameState, onGameStateChange, onComp
           {error && <p className="conversation-error" role="alert">{error}</p>}
           <button type="submit">CONTINUAR</button>
         </form>}
-        {node.type === 'choice' && <div className="conversation-choices">{node.choices.map((choice) => <button type="button" key={choice.id} onClick={() => move(choice.next, applyDialogueEffects(context, choice.effects))}>{resolveText(choice.label, context)}</button>)}</div>}
+        {node.type === 'choice' && <div className="conversation-choices">{node.choices.filter((choice) => !choice.when || choice.when(context)).map((choice) => <button type="button" key={choice.id} onClick={() => move(choice.next, applyDialogueEffects(context, choice.effects))}>{resolveText(choice.label, context)}</button>)}</div>}
         {(node.type === 'dialogue' || node.type === 'narration' || node.type === 'end') && <button className="conversation-continue" type="button" onClick={continueScene}>{node.type === 'end' ? node.actionLabel : node.actionLabel ?? 'CONTINUAR'}</button>}
       </div>
       <footer className="conversation-progress">SOMOS UNA BANDA</footer>

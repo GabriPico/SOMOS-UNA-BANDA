@@ -14,7 +14,22 @@ export function getHumanStateLabel(
 }
 
 export function getHappinessLabel(value: number) {
-  return getHumanStateLabel(value, { high: 'Feliz', medium: 'Conforme', low: 'Descontento' })
+  if (value >= 85) return 'Muy feliz'
+  if (value >= 70) return 'Feliz'
+  if (value >= 55) return 'Conforme'
+  if (value >= 40) return 'Descontento'
+  return 'Muy descontento'
+}
+
+export const getFatigueLabel = (value: number) => value >= 85 ? 'Muy cansado' : value >= 70 ? 'Cansado' : value >= 50 ? 'Algo cansado' : value >= 30 ? 'Bien' : 'Fresco'
+export const getConditionLabel = (value: number) => value >= 85 ? 'Óptima' : value >= 70 ? 'Buena' : value >= 55 ? 'Justa' : value >= 40 ? 'Baja' : 'Muy baja'
+export const getFamiliarityLabel = (value: number) => value >= 85 ? 'Muy buena' : value >= 70 ? 'Buena' : value >= 55 ? 'Aceptable' : value >= 40 ? 'Baja' : 'Muy baja'
+export const getTrainingSatisfactionLabel = getHappinessLabel
+
+export function getConditionAlert(condition: number): string | null {
+  if (condition < 55) return 'Condición baja'
+  if (condition < 70) return 'Condición justa'
+  return null
 }
 
 export type DressingRoomIssueSeverity = 'positive' | 'warning' | 'negative'
@@ -49,7 +64,7 @@ function getFiveLevelLabel(value: number, labels: readonly [string, string, stri
 
 export const getCohesionLabel = (value: number) => getFiveLevelLabel(value, ['Muy alta', 'Alta', 'Normal', 'Baja', 'Muy baja'])
 export const getMoodLabel = (value: number) => value >= 80 ? 'Excelente' : value >= 62 ? 'Bueno' : value >= 50 ? 'Normal' : value >= 38 ? 'Malo' : 'Muy malo'
-export const getAuthorityLabel = (value: number) => value >= 80 ? 'Muy respetada' : value >= 62 ? 'Respetada' : value >= 50 ? 'Normal' : value >= 38 ? 'Cuestionada' : 'Muy cuestionada'
+export const getAuthorityLabel = (value: number) => value >= 85 ? 'Muy respetada' : value >= 70 ? 'Respetada' : value >= 55 ? 'Aceptada' : value >= 40 ? 'Cuestionada' : 'Muy cuestionada'
 export const getDressingRoomHappinessLabel = (value: number) => value >= 82 ? 'Muy contento' : value >= 62 ? 'Contento' : value >= 58 ? 'Normal' : value >= 45 ? 'Descontento' : 'Muy descontento'
 
 export function getCoachRelationshipLabel(value: number) {

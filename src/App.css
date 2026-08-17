@@ -100,3 +100,6 @@
     border-right: 0;
   }
 }
+.onboarding-prompt { margin: 0 0 1rem; padding: 1rem 1.2rem; border-left: 4px solid #c8952e; background: #fff8e8; display: flex; align-items: center; gap: 1rem; }
+.onboarding-prompt span { font-size: .72rem; font-weight: 800; letter-spacing: .12em; color: #8a6418; }
+.onboarding-prompt p { flex: 1; margin: 0; }

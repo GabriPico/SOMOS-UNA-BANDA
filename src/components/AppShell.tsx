@@ -12,6 +12,8 @@ type AppShellProps = {
   navItems: NavItem[]
   onNavigate: (screen: ScreenId) => void
   children: ReactNode
+  dateLabel: string
+  matchday: number
 }
 
 export function AppShell({
@@ -19,6 +21,8 @@ export function AppShell({
   navItems,
   onNavigate,
   children,
+  dateLabel,
+  matchday,
 }: AppShellProps) {
   return (
     <div className="app-shell">
@@ -26,6 +30,7 @@ export function AppShell({
         <div>
           <p>Somos una banda</p>
           <h1>FC Poblenou</h1>
+          <small>{matchday === 0 ? 'Pretemporada' : `Jornada ${matchday}`} · {dateLabel}</small>
         </div>
       </header>
       <aside className="sidebar">

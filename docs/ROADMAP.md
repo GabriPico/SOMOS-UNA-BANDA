@@ -31,7 +31,7 @@ Pendiente dentro de la maqueta o sin lógica de juego completa:
 ## Hito 3 — Temporada completa · Planificado
 
 - Calendario y jornadas para 12 equipos.
-- Ascenso, fracaso y posible despido.
+- Resolución de victoria al ascender a 3a Catalana —directamente o por playoff— y derrota al terminar sin ascenso.
 - Resolución de una única temporada beta.
 
 ## Líneas futuras sin hito cerrado

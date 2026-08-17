@@ -1,0 +1,14 @@
+.dev-tools { position: fixed; right: 12px; top: 10px; z-index: 1000; }
+.dev-trigger { background: #222; border: 0; border-radius: 4px; color: #fff; cursor: pointer; font-size: 11px; padding: 7px 9px; }
+.dev-panel { background: #fff; border: 1px solid #bbb; border-radius: 4px; box-shadow: 0 8px 24px #0002; margin-top: 6px; padding: 10px; width: 250px; }
+.dev-panel header { align-items: center; display: flex; font-size: 12px; justify-content: space-between; }
+.dev-panel header button { background: none; border: 0; cursor: pointer; font-size: 20px; }
+.dev-panel label { display: grid; font-size: 11px; gap: 3px; margin: 8px 0; }
+.dev-panel input { border: 1px solid #ccc; border-radius: 3px; padding: 6px; }
+.dev-panel small { color: #a22; display: block; font-size: 10px; margin-bottom: 6px; }
+.dev-scenario-list { display: grid; gap: 3px; max-height: 55vh; overflow-y: auto; }
+.dev-scenario-list button, .dev-reset { background: #fff; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; padding: 6px 8px; text-align: left; }
+.dev-scenario-list button.is-active { background: #eee; border-color: #888; }
+.dev-scenario-list button:disabled { color: #999; cursor: not-allowed; }
+.dev-reset { background: #222; color: #fff; margin-top: 8px; text-align: center; width: 100%; }
+.dev-reset:disabled { opacity: .4; }

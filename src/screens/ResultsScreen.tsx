@@ -1,15 +1,16 @@
 import { LeagueTabs } from '../components/LeagueTabs'
 import { MatchdaySelector } from '../components/MatchdaySelector'
-import { leagueMatches, leagueSeason, leagueTeams } from '../data/mockData'
+import { leagueSeason, leagueTeams } from '../data/mockData'
+import type { LeagueMatch } from '../domain/models'
 import { getMatchesByMatchday } from '../domain/leagueStandings'
 import './ResultsScreen.css'
 
-type ResultsScreenProps = { onBack: () => void; onOpenStandings: () => void; onOpenSanctions: () => void; onOpenScorers: () => void; selectedMatchday: number; onMatchdayChange: (matchday: number) => void }
+type ResultsScreenProps = { liveMatches: LeagueMatch[]; currentMatchday: number; onBack: () => void; onOpenStandings: () => void; onOpenSanctions: () => void; onOpenScorers: () => void; selectedMatchday: number; onMatchdayChange: (matchday: number) => void }
 const USER_TEAM_ID = 'fc-poblenou'
 
-export function ResultsScreen({ onBack, onOpenStandings, onOpenSanctions, onOpenScorers, selectedMatchday, onMatchdayChange }: ResultsScreenProps) {
+export function ResultsScreen({ liveMatches, currentMatchday, onBack, onOpenStandings, onOpenSanctions, onOpenScorers, selectedMatchday, onMatchdayChange }: ResultsScreenProps) {
   const teamNames = new Map(leagueTeams.map((team) => [team.id, team.name]))
-  const matches = getMatchesByMatchday(leagueMatches, selectedMatchday)
+  const matches = getMatchesByMatchday(liveMatches, selectedMatchday)
 
   return (
     <section className="results-screen">
@@ -19,7 +20,7 @@ export function ResultsScreen({ onBack, onOpenStandings, onOpenSanctions, onOpen
       </header>
 
       <LeagueTabs activeTab="results" onSelect={(tab) => { if (tab === 'standings') onOpenStandings(); if (tab === 'sanctions') onOpenSanctions(); if (tab === 'scorers') onOpenScorers() }} />
-      <MatchdaySelector currentMatchday={leagueSeason.currentMatchday} selectedMatchday={selectedMatchday} totalMatchdays={leagueSeason.totalMatchdays} onSelect={onMatchdayChange} />
+      <MatchdaySelector currentMatchday={currentMatchday} selectedMatchday={selectedMatchday} totalMatchdays={leagueSeason.totalMatchdays} onSelect={onMatchdayChange} />
 
       <div className="match-results" aria-label={`Resultados de la jornada ${selectedMatchday}`}>
         {matches.map((match) => {

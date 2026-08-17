@@ -1,20 +1,18 @@
 import type { Player, PlayerAttribute, PlayerAttributes, PlayerPosition } from './models'
 import { calculatePositionRating, POSITION_RATING_WEIGHTS, POSITION_TO_RATING_PROFILE } from './playerRatings'
 
-export type PositionFamiliarity = 'NATURAL' | 'RELATED' | 'UNFAMILIAR' | 'VERY_UNFAMILIAR'
+export type PositionFamiliarity = 'PREFERRED' | 'COMPATIBLE' | 'IMPROVISED'
 
 export const POSITION_FAMILIARITY_LABELS: Record<PositionFamiliarity, string> = {
-  NATURAL: 'Natural',
-  RELATED: 'Posición relacionada',
-  UNFAMILIAR: 'Fuera de posición',
-  VERY_UNFAMILIAR: 'Muy fuera de posición',
+  PREFERRED: 'Preferido',
+  COMPATIBLE: 'Compatible',
+  IMPROVISED: 'Improvisado',
 }
 
 export const POSITION_FAMILIARITY_PENALTIES: Record<PositionFamiliarity, number> = {
-  NATURAL: 0,
-  RELATED: 1,
-  UNFAMILIAR: 2,
-  VERY_UNFAMILIAR: 3,
+  PREFERRED: 0,
+  COMPATIBLE: 0,
+  IMPROVISED: 2,
 }
 
 const RELATED_POSITION_PAIRS: ReadonlyArray<readonly [PlayerPosition, PlayerPosition]> = [
@@ -26,6 +24,13 @@ const RELATED_POSITION_PAIRS: ReadonlyArray<readonly [PlayerPosition, PlayerPosi
   ['MP', 'DC'], ['MP', 'ED'], ['MP', 'EI'],
   ['ED', 'DC'], ['EI', 'DC'],
 ]
+
+const WIDE_COMPATIBILITY: Partial<Record<PlayerPosition, PlayerPosition[]>> = {
+  LD: ['LI', 'CAD', 'CAI', 'MD', 'MI'], LI: ['LD', 'CAD', 'CAI', 'MD', 'MI'],
+  CAD: ['CAI', 'LD', 'LI', 'MD', 'MI'], CAI: ['CAD', 'LD', 'LI', 'MD', 'MI'],
+  MD: ['MI', 'LD', 'LI', 'CAD', 'CAI', 'ED', 'EI'], MI: ['MD', 'LD', 'LI', 'CAD', 'CAI', 'ED', 'EI'],
+  ED: ['EI', 'MD', 'MI'], EI: ['ED', 'MD', 'MI'],
+}
 
 export const RELATED_POSITIONS = RELATED_POSITION_PAIRS.reduce((graph, [left, right]) => {
   graph[left].add(right)
@@ -54,11 +59,10 @@ function getPositionDistance(from: PlayerPosition, to: PlayerPosition) {
 
 export function getPositionFamiliarity(player: Pick<Player, 'primaryPosition' | 'secondaryPositions'>, tacticalPosition: PlayerPosition): PositionFamiliarity {
   const naturalPositions = [player.primaryPosition, ...player.secondaryPositions]
+  if (naturalPositions.includes(tacticalPosition)) return 'PREFERRED'
+  if (naturalPositions.some((position) => WIDE_COMPATIBILITY[position]?.includes(tacticalPosition))) return 'COMPATIBLE'
   const distance = Math.min(...naturalPositions.map((position) => getPositionDistance(position, tacticalPosition)))
-  if (distance === 0) return 'NATURAL'
-  if (distance === 1) return 'RELATED'
-  if (distance === 2) return 'UNFAMILIAR'
-  return 'VERY_UNFAMILIAR'
+  return distance === 1 ? 'COMPATIBLE' : 'IMPROVISED'
 }
 
 export function getPositionPenalty(player: Pick<Player, 'primaryPosition' | 'secondaryPositions'>, tacticalPosition: PlayerPosition) {
@@ -75,5 +79,6 @@ export function getEffectiveAttributesForPosition(player: Player, tacticalPositi
 }
 
 export function calculateTacticalRating(player: Player, tacticalPosition: PlayerPosition) {
-  return calculatePositionRating({ attributes: getEffectiveAttributesForPosition(player, tacticalPosition) }, tacticalPosition)
+  const rating = calculatePositionRating({ attributes: getEffectiveAttributesForPosition(player, tacticalPosition) }, tacticalPosition)
+  return Math.min(100, rating + (getPositionFamiliarity(player, tacticalPosition) === 'PREFERRED' ? 1 : 0))
 }

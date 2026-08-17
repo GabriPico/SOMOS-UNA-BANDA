@@ -6,7 +6,7 @@ type CharacterValue = NarrativeCharacter | ((context: DialogueContext) => Narrat
 type BaseNode = { id: string; next?: string }
 export type NarrationNode = BaseNode & { type: 'narration'; text: TextValue; eyebrow?: TextValue; actionLabel?: string }
 export type DialogueNode = BaseNode & { type: 'dialogue'; character: CharacterValue; text: TextValue; actionLabel?: string }
-export type DialogueChoice = { id: string; label: TextValue; next: string; effects?: DialogueEffect[] }
+export type DialogueChoice = { id: string; label: TextValue; next: string; when?: (context: DialogueContext) => boolean; effects?: DialogueEffect[] }
 export type ChoiceNode = Omit<BaseNode, 'next'> & { type: 'choice'; character?: CharacterValue; text: TextValue; choices: DialogueChoice[] }
 export type InputNode = Omit<BaseNode, 'next'> & { type: 'input'; character?: CharacterValue; text: TextValue; input: { key: string; label: string; inputType: 'text' | 'number'; placeholder?: string; validate: (value: string) => string | null }; next: string; effects?: DialogueEffect[] }
 export type ConditionNode = Omit<BaseNode, 'next'> & { type: 'condition'; when: (context: DialogueContext) => boolean; then: string; otherwise: string }
@@ -15,7 +15,7 @@ export type JumpNode = Omit<BaseNode, 'next'> & { type: 'jump'; target: string }
 export type EndNode = Omit<BaseNode, 'next'> & { type: 'end'; text: TextValue; actionLabel: string; effects?: DialogueEffect[] }
 export type DialogueNodeType = NarrationNode | DialogueNode | ChoiceNode | InputNode | ConditionNode | EffectNode | JumpNode | EndNode
 export type DialogueEffect = (context: DialogueContext) => DialogueContext
-export type DialogueScene = { id: string; location?: string; startNodeId: string; nodes: Record<string, DialogueNodeType> }
+export type DialogueScene = { id: string; location?: string; startNodeId: string; nodes: Record<string, DialogueNodeType>; completionFlow?: 'RETURN' | 'CONTINUE' }
 
 export const resolveText = (value: TextValue, context: DialogueContext) => typeof value === 'function' ? value(context) : value
 export const resolveCharacter = (value: CharacterValue, context: DialogueContext) => typeof value === 'function' ? value(context) : value

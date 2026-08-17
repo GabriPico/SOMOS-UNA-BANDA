@@ -2,6 +2,7 @@
 .training-header { background: #fff; border: 1px solid #ddd; padding: 16px 20px; }
 .training-header > div { align-items: baseline; display: flex; gap: 16px; }
 .training-header span { color: #666; font-size: 14px; }
+.training-completed-flow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 20px;padding:14px 18px;background:#edf3ee;border:1px solid #8fa394}.training-completed-flow>div{display:grid}.training-completed-flow>div span{font-size:.72rem;letter-spacing:.08em}.training-completed-flow p{margin:0}.training-completed-flow small{grid-column:1/3;color:#5f6b63}.training-completed-flow button{grid-column:3;grid-row:1/3}
 .training-summary { background: #fff; border: 1px solid #ddd; display: grid; grid-template-columns: repeat(6, 1fr); }
 .training-summary div { border-right: 1px solid #e2e2e2; display: grid; gap: 3px; padding: 13px 15px; }
 .training-summary div:last-child { border-right: 0; }
@@ -49,6 +50,7 @@
 .session-highlights { border-top: 1px solid #ddd; margin-top: 14px; padding-top: 10px; }
 .session-highlights h4, .session-highlights p { margin: 0 0 6px; }
 .training-squad { background: #fff; border: 1px solid #ddd; padding: 18px; }
+.players-to-watch{display:grid;gap:7px}.players-to-watch button{display:grid;gap:2px;text-align:left;background:#faf8f2;border:1px solid #ddd;padding:10px 12px;cursor:pointer}.players-to-watch span{color:#8a4e32;font-size:.82rem}.training-edit-finish{display:flex;align-items:center;justify-content:space-between;background:#edf3ee;border:1px solid #8fa394;padding:14px 18px}.training-edit-finish p{margin:0}
 .training-squad h3 { margin: 0 0 10px; }
 .training-table-wrapper { overflow-x: auto; }
 .training-squad table { border-collapse: collapse; min-width: 650px; width: 100%; }
