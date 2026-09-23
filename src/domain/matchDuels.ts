@@ -1,6 +1,7 @@
 import type { PlayerAttribute } from './models'
 import type { AttackRoute, MatchPlayer, MatchTeamState } from './matchTypes'
 import { coordinationFor } from './matchTactics'
+import { PREMATCH_TALK_BALANCE as talkBalance } from './preMatchTalkBalance'
 
 export type DuelKind = 'DRIBBLE' | 'SPACE' | 'AERIAL' | 'BUILD_UP' | 'FINISH'
 type Weight = readonly [PlayerAttribute, number]
@@ -17,7 +18,12 @@ export function behavioralState(player: MatchPlayer) {
   const unhappiness = Math.max(0, 55 - player.happiness) / 55
   const lowAuthority = Math.max(0, 55 - player.authority) / 55
   const fatigue = Math.max(0, player.fatigue - 45) / 55
-  return { concentrationError: unhappiness * .09 * personalityFrustration(player) + fatigue * .12, disobedience: lowAuthority * (.05 + unhappiness * .08) * personalityFrustration(player), effort: Math.max(.88, 1 + (player.happiness - 55) / 500 - fatigue * .12) }
+  const fade = Math.max(0, 1 - player.minutesPlayed / talkBalance.decayMinutes)
+  const emotions = player.prematchEmotions
+  const focus = emotions ? (emotions.concentration + emotions.confidence - emotions.nerves - emotions.tension) * talkBalance.concentrationPerPoint * fade : 0
+  const effort = emotions ? (emotions.motivation + emotions.involvement) * talkBalance.effortPerPoint * fade : 0
+  const adherence = emotions ? emotions.involvement * talkBalance.adherencePerPoint * fade : 0
+  return { concentrationError: Math.max(0, unhappiness * .09 * personalityFrustration(player) + fatigue * .12 - focus), disobedience: Math.max(0, lowAuthority * (.05 + unhappiness * .08) * personalityFrustration(player) - adherence), effort: Math.max(.88, 1 + (player.happiness - 55) / 500 - fatigue * .12 + effort) }
 }
 export function duelScore(player: MatchPlayer, kind: DuelKind, side: 'attack' | 'defense') {
   const behavior = behavioralState(player)

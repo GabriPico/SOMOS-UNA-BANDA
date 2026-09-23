@@ -1,32 +1,44 @@
-import { useState } from 'react'
-import { PlayerDetail } from '../components/PlayerDetail'
-import { StarRating } from '../components/StarRating'
+﻿import { useState } from 'react'
+import { ClubPlayerFile } from '../components/ClubPlayerFile'
+import { PlayerTable } from '../components/PlayerUi'
+import { PlayerRow } from '../components/PlayerRow'
+import { ManagementIcon } from '../components/ManagementIcon'
 import { players } from '../data/mockData'
-import type { Player } from '../domain/models'
 import type { PlayerSeasonStats } from '../domain/gameState'
 import type { PlayerClubCompensation, PlayerFeePlan } from '../domain/playerFinance'
-import { getPlayerFeeLabel } from '../domain/playerFinance'
-import { calculateGeneralRating, getPlayerPositions } from '../domain/playerRatings'
-import { getPlayerHappiness } from '../domain/trainingEngine'
+import type { PlayerEligibility } from '../domain/squadSelection'
 import type { TrainingGameState } from '../domain/trainingTypes'
-import { getHappinessLabel } from '../domain/humanState'
-import { formatMatchRating, getAverageMatchRating, getFormLabel, getLastMatchRatings } from '../domain/playerPresentation'
+import { filterAndSortSquad, getPlayerStatus, getTrainingObservations, POSITION_LABELS, type SquadSort } from '../presentation/playerPresentation'
 import './TeamScreen.css'
 
-type TeamScreenProps = { playerSeasonStats: Record<number, PlayerSeasonStats>; trainingState: TrainingGameState; injuredPlayerIds: number[]; playerFees: Record<number, PlayerFeePlan>; playerCompensations: Record<number, PlayerClubCompensation>; onBack: () => void }
+type TeamScreenProps = { playerSeasonStats: Record<number, PlayerSeasonStats>; trainingState: TrainingGameState; injuredPlayerIds: number[]; playerFees: Record<number, PlayerFeePlan>; playerCompensations: Record<number, PlayerClubCompensation>; eligibility?: Record<number, PlayerEligibility>; seasonLabel?: string; onBack: () => void; onOpenPlayer?: (id: number) => void }
 
-export function TeamScreen({ playerSeasonStats, trainingState, injuredPlayerIds, playerFees, playerCompensations, onBack }: TeamScreenProps) {
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null)
+export function TeamScreen({ playerSeasonStats, trainingState, injuredPlayerIds, playerFees, playerCompensations, eligibility, seasonLabel, onOpenPlayer }: TeamScreenProps) {
+  const [selectedId, setSelectedId] = useState(players[0]?.id)
+  const [position, setPosition] = useState('')
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState<SquadSort>('position')
+  const visiblePlayers = filterAndSortSquad(players, position, search, sort, playerSeasonStats)
+  // A search never closes the inspector or resets selection.
+  const selectedPlayer = players.find(player => player.id === selectedId) ?? players[0]
+  const statusFor = (player: typeof players[number]) => getPlayerStatus(player, trainingState.players[player.id], { injured: injuredPlayerIds.includes(player.id), eligibility: eligibility?.[player.id], observations: getTrainingObservations(trainingState, player.id) })
   return <section className="team-screen">
-    <header className="screen-header"><button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button><h2>Equipo</h2></header>
-    <p className="team-description">Plantilla actual, situación deportiva y estado de la cuota del club.</p>
-    <div className="team-table-wrapper"><table className="team-table" aria-label="Tabla de jugadores del equipo">
-      <caption className="team-table-caption">Pulsa un jugador para abrir su ficha. Las cuotas pertenecen al club y no forman parte del presupuesto deportivo.</caption>
-      <thead><tr><th>Pos</th><th>Nombre</th><th>Calidad</th><th>Forma</th><th>PJ</th><th>G</th><th>Valoración media</th><th>Últimos 5</th><th>Edad</th><th>Personalidad</th><th>Felicidad</th><th>Cuota</th></tr></thead>
-      <tbody>{players.map((player) => { const stats = playerSeasonStats[player.id]; const human = trainingState.players[player.id]; const average = getAverageMatchRating(stats); const latest = getLastMatchRatings(stats); return <tr key={player.id} tabIndex={0} onClick={() => setSelectedPlayer(player)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedPlayer(player) }}>
-        <td>{getPlayerPositions(player).join('/')}</td><td><button className="player-name-button" type="button">{player.name}</button>{player.clubStatus === 'TRIAL' && <span className="trial-player-badge">A prueba</span>}</td><td><StarRating value={calculateGeneralRating(player)} /></td><td>{getFormLabel(player.form)}</td><td>{stats?.appearances ?? player.appearances}</td><td>{stats?.goals ?? player.goals}</td><td>{average === null ? '—' : formatMatchRating(average)}</td><td className="recent-ratings">{latest.length ? latest.map((item) => formatMatchRating(item.rating)).join(' · ') : '—'}</td><td>{player.age}</td><td>{human?.personality ?? player.personality}</td><td>{getHappinessLabel(human ? getPlayerHappiness(human) : player.happiness)}</td><td>{player.clubStatus === 'TRIAL' ? '—' : getPlayerFeeLabel(playerFees[player.id], playerCompensations[player.id]?.monthlyAmount)}</td>
-      </tr> })}</tbody>
-    </table></div>
-    {selectedPlayer && <PlayerDetail player={selectedPlayer} trainingState={trainingState.players[selectedPlayer.id]} seasonStats={playerSeasonStats[selectedPlayer.id]} injured={injuredPlayerIds.includes(selectedPlayer.id)} playerFee={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerFees[selectedPlayer.id]} playerCompensation={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerCompensations[selectedPlayer.id]} onClose={() => setSelectedPlayer(null)} />}
+    <header className="team-header"><div><h2>Plantilla</h2><p>{players.length} jugadores{visiblePlayers.length !== players.length && ` · ${visiblePlayers.length} visibles`}</p></div>
+      <div className="team-filters">
+        <select aria-label="Filtrar por posición" value={position} onChange={event => setPosition(event.target.value)}><option value="">Todas las posiciones</option>{Object.entries(POSITION_LABELS).map(([id, label]) => <option key={id} value={id}>{id} · {label}</option>)}</select>
+        <select aria-label="Ordenar plantilla" value={sort} onChange={event => setSort(event.target.value as SquadSort)}><option value="position">Orden: Posición</option><option value="name">Orden: Nombre</option><option value="age">Orden: Edad</option><option value="appearances">Orden: Partidos</option><option value="minutes">Orden: Minutos</option><option value="goals">Orden: Goles</option></select>
+        <label className="team-search"><ManagementIcon name="search" /><input type="search" aria-label="Buscar jugador" placeholder="Buscar jugador…" value={search} onChange={event => setSearch(event.target.value)} /></label>
+      </div>
+    </header>
+    <div className="team-workspace">
+      <div className="team-roster club-sheet club-sheet--stacked club-sheet--taped"><PlayerTable className="team-table" label="Tabla de jugadores del equipo">
+        <colgroup>{['number', 'name', 'positions', 'age', 'played', 'minutes', 'goals', 'happiness', 'status', 'notes'].map(name => <col key={name} className={`column-${name}`} />)}</colgroup>
+        <thead><tr><th scope="col">Nº</th><th scope="col">Nombre</th><th scope="col">Posiciones</th><th scope="col" className="is-numeric">Edad</th><th scope="col" className="is-numeric" title="Partidos jugados (titularidades)">PJ(TIT)</th><th scope="col" className="is-numeric">Min</th><th scope="col" className="is-numeric">G</th><th scope="col" className="is-numeric">Felicidad</th><th scope="col">Estado</th><th scope="col">Observaciones</th></tr></thead>
+        <tbody>{visiblePlayers.map(player => <PlayerRow key={player.id} player={player} stats={playerSeasonStats[player.id]} training={trainingState.players[player.id]} status={statusFor(player)} selected={player.id === selectedPlayer?.id} onSelect={() => setSelectedId(player.id)} onOpenPlayer={onOpenPlayer} />)}</tbody>
+      </PlayerTable>
+      {visiblePlayers.length === 0 && <div className="team-empty"><p>No hay jugadores con estos filtros.</p><button type="button" onClick={() => { setPosition(''); setSearch('') }}>Limpiar filtros</button></div>}
+      <footer className="team-table-note">PJ(TIT): partidos y titularidades · Estadísticas de Liga · — Dato sin registrar</footer></div>
+      {selectedPlayer && <ClubPlayerFile key={selectedPlayer.id} variant="inline" onOpenFull={onOpenPlayer ? () => onOpenPlayer(selectedPlayer.id) : undefined} player={selectedPlayer} trainingState={trainingState.players[selectedPlayer.id]} seasonStats={playerSeasonStats[selectedPlayer.id]} status={statusFor(selectedPlayer)} seasonLabel={seasonLabel} playerFee={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerFees[selectedPlayer.id]} playerCompensation={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerCompensations[selectedPlayer.id]} />}
+    </div>
   </section>
 }

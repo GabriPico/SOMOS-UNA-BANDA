@@ -1,0 +1,160 @@
+/* Shared paper file: a quick roster summary and a wider, complete player profile. */
+.club-material-theme :is(.content--squad, .content--player-profile) { padding: 8px; }
+.club-material-theme :is(.content--squad, .content--player-profile)::before {
+  inset: 0;
+  border: 0;
+  background:
+    linear-gradient(rgba(248, 245, 237, .06), rgba(248, 245, 237, .06)),
+    var(--club-office-context) 38% 0% / 100% auto no-repeat,
+    var(--club-wall);
+  box-shadow: inset 0 2px 4px #30291f26;
+}
+.club-material-theme .club-player-file-mount {
+  min-width: 0;
+  padding: 16px 7px 7px;
+  background: var(--club-texture-paint), var(--club-paint-dark);
+  border-width: 2px;
+  box-shadow: inset 0 0 0 1px var(--club-paint-light), var(--club-paper-shadow);
+}
+.club-material-theme .club-player-file-mount::before { top: 0; }
+.club-material-theme .club-player-file-mount--inline { position: sticky; top: calc(var(--ui-header-height) + var(--ui-dev-offset, 0px) + 8px); }
+.club-material-theme .club-player-file { position: relative; top: auto; padding: 0; border: 1px solid var(--club-paper-edge); border-radius: 0; }
+.club-material-theme .team-workspace .club-player-file { max-height: calc(var(--team-available-height) - 27px); }
+.club-material-theme .club-player-file .player-detail-header {
+  min-height: 0;
+  grid-template-columns: 70px minmax(0, 1fr) 75px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--club-texture-grain), var(--club-paper-aged);
+  border-bottom: 2px solid var(--club-paint);
+}
+.club-material-theme .club-player-file .player-portrait--large {
+  align-self: center;
+  width: 70px;
+  height: 82px;
+  margin: 0;
+  padding: 4px;
+  border: 3px solid var(--club-paper);
+  border-radius: 0;
+  background: var(--club-neutral-bg);
+  box-shadow: 0 0 0 1px var(--club-paper-rule), 1px 2px 2px #3d382126;
+}
+.club-material-theme .team-workspace .club-player-file .player-portrait--large { height: 82px; }
+.club-material-theme .club-player-file .player-detail-identity { padding: 0; }
+.club-material-theme .club-player-file .player-detail-identity h3 { font: 700 22px/1.12 var(--club-font-heading); overflow-wrap: anywhere; }
+.club-material-theme .club-player-file .player-detail-number { margin-bottom: 4px; font-size: 15px; color: var(--club-ink-muted); }
+.club-material-theme .club-player-file .player-detail-identity p { margin: 6px 0 3px; font-size: 12px; }
+.club-material-theme .club-player-file .player-detail-identity em { font-size: 11px; line-height: 1.35; }
+.club-material-theme .club-player-file .player-detail-happiness { align-self: center; padding: 6px 0 6px 8px; border-left: 1px solid var(--club-paper-rule); background: none; }
+.club-material-theme .club-player-file .player-detail-happiness .happiness-indicator { align-items: start; gap: 6px; font-size: 12px; }
+.club-material-theme .club-player-file .player-detail-happiness svg { width: 23px; height: 23px; }
+.club-material-theme .club-player-file .player-detail-content { padding: 0 12px 10px; }
+.club-material-theme .club-player-file .player-overview { grid-template-columns: minmax(75px, .9fr) minmax(0, 1.6fr) minmax(70px, .9fr); gap: 8px; padding: 9px 0; }
+.club-material-theme .club-player-file .player-overview > div { grid-column: auto; grid-row: auto; }
+.club-material-theme .club-player-file .player-overview > div + div { padding-left: 8px; border-left: 1px solid var(--club-paper-rule); }
+.club-material-theme .club-player-file .player-overview h4 { font-size: 10px; margin-bottom: 6px; font-weight: 500; }
+.club-material-theme .club-player-file .player-overview strong { font-size: 12px; }
+.club-material-theme .club-player-file .player-overview p { font-size: 11px; line-height: 1.4; }
+.club-material-theme .club-player-file .player-overview-quality .star-rating { font-size: 18px; }
+.club-material-theme .club-player-file .rating-stars-track { color: var(--club-paper-rule); }
+.club-material-theme .club-player-file .player-personal-info { padding: 8px 0; font-size: 11px; border-bottom: 3px double var(--club-paper-rule); }
+.club-material-theme .club-player-file .player-detail-section { padding-block: 8px; }
+.club-material-theme .club-player-file .player-detail-section h4 { margin-bottom: 7px; color: var(--club-paint-dark); font-family: var(--club-font-heading); font-size: 12px; letter-spacing: .035em; }
+.club-material-theme .club-player-file .player-position-map--compact { min-height: 0; }
+.club-material-theme .club-player-file .player-position-map--compact ul { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.club-material-theme .club-player-file .player-position-map--compact li { gap: 5px; }
+.club-material-theme .club-player-file .player-position-map--compact li b { min-width: 0; font-size: 12px; }
+.club-material-theme .club-player-file .player-position-map--compact li span { font-size: 10px; }
+.club-material-theme .club-player-file .player-position-map--compact li i { width: 7px; height: 7px; }
+.club-material-theme .club-player-file .attribute-group h5 { color: var(--club-paint); font-weight: 600; }
+.club-material-theme .club-player-file .player-attribute-row { grid-template-columns: minmax(0, 1fr) max-content; gap: 6px; }
+.club-material-theme .club-player-file .attribute-stars { font-size: 13px; letter-spacing: 0; }
+.club-material-theme .club-player-file .player-profile-extra { padding-block: 8px 2px; }
+.club-material-theme .club-player-file .player-profile-extra summary { color: var(--ui-interactive); }
+.club-material-theme .club-player-file .player-state-sections { gap: 12px; }
+.club-material-theme .club-player-file .player-state-sections:has(> section:only-child) { grid-template-columns: 1fr; }
+.club-material-theme .player-summary-full { width: 100%; margin-top: 6px; padding: 8px 12px; border: 1px solid var(--club-paint-dark); background: var(--club-paint); color: var(--club-paper); font-size: 12px; cursor: pointer; }
+.club-material-theme .player-summary-full:hover { background: var(--club-paint-dark); }
+
+/* The complete file uses the full width: identity at left, information at right. */
+.club-material-theme .player-profile-screen { max-width: 1680px; }
+.club-material-theme .player-profile-navigation { min-height: 0; padding: 0 0 7px; }
+.club-material-theme .player-profile-navigation > div:first-child { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 4px 8px; background: var(--club-paper); border: 1px solid var(--club-paper-rule); }
+.club-material-theme .player-profile-navigation button { padding: 4px 2px; color: var(--club-paint-dark); font-size: 12px; }
+.club-material-theme .player-profile-navigation button:hover { text-decoration: underline; }
+.club-material-theme .club-player-file.player-detail--page { display: grid; grid-template-columns: clamp(205px, 20vw, 270px) minmax(0, 1fr); gap: 0 18px; padding: 12px 14px; overflow: visible; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-header { grid-column: 1; grid-row: 1 / 5; display: flex; flex-direction: column; align-items: stretch; justify-content: start; gap: 9px; padding: 0 14px 8px 0; background: none; border-bottom: 0; border-right: 1px solid var(--club-paper-rule); }
+.club-material-theme .club-player-file.player-detail--page .player-portrait--large { width: 100%; height: clamp(165px, 25vh, 255px); padding: 8px; border-width: 5px; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-identity { align-self: stretch; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-identity h3 { font-size: clamp(24px, 2vw, 30px); }
+.club-material-theme .club-player-file.player-detail--page .player-detail-identity p { font-size: 13px; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-happiness { align-self: stretch; padding: 7px 0 0; border-left: 0; border-top: 1px solid var(--club-paper-rule); }
+.club-material-theme .club-player-file.player-detail--page .player-detail-happiness .happiness-indicator { flex-direction: row; align-items: center; font-size: 13px; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-content { display: contents; }
+.club-material-theme .club-player-file.player-detail--page .player-overview { grid-column: 2; grid-row: 1; grid-template-columns: minmax(100px, .8fr) minmax(0, 1.5fr) minmax(100px, .8fr); gap: 12px; padding: 0 0 6px; }
+.club-material-theme .club-player-file.player-detail--page .player-overview strong { font-size: 13px; }
+.club-material-theme .club-player-file.player-detail--page .player-overview-quality .star-rating { font-size: 20px; }
+.club-material-theme .club-player-file.player-detail--page .player-personal-info { grid-column: 2; grid-row: 2; justify-content: start; gap: 24px; padding: 6px 0; font-size: 12px; }
+.club-material-theme .club-player-file.player-detail--page .player-positions-panel { grid-column: 1; grid-row: 5; padding-right: 14px; border-right: 1px solid var(--club-paper-rule); border-bottom: 0; }
+.club-material-theme .club-player-file.player-detail--page .player-position-map--compact ul { display: grid; gap: 7px; }
+.club-material-theme .club-player-file.player-detail--page .player-tactical-context { grid-column: 1; grid-row: 6; font-size: 11px; padding: 7px 10px 0 0; border: 0; }
+.club-material-theme .club-player-file.player-detail--page .player-attributes-panel { grid-column: 2; grid-row: 3; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-section { padding-block: 6px; }
+.club-material-theme .club-player-file.player-detail--page .player-detail-section h4 { margin-bottom: 6px; padding: 0; border: 0; }
+.club-material-theme .club-player-file.player-detail--page .attribute-groups { gap: 8px 16px; }
+.club-material-theme .club-player-file.player-detail--page .attribute-group { padding-left: 12px; }
+.club-material-theme .club-player-file.player-detail--page .attribute-group:first-child { padding-left: 0; }
+.club-material-theme .club-player-file.player-detail--page .attribute-group h5 { font-size: 11px; margin-bottom: 6px; }
+.club-material-theme .club-player-file.player-detail--page .attribute-group dl { gap: 4px; }
+.club-material-theme .club-player-file.player-detail--page .player-attribute-row { font-size: 12px; }
+.club-material-theme .club-player-file.player-detail--page .player-performance { grid-column: 2; grid-row: 4; }
+.club-material-theme .club-player-file.player-detail--page .player-performance dl { gap: 12px; }
+.club-material-theme .club-player-file.player-detail--page .player-performance dt { font-size: 10px; }
+.club-material-theme .club-player-file.player-detail--page .player-performance dd { font-size: 18px; margin-top: 3px; }
+.club-material-theme .club-player-file.player-detail--page .player-state-sections { grid-column: 2; grid-row: 5; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.club-material-theme .club-player-file.player-detail--page .player-state-sections > section + section { border-top: 0; border-left: 1px solid var(--club-paper-rule); padding-left: 12px; }
+.club-material-theme .club-player-file.player-detail--page .player-state-sections p { font-size: 11px; line-height: 1.35; }
+.club-material-theme .club-player-file.player-detail--page .player-state-sections small { font-size: 10px; margin-top: 4px; }
+.club-material-theme .club-player-file.player-detail--page .profile-physical-state { margin-top: 5px; gap: 4px; }
+.club-material-theme .club-player-file.player-detail--page .profile-physical-state > div { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.club-material-theme .club-player-file.player-detail--page .profile-physical-state .tactical-card-physical { width: 140px; margin: 0; }
+.club-material-theme .club-player-file.player-detail--page .player-profile-extra { grid-column: 2; grid-row: 6; border-top: 1px solid var(--club-paper-rule); padding: 7px 0 0; }
+
+@media (max-width: 1050px) {
+  .club-material-theme .club-player-file-mount--inline { position: relative; top: auto; }
+  .club-material-theme .team-workspace .club-player-file { max-height: none; }
+  .club-material-theme .club-player-file.player-detail--page { grid-template-columns: 185px minmax(0, 1fr); gap: 12px; }
+  .club-material-theme .club-player-file.player-detail--page .player-attribute-row { grid-template-columns: 1fr; gap: 3px; }
+}
+@media (max-width: 800px) {
+  .club-material-theme :is(.content--squad, .content--player-profile)::before { background-size: auto, auto 320px; }
+  .club-material-theme .club-player-file.player-detail--page { display: block; padding: 10px; }
+  .club-material-theme .club-player-file.player-detail--page .player-detail-header { display: grid; grid-template-columns: 115px minmax(0, 1fr); gap: 12px; padding: 0 0 10px; border-right: 0; border-bottom: 2px solid var(--club-paint); }
+  .club-material-theme .club-player-file.player-detail--page .player-portrait--large { height: 140px; }
+  .club-material-theme .club-player-file.player-detail--page .player-detail-happiness { grid-column: 1 / -1; }
+  .club-material-theme .club-player-file.player-detail--page .player-overview { display: grid; grid-template-columns: 1fr 1fr; padding: 10px 0; }
+  .club-material-theme .club-player-file.player-detail--page .player-overview > div { margin: 0; padding: 0; border-left: 0; }
+  .club-material-theme .club-player-file.player-detail--page .player-overview > .player-overview-role { grid-column: 1 / -1; grid-row: 2; }
+  .club-material-theme .club-player-file.player-detail--page .player-overview > .player-overview-personality { grid-column: 2; grid-row: 1; }
+  .club-material-theme .club-player-file.player-detail--page .player-personal-info { gap: 8px 16px; }
+  .club-material-theme .club-player-file.player-detail--page .player-positions-panel { border-right: 0; border-bottom: 1px solid var(--club-paper-rule); }
+  .club-material-theme .club-player-file.player-detail--page .player-position-map--compact ul { display: flex; }
+  .club-material-theme .club-player-file.player-detail--page .player-state-sections { grid-template-columns: 1fr; gap: 0; }
+  .club-material-theme .club-player-file.player-detail--page .player-state-sections > section + section { border-left: 0; padding-left: 0; }
+  .club-material-theme .club-player-file.player-detail--page .attribute-groups { gap: 8px; }
+  .club-material-theme .club-player-file.player-detail--page .attribute-group { padding-left: 6px; }
+  .club-material-theme .club-player-file.player-detail--page .player-performance dl { gap: 5px; }
+  .club-material-theme .club-player-file.player-detail--page .player-performance dt { font-size: 9px; }
+}
+@container (max-width: 370px) {
+  .club-material-theme .club-player-file.player-detail--inline .player-detail-header { grid-template-columns: 54px minmax(0, 1fr); gap: 10px; padding: 10px; }
+  .club-material-theme .club-player-file.player-detail--inline .player-portrait--large { width: 54px; height: 65px; }
+  .club-material-theme .team-workspace .club-player-file.player-detail--inline .player-portrait--large { height: 65px; }
+  .club-material-theme .club-player-file.player-detail--inline .player-detail-happiness { grid-column: 1 / -1; padding: 6px 0 0; border-left: 0; }
+  .club-material-theme .club-player-file.player-detail--inline .player-detail-happiness .happiness-indicator { flex-direction: row; align-items: center; }
+  .club-material-theme .club-player-file.player-detail--inline .player-overview { grid-template-columns: 1fr 1fr; }
+  .club-material-theme .club-player-file.player-detail--inline .player-overview > .player-overview-role { grid-column: 1 / -1; grid-row: 2; padding-left: 0; border-left: 0; }
+  .club-material-theme .club-player-file.player-detail--inline .player-overview > .player-overview-personality { grid-column: 2; grid-row: 1; }
+  .club-material-theme .club-player-file.player-detail--inline .player-detail-identity h3 { font-size: 20px; }
+}

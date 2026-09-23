@@ -1,62 +1,23 @@
-.tactics-screen { background: #fff; border: 1px solid #ddd; }
-.tactics-header { align-items: center; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; padding: 14px 20px; }
-.tactics-header h2, .tactics-panel h3 { margin: 0; }
-.tactics-header h2 { font-size: 18px; text-transform: uppercase; }
-.tactics-header button, .tactics-segmented-control button, .reserve-player-list button { background: #fff; border: 1px solid #ccc; border-radius: 4px; color: #222; cursor: pointer; }
-.tactics-header button { padding: 7px 10px; }
-.tactics-layout { display: grid; grid-template-areas: "formations pitch" "controls controls"; grid-template-columns: minmax(170px, .7fr) minmax(420px, 2fr); }
-.tactics-panel { padding: 20px; }
-.tactics-panel h3 { font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
-.tactics-formations { border-bottom: 1px solid #ddd; border-right: 1px solid #ddd; grid-area: formations; }
-.formation-options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-.formation-options label { align-items: center; cursor: pointer; display: flex; gap: 8px; }
-.tactics-pitch-zone { background: #f3f3f3; border-bottom: 1px solid #ddd; grid-area: pitch; }
-.pitch-area { display: flex; justify-content: center; padding: 24px; }
-.football-pitch { aspect-ratio: 3 / 4; background: #548c54; border: 2px solid #fff; box-shadow: 0 1px 4px #0003; max-height: 570px; min-height: 440px; overflow: hidden; position: relative; }
-.pitch-halfway-line, .pitch-circle, .penalty-area { border: 2px solid #ffffffaa; position: absolute; }
-.pitch-halfway-line { border-width: 2px 0 0; left: 0; top: 50%; width: 100%; }
-.pitch-circle { border-radius: 50%; height: 18%; left: 38%; top: 41%; width: 24%; }
-.penalty-area { height: 16%; left: 22%; width: 56%; }
-.penalty-area-top { border-top: 0; top: 0; }
-.penalty-area-bottom { border-bottom: 0; bottom: 0; }
-.pitch-player { background: #fff; border: 2px solid #333; border-radius: 5px; color: #222; height: 54px; position: absolute; transform: translate(-50%, -50%); transition: left 180ms ease, top 180ms ease; width: 76px; z-index: 1; }
-.pitch-player.is-selected { border-color: #f4c542; box-shadow: 0 0 0 4px #f4c542aa; }
-.pitch-player-select { align-items: center; background: transparent; border: 0; color: inherit; cursor: pointer; display: flex; flex-direction: column; height: 100%; justify-content: center; padding: 2px 12px 2px 3px; width: 100%; }
-.pitch-player strong { font-size: 9px; line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pitch-player strong b, .reserve-player-list b { color: #244d31; }
-.pitch-player .out-of-position-marker { color: #8a5a16; font-size: 9px; }
-.pitch-player span { font-size: 11px; font-weight: 700; line-height: 1.2; }
-.pitch-player small { color: #666; font-size: 7px; line-height: 1.1; white-space: nowrap; }
-.player-detail-trigger { align-items: center; background: #f7f7f7; border: 1px solid #aaa; border-radius: 50%; display: flex; font-size: 9px; font-weight: 700; height: 16px; justify-content: center; padding: 0; position: absolute; right: 2px; top: 2px; width: 16px; }
-.reserve-players { background: #fff; border-top: 1px solid #ddd; padding: 16px 20px 20px; }
-.reserve-players-header { align-items: baseline; display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 12px; }
-.reserve-players-header h3 { font-size: 14px; letter-spacing: .06em; margin: 0; text-transform: uppercase; }
-.reserve-players-header p { color: #666; font-size: 12px; margin: 0; }
-.reserve-player-list { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-.reserve-player { border: 1px solid #ccc; border-radius: 4px; display: flex; position: relative; }
-.reserve-player.is-selected { border-color: #f4c542; box-shadow: 0 0 0 3px #f4c54288; }
-.reserve-player .reserve-player-select { border: 0; display: flex; flex: 1; flex-direction: column; padding: 8px 28px 8px 10px; text-align: left; }
-.reserve-player .player-detail-trigger { right: 7px; top: 7px; }
-.reserve-player-list span { font-weight: 600; }
-.reserve-player-list small { color: #666; }
-.tactics-controls { display: grid; grid-area: controls; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.tactics-with-ball { border-right: 1px solid #ddd; }
-.tactics-segmented-control button { padding: 8px 10px; }
-.tactics-segmented-control button.is-selected { background: #eee; border-color: #777; font-weight: 600; }
-.tactics-option-group { border: 0; display: grid; gap: 8px; margin: 18px 0 0; padding: 0; }
-.tactics-option-group legend { font-weight: 600; padding: 0; }
-.tactics-segmented-control { display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(80px, 1fr)); }
-
-@media (max-width: 840px) {
-  .tactics-layout { grid-template-areas: "formations" "pitch" "controls"; grid-template-columns: 1fr; }
-  .tactics-controls { grid-template-columns: 1fr; }
-  .tactics-formations, .tactics-with-ball { border-right: 0; }
-  .tactics-with-ball { border-bottom: 1px solid #ddd; }
-  .formation-options { flex-flow: row wrap; }
-}
-
-@media (max-width: 520px) {
-  .pitch-area { padding: 12px; }
-  .football-pitch { min-height: 390px; }
-  .tactics-segmented-control { grid-template-columns: 1fr; }
-}
+.tactics-screen { background: var(--ui-surface); border: 1px solid var(--ui-border); }
+.tactics-screen--visual { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; gap: 8px; padding: 0 10px 8px; }
+.tactics-screen--visual .tactics-header { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; min-height: 46px; padding: 5px 2px; border-bottom: 1px solid var(--ui-border); }
+.tactics-screen--visual .tactics-header > div { display: flex; align-items: center; gap: 16px; }
+.tactics-screen--visual .tactics-header h2 { margin: 0; font-size: clamp(21px, 1.7vw, 28px); text-transform: uppercase; }
+.tactics-screen--visual .tactical-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; font-size: 11px; }
+.tactics-screen--visual .tactical-summary > strong { font-size: 11px; font-weight: 500; }
+.tactics-screen--visual .tactical-summary small { font-size: 11px; font-weight: 500; color: var(--ui-interactive); }
+.tactics-screen--visual .screen-back-button { font-size: 11px; padding: 6px 9px; white-space: nowrap; }
+.tactics-screen--visual .assistant-lineup-proposal { display: flex; flex-shrink: 0; align-items: center; gap: 10px; min-height: 38px; padding: 3px 2px; margin: 0; border: 0; border-bottom: 1px solid var(--ui-border); background: none; }
+.assistant-lineup-proposal > .management-icon { color: var(--ui-interactive); width: 24px; height: 24px; }
+.assistant-lineup-proposal > div { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px; }
+.assistant-lineup-proposal span { color: var(--ui-text-secondary); font-size: 10px; letter-spacing: .07em; }
+.assistant-lineup-proposal strong { font-size: 13px; font-weight: 500; }
+.assistant-lineup-proposal button { margin-left: auto; border: 1px solid var(--ui-interactive); background: var(--ui-interactive-bg); color: var(--ui-text); padding: 7px 12px; font-size: 11px; white-space: nowrap; cursor: pointer; }
+.assistant-lineup-preview { position: absolute; top: 102px; left: 10px; right: 10px; z-index: 8; display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 12px 15px; border: 1px solid var(--ui-interactive); border-radius: var(--ui-radius); background: var(--ui-bg-secondary); box-shadow: 0 10px 35px var(--ui-overlay); }
+.assistant-lineup-preview h3 { font-size: 14px; margin: 0 0 5px; }
+.assistant-lineup-preview p { display: inline; margin: 0; font-size: 12px; color: var(--ui-text-secondary); }
+.assistant-lineup-preview p + p::before { content: ' · '; }
+.assistant-proposal-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.assistant-proposal-actions button { font-size: 11px; padding: 8px 12px; }
+@media (max-width: 1250px) { .tactics-screen--visual .tactics-header > div { display: grid; gap: 5px; } }
+@media (max-width: 650px) { .tactics-screen--visual { padding-inline: 9px; } .tactics-screen--visual .tactics-header { align-items: start; } .tactics-screen--visual .tactical-summary { display: grid; gap: 4px; } .tactics-screen--visual .tactical-summary span { display: none; } .assistant-lineup-proposal > .management-icon { display: none; } .assistant-lineup-proposal > div { display: grid; } .assistant-lineup-preview { flex-direction: column; align-items: start; } }

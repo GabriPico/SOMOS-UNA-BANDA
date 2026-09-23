@@ -1,6 +1,8 @@
 import type { PlayerAttribute, PlayerAttributes, TacticalPlan, TrainingSession } from './models'
 
 export type BetaPersonality = 'Profesional' | 'Trabajador / Currante' | 'Ambicioso' | 'Competitivo' | 'Fiestero' | 'Vago' | 'Veterano' | 'Líder' | 'Sociable' | 'Individualista' | 'Caliente' | 'Pasota'
+export type PhysicalIssueType = 'MUSCLE_DISCOMFORT' | 'POOR_SLEEP' | 'HANGOVER' | 'SORENESS' | 'MINOR_KNOCK' | 'MILD_ILLNESS'
+export type CurrentPhysicalIssue = { type: PhysicalIssueType; remainingDays: number; startedAt: string }
 export type AttributeTrainingState = { bonus: number; consolidation: number; consecutiveWeeks: number; trainedThisWeek: boolean; maintainedThisWeek: boolean; exposuresThisWeek: number }
 export type HappinessComponents = { teammates: number; playingTime: number; training: number; results: number }
 export type TrainingPlayerState = {
@@ -10,8 +12,13 @@ export type TrainingPlayerState = {
   fitness: number
   fatigue: number
   happiness: HappinessComponents
-  authorityWithCoach: number
+  managerRelationship: number
+  managerAuthority: number
+  lockerRoomInfluence: 'LOW' | 'MEDIUM' | 'HIGH' | 'LEADER'
+  /** @deprecated Se migra a managerAuthority al hidratar partidas antiguas. */
+  authorityWithCoach?: number
   personality: BetaPersonality
+  currentIssue?: CurrentPhysicalIssue
 }
 export type FamiliarityMemory = { current: number; historicalMax: number; trainedThisWeek: boolean }
 export type TacticalFamiliarityState = {
@@ -20,7 +27,7 @@ export type TacticalFamiliarityState = {
   setPieces: FamiliarityMemory
   setPieceWeeksWithoutTraining: number
 }
-export type TrainingPlanningStatus = 'UNPLANNED' | 'PLANNED' | 'COMPLETED'
+export type TrainingPlanningStatus = 'UNPLANNED' | 'DIRTY' | 'PLANNED' | 'COMPLETED'
 export type TrainingSessionEvent =
   | { type: 'PLAYER_ABSENCE'; playerId: number; planned: boolean; warned: boolean; reason?: string }
   | { type: 'PLAYER_LATE'; playerId: number; minutes: number }

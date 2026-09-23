@@ -1,0 +1,116 @@
+/* A compact administrative roster, using the same materials as Tácticas. */
+.club-material-theme .team-screen {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.club-material-theme .team-header h2 {
+  font-size: 23px;
+  color: var(--club-paint-dark);
+  font-family: var(--club-font-heading);
+  font-weight: 700;
+  letter-spacing: .025em;
+  text-shadow: 0 1px var(--club-paper);
+}
+
+.club-material-theme .team-header p { color: var(--club-ink-muted); font-size: 10px; }
+.club-material-theme .team-header > div:first-child { display: flex; align-items: baseline; gap: 10px; padding: 4px 8px; background: var(--club-paper); border: 1px solid var(--club-paper-rule); }
+.club-material-theme .team-filters { gap: 8px; }
+.club-material-theme .team-filters :is(select, .team-search) { height: 31px; padding-block: 4px; font-size: 12px; }
+.club-material-theme .team-search input { font-size: 12px; }
+
+.club-material-theme .team-filters :is(select, .team-search) {
+  background: var(--club-texture-grain), var(--club-paper);
+  border-color: var(--club-paper-rule);
+  box-shadow: inset 0 1px 2px #3d382119, 0 1px #f4efdf80;
+}
+
+.club-material-theme .team-filters select:hover,
+.club-material-theme .team-search:focus-within { border-color: var(--club-paint); }
+.club-material-theme .team-search input::placeholder { color: var(--club-ink-muted); }
+
+.club-material-theme .team-header { position: relative; margin: 0; gap: 12px; flex-shrink: 0; }
+.club-material-theme .team-workspace { min-height: 0; gap: var(--club-scene-gap); grid-template-columns: minmax(0, 1fr) minmax(360px, 29%); }
+
+/* The roster is one ruled administrative sheet, with its original local scroll. */
+.club-material-theme .team-roster { padding: 8px 5px 5px; min-height: 0; display: flex; flex-direction: column; }
+
+.club-material-theme .team-screen .player-table-wrapper {
+  min-height: 0;
+  max-height: none;
+  overscroll-behavior: contain;
+  border: 0;
+  border-top: 1px solid var(--club-paint);
+  border-bottom: 1px solid var(--club-paper-rule);
+  border-radius: 0;
+}
+
+.club-material-theme .team-table th {
+  padding: 7px 5px;
+  font-size: 10px;
+  letter-spacing: 0;
+  color: var(--club-paint-dark);
+  font-family: var(--club-font-heading);
+  font-weight: 600;
+}
+.club-material-theme .team-screen .team-table { min-width: 760px; }
+.club-material-theme .team-screen .team-table td { height: 34px; padding: 3px 5px; font-size: 13px; }
+.club-material-theme .team-table .player-portrait { width: 21px; height: 26px; }
+.club-material-theme .team-table .player-identity { flex-wrap: nowrap; gap: 3px; }
+.club-material-theme .team-table .player-identity-button { flex: 1; min-width: 0; gap: 4px; }
+.club-material-theme .team-table .player-profile-link { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.club-material-theme .team-screen .team-table .trial-player-badge { margin-left: 0; font-size: 8px; }
+.club-material-theme .team-table .happiness-indicator svg { width: 17px; height: 17px; }
+.club-material-theme .team-table .player-status { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+.club-material-theme .team-table :is(.team-player-position, .team-observations) { font-size: 12px; }
+
+.club-material-theme .team-table tbody tr { background: transparent; }
+.club-material-theme .team-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--club-paper-aged) 35%, transparent);
+}
+.club-material-theme .team-table tbody tr:hover { background: var(--club-paper-aged); }
+
+.club-material-theme .team-screen .team-table tbody tr.is-selected {
+  color: var(--club-ink);
+  background: var(--ui-interactive-bg);
+  outline-color: var(--club-paint);
+}
+.club-material-theme .team-table tr.is-selected td:first-child { box-shadow: inset 3px 0 var(--club-paint); }
+.club-material-theme .team-screen .team-table tr.is-selected .player-identity-button { color: var(--club-paint-dark); }
+.club-material-theme .team-screen .team-table tr.is-selected :is(.team-player-position, .team-observations) { color: var(--club-ink-muted); }
+.club-material-theme .team-screen .team-table tr.is-selected .is-positive { --tone: var(--club-positive); }
+.club-material-theme .team-screen .team-table tr.is-selected .is-warning { --tone: var(--club-warning); }
+.club-material-theme .team-screen .team-table tr.is-selected .is-negative { --tone: var(--club-danger); }
+.club-material-theme .team-table .squad-number { color: var(--club-ink-muted); }
+.club-material-theme .team-table-note { flex-shrink: 0; padding: 6px 3px 1px; font-size: 10px; }
+
+.club-material-theme .team-screen { padding-top: clamp(110px, 23dvh, 250px); }
+.club-material-theme .team-workspace .club-player-file-mount--inline { position: relative; top: auto; min-height: 0; height: fit-content; max-height: 100%; padding: 12px 5px 5px; display: flex; flex-direction: column; }
+.club-material-theme .team-workspace .club-player-file { min-height: 0; max-height: none; }
+
+@media (min-width: 1101px) and (min-height: 650px) {
+  .club-material-theme .team-screen { flex: 1; }
+  .club-material-theme .team-workspace { flex: 1; grid-template-rows: minmax(0, 1fr); }
+  .club-material-theme .team-roster { max-height: 100%; }
+  .club-material-theme .team-screen .player-table-wrapper { flex: 1 1 auto; }
+}
+
+@media (max-width: 1400px) {
+  .club-material-theme .team-workspace { grid-template-columns: minmax(0, 1fr) minmax(340px, 32%); }
+  .club-material-theme .team-header { flex-wrap: wrap; }
+}
+
+@media (max-width: 1100px), (max-height: 649px) {
+  .club-material-theme .team-workspace { grid-template-columns: minmax(0, 1fr); }
+  .club-material-theme .team-roster { order: 0; }
+  .club-material-theme .team-workspace .club-player-file-mount { max-height: none; }
+  .club-material-theme .team-workspace .club-player-file { max-height: none; }
+  .club-material-theme .team-screen .player-table-wrapper { max-height: 540px; }
+  .club-material-theme .team-table th { letter-spacing: 0; }
+}

@@ -19,5 +19,28 @@ export const PERSONALITY_MODIFIERS: Record<BetaPersonality, PersonalityModifiers
   Pasota: p({ resultsSensitivity: -2, authoritySensitivity: -2, conflictProneness: -1, funTrainingPreference: 1 }),
 }
 export const BETA_PERSONALITIES = Object.keys(PERSONALITY_MODIFIERS) as BetaPersonality[]
+
+export function getPersonalityWeight(personality: string, age: number) {
+  if (personality === 'Veterano') {
+    if (age < 30) return 0
+    if (age === 30) return .35
+    if (age <= 31) return .65
+    if (age <= 34) return 1.25
+    return 1.75
+  }
+  if (personality === 'Líder') return age < 23 ? .7 : age < 28 ? .9 : 1.15
+  return 1
+}
+
+export function selectPersonalityForAge(age: number, seedValue: number): BetaPersonality {
+  const weighted = BETA_PERSONALITIES.map((personality) => ({ personality, weight: getPersonalityWeight(personality, age) }))
+  const total = weighted.reduce((sum, item) => sum + item.weight, 0)
+  let cursor = ((seedValue >>> 0) / 4294967296) * total
+  for (const item of weighted) {
+    cursor -= item.weight
+    if (cursor < 0) return item.personality
+  }
+  return weighted[weighted.length - 1].personality
+}
 export function getDressingRoomInfluence(player: Player, state: TrainingPlayerState) { const modifier = PERSONALITY_MODIFIERS[state.personality]; return Math.max(0, Math.min(100, 25 + modifier.dressingRoomInfluence * 15 + player.age * .5 + player.attributes.comunicacion * 1.5 + player.appearances)) }
-export function getConflictRisk(player: Player, state: TrainingPlayerState, teamAuthority: number) { const modifiers = PERSONALITY_MODIFIERS[state.personality]; const authorityRisk = Math.max(0, 55 - Math.min(state.authorityWithCoach, teamAuthority)) * .8; return Math.max(0, Math.min(100, 4 + modifiers.conflictProneness * 7 + modifiers.demandRespect * 2 + authorityRisk + getDressingRoomInfluence(player, state) * .04)) }
+export function getConflictRisk(player: Player, state: TrainingPlayerState, teamAuthority: number) { const modifiers = PERSONALITY_MODIFIERS[state.personality]; const authorityRisk = Math.max(0, 55 - Math.min(state.managerAuthority, teamAuthority)) * .8; return Math.max(0, Math.min(100, 4 + modifiers.conflictProneness * 7 + modifiers.demandRespect * 2 + authorityRisk + getDressingRoomInfluence(player, state) * .04)) }

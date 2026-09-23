@@ -76,6 +76,19 @@ const clamp = (value: number, minimum = 1) => Math.max(minimum, Math.min(20, Mat
 const randomInRange = (rng: () => number, [minimum, maximum]: readonly [number, number]) =>
   minimum + rng() * (maximum - minimum)
 
+/** Descriptive measurements use an independent seed stream, preserving every sporting roll. */
+export function generatePlayerMeasurements(seedData: Pick<PlayerSeed, 'id' | 'seed' | 'primaryPosition' | 'traits' | 'heightCm' | 'weightKg'>) {
+  const rng = random(seedData.seed ^ Math.imul(seedData.id, 0x45d9f3b) ^ 0x626f6479)
+  const heightRange: readonly [number, number] = seedData.traits.includes('BAJITO') ? [165, 173]
+    : seedData.traits.includes('POTENTE_POR_ARRIBA') ? [182, 194]
+    : seedData.primaryPosition === 'POR' ? [179, 195]
+    : seedData.primaryPosition === 'DFC' ? [178, 192] : [168, 187]
+  const heightCm = seedData.heightCm ?? Math.round(randomInRange(rng, heightRange))
+  const frameOffset = Math.round(randomInRange(rng, [-5, 5])) + (seedData.traits.includes('MUY_FISICO') ? 4 : 0)
+  const weightKg = seedData.weightKg ?? Math.max(55, Math.min(98, heightCm - 104 + frameOffset))
+  return { heightCm, weightKg }
+}
+
 function createInitialAttributes(seedData: PlayerSeed, rng: () => number): PlayerAttributes {
   if (seedData.primaryPosition === 'POR') {
     return Object.fromEntries(ALL_ATTRIBUTES.map((attribute) =>
@@ -105,7 +118,7 @@ export function generatePlayer(seedData: PlayerSeed): Player {
   const attributes = createInitialAttributes(seedData, rng)
   applyArchetype(attributes, seedData, rng)
   applyTraits(attributes, seedData.traits, rng)
-  const player: Player = { ...seedData, attributes }
+  const player: Player = { ...seedData, ...generatePlayerMeasurements(seedData), attributes }
   delete (player as Player & { targetRating?: number; seed?: number }).targetRating
   delete (player as Player & { targetRating?: number; seed?: number }).seed
 
@@ -146,6 +159,7 @@ export function generatePlayer(seedData: PlayerSeed): Player {
 
 export function validateGeneratedPlayer(player: Player) {
   if (!player.primaryPosition) throw new Error(`${player.name} no tiene posición principal`)
+  if (player.age < 30 && player.traits.includes('VETERANO')) throw new Error(`${player.name}: el rasgo Veterano requiere al menos 30 años`)
   for (const [attribute, value] of Object.entries(player.attributes)) {
     if (value < 1 || value > 20) throw new Error(`${player.name}: ${attribute} fuera de 1-20`)
   }

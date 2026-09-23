@@ -1,6 +1,25 @@
 import type { Player, PlayerPosition } from './models'
+import type { PlayerEligibility } from './squadSelection'
 
 export type LineupSource = { group: 'field'; slot: number } | { group: 'reserve'; playerId: number }
+
+export function getLineupSource(playerId: number, lineupIds: number[]): LineupSource {
+  const slot = lineupIds.indexOf(playerId)
+  return slot < 0 ? { group: 'reserve', playerId } : { group: 'field', slot }
+}
+
+/** The preview and commit use the same eligibility and goalkeeper rules. */
+export function moveAvailableLineupPlayer(lineupIds: number[], source: LineupSource, target: LineupSource, slots: PlayerPosition[], players: Player[], eligibility?: Record<number, PlayerEligibility>) {
+  const enteringIds = source.group === 'field' && target.group === 'field' ? [lineupIds[source.slot], lineupIds[target.slot]]
+    : source.group === 'reserve' && target.group === 'field' ? [source.playerId]
+    : source.group === 'field' && target.group === 'reserve' ? [target.playerId] : []
+  for (const id of enteringIds) {
+    if (!players.some(player => player.id === id) || eligibility?.[id]?.eligible === false) {
+      return { lineupIds, error: eligibility?.[id]?.reason ?? 'Ese jugador no está disponible para esta alineación.' }
+    }
+  }
+  return moveLineupPlayer(lineupIds, source, target, slots, players)
+}
 
 export function moveLineupPlayer(lineupIds: number[], source: LineupSource, target: LineupSource, slots: PlayerPosition[], players: Pick<Player, 'id' | 'primaryPosition' | 'secondaryPositions'>[]) {
   const next = [...lineupIds]

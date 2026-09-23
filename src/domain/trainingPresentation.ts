@@ -2,6 +2,7 @@ import { getConditionAlert, getConditionLabel, getFatigueLabel, getHappinessLabe
 import { getPlayerHappiness } from './trainingEngine'
 import { PERSONALITY_MODIFIERS } from './trainingPersonality'
 import type { TrainingGameState, TrainingPlayerState, TrainingSessionEvent } from './trainingTypes'
+import { getPhysicalIssueEffects, getPhysicalIssueLabel } from './physicalIssues'
 
 export type PlayerWatchReason = { label: string; severity: number }
 export type PlayerToWatch = { playerId: number; reasons: PlayerWatchReason[] }
@@ -9,6 +10,7 @@ export type PlayerToWatch = { playerId: number; reasons: PlayerWatchReason[] }
 export function getPlayerWatchReasons(state: TrainingPlayerState, injured = false): PlayerWatchReason[] {
   const reasons: PlayerWatchReason[] = []
   if (injured) reasons.push({ label: 'Lesionado', severity: 100 })
+  if (state.currentIssue) reasons.push({ label: getPhysicalIssueLabel(state.currentIssue)!, severity: 55 + (getPhysicalIssueEffects(state.currentIssue)?.recommendationPenalty ?? 0) * 4 })
   if (state.fatigue >= 85) reasons.push({ label: 'Muy cansado', severity: state.fatigue })
   else if (state.fatigue >= 70) reasons.push({ label: 'Carga elevada', severity: state.fatigue })
   if (state.fitness < 40) reasons.push({ label: 'Condición física muy baja', severity: 100 - state.fitness })
@@ -23,7 +25,7 @@ export function getPlayersToWatch(state: TrainingGameState, injuredPlayerIds: nu
 }
 
 export function getTacticalHumanLabels(state: TrainingPlayerState) {
-  return { fatigue: getFatigueLabel(state.fatigue), conditionAlert: getConditionAlert(state.fitness) }
+  return { fatigue: getFatigueLabel(state.fatigue), condition: `Condición ${getConditionLabel(state.fitness).toLowerCase()}`, conditionAlert: getConditionAlert(state.fitness), issue: getPhysicalIssueLabel(state.currentIssue) }
 }
 
 export function isRelevantTrainingIncident(event: TrainingSessionEvent) {
@@ -33,7 +35,7 @@ export function isRelevantTrainingIncident(event: TrainingSessionEvent) {
 export function getUnwarnedAbsenceChance(state: TrainingPlayerState) {
   const personality = PERSONALITY_MODIFIERS[state.personality]
   const unhappiness = Math.max(0, 45 - getPlayerHappiness(state))
-  const poorRelationship = Math.max(0, 45 - state.authorityWithCoach)
+  const poorRelationship = Math.max(0, 45 - state.managerRelationship)
   const problematic = Math.max(0, personality.conflictProneness) + Math.max(0, personality.demandRespect)
   return Math.min(1.5, .05 + unhappiness * .025 + poorRelationship * .025 + problematic * .08)
 }

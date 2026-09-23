@@ -7,6 +7,8 @@ import { startNextTrainingWeek } from './trainingEngine'
 import { completeOnboardingMilestone } from './onboarding'
 import { matchPerformancePresentation } from './tacticalPresentation'
 import { hasValidMatchRating } from './playerPresentation'
+import { applyMatchLoadToIssue } from './physicalIssues'
+import { updateRecentResultsMood } from './consequences'
 
 const USER_TEAM_ID = 'fc-poblenou'
 const clamp = (value: number) => Math.max(0, Math.min(100, value))
@@ -37,12 +39,13 @@ export function applyPostMatch(currentGame: GameState, currentTraining: Training
   Object.values(club.players).forEach((played) => {
     const player = trainingState.players[played.id]; if (!player) return
     player.fitness = clamp(played.condition); player.fatigue = clamp(played.fatigue)
+    player.currentIssue = applyMatchLoadToIssue(played.currentIssue, played.minutesPlayed)
     const personality = PERSONALITY_MODIFIERS[player.personality]; const started = played.minutesPlayed > 0 && !match.substitutions.some((sub) => sub.teamId === USER_TEAM_ID && sub.playerInId === played.id)
     const used = played.minutesPlayed > 0
     const playingDelta = started ? 2 : used ? 1 : -1 - Math.max(0, personality.playingTimeSensitivity) * .4
     player.happiness.playingTime = clamp(player.happiness.playingTime + playingDelta)
     player.happiness.results = clamp(player.happiness.results + resultDelta * (1 + personality.resultsSensitivity * .12))
-    player.authorityWithCoach = clamp(player.authorityWithCoach + (clubGoals > opponentGoals ? .6 : clubGoals < opponentGoals ? -.35 : .1))
+    player.managerAuthority = clamp(player.managerAuthority + (clubGoals > opponentGoals ? .6 : clubGoals < opponentGoals ? -.35 : .1))
     const statistics = gameState.playerSeasonStats[played.id]
     if (statistics && hasValidMatchRating(played.minutesPlayed)) {
       statistics.ratings ??= []
@@ -56,7 +59,8 @@ export function applyPostMatch(currentGame: GameState, currentTraining: Training
     }
     if (played.injured && !gameState.injuredPlayerIds.includes(played.id)) gameState.injuredPlayerIds.push(played.id)
   })
-  gameState.dressingRoomCohesion = clamp(gameState.dressingRoomCohesion + (clubGoals > opponentGoals ? 1.2 : clubGoals < opponentGoals ? -.7 : .25))
+  gameState.team.cohesion = clamp(gameState.team.cohesion + (clubGoals > opponentGoals ? 1.2 : clubGoals < opponentGoals ? -.7 : .25))
+  gameState.team.recentResultsMood = updateRecentResultsMood(gameState.team.recentResultsMood, clubGoals > opponentGoals ? 'WIN' : clubGoals < opponentGoals ? 'LOSS' : 'DRAW', !isFriendly)
   gameState.temporal.activeCheckpoint = undefined; gameState.activeMatch = undefined; matchState.committed = true
   const progressedGame = isFriendly ? completeOnboardingMilestone(gameState, 'FIRST_FRIENDLY') : gameState
   return { gameState: progressedGame, trainingState: startNextTrainingWeek(trainingState, players), matchState }

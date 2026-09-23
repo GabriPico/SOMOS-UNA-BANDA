@@ -1,16 +1,16 @@
-.intervention-panel>.tactical-workspace{grid-template-columns:minmax(520px,1.4fr) minmax(260px,.6fr)}
-.intervention-panel .tactical-pitch{min-height:610px}
-.match-minute-marker{font-weight:850;color:#53655a}
-.intervention-hint{margin:0;color:#657168}
-.pending-changes{display:flex;flex-wrap:wrap;gap:8px 16px;padding:10px 12px;background:#f3f5e8;border-left:4px solid #a8ba50}
-.pending-changes span{font-size:.85rem}
-.intervention-error{margin:0;padding:8px;background:#fff0e9;color:#8b3d27}
-.match-selected-player{display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:#f7f8f4;border:1px solid #d9ded9}.match-selected-player>div{display:grid;gap:2px}.match-selected-player span{color:#68756d}.match-selected-player dl{display:flex;align-items:center;gap:14px;margin:0}.match-selected-player dl>div{display:grid;text-align:center}.match-selected-player dt{color:#68756d;font-size:.7rem}.match-selected-player dd{margin:0;font-weight:850}
-.intervention-panel>footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.intervention-panel>footer>div{display:flex;gap:8px}
-.rival-window{display:flex;justify-content:space-between;align-items:center;border-left:5px solid #a8ba50}.rival-window p{margin:4px 0 0}.rival-window>div:last-child{display:flex;gap:8px}
-.match-team-tabs,.intervention-team-tabs{display:flex;gap:5px}.match-team-tabs button,.intervention-team-tabs button{padding:6px 9px;background:#fff;border:1px solid #c5cbc6;font-size:.75rem;font-weight:800}.match-team-tabs button.is-active,.intervention-team-tabs button.is-active{background:#273f32;color:#fff}.intervention-team-tabs{justify-content:center}.rival-compact-lineup{display:grid}.rival-compact-lineup article{display:grid;grid-template-columns:38px 1fr auto;gap:8px;padding:6px 3px;border-bottom:1px solid #eceeea;font-size:.82rem}.rival-compact-lineup article>b{color:#68776e}.rival-compact-lineup mark{background:transparent;color:#a15532}.rival-compact-lineup article.has-alert{background:#fff3ec}.rival-changes-summary{display:block;margin-top:8px;color:#68756d;line-height:1.4}.rival-tactical-view{display:grid;grid-template-columns:minmax(520px,1.4fr) minmax(260px,.6fr);gap:16px}.rival-tactical-view .tactical-pitch{min-height:610px}.rival-tactical-view aside{padding:14px;background:#f7f8f4;border:1px solid #d6d9d4}.rival-tactical-view aside h3{margin-top:0}.rival-tactical-view aside h4{margin-bottom:6px}
-@media(max-width:1000px){.intervention-panel>.tactical-workspace{grid-template-columns:1fr}.intervention-panel>footer{align-items:stretch;flex-direction:column}}
+.intervention-panel>.tactical-workspace{grid-template-columns: minmax(520px,1.4fr) minmax(260px,.6fr)}
+.intervention-panel .tactical-pitch{min-height: 610px}
+.match-minute-marker{font-weight: 850;color: var(--ui-text-secondary)}
+.intervention-hint{margin: 0;color: var(--ui-text-secondary)}
+.pending-changes{display: flex;flex-wrap: wrap;gap: 8px 16px;padding: 10px 12px;background: var(--ui-surface-elevated);border-left: 4px solid var(--ui-warning)}
+.pending-changes span{font-size: .85rem}
+.intervention-error{margin: 0;padding: 8px;background: var(--ui-warning-bg);color: var(--ui-text-secondary)}
+.match-selected-player{display: flex;justify-content: space-between;gap: 16px;padding: 10px 12px;background: var(--ui-surface-elevated);border: 1px solid var(--ui-border)}.match-selected-player>div{display: grid;gap: 2px}.match-selected-player span{color: var(--ui-text-secondary)}.match-selected-player dl{display: flex;align-items: center;gap: 14px;margin: 0}.match-selected-player dl>div{display: grid;text-align: center}.match-selected-player dt{color: var(--ui-text-secondary);font-size: .7rem}.match-selected-player dd{margin: 0;font-weight: 850}
+.intervention-panel>footer{display: flex;justify-content: space-between;align-items: center;gap: 12px}
+.intervention-panel>footer>div{display: flex;gap: 8px}
+.rival-window{display: flex;justify-content: space-between;align-items: center;border-left: 5px solid var(--ui-warning)}.rival-window p{margin: 4px 0 0}.rival-window>div:last-child{display: flex;gap: 8px}
+.match-team-tabs,.intervention-team-tabs{display: flex;gap: 5px}.match-team-tabs button,.intervention-team-tabs button{padding: 6px 9px;background: var(--ui-surface);border: 1px solid var(--ui-border);font-size: .75rem;font-weight: 800}.match-team-tabs button.is-active,.intervention-team-tabs button.is-active{background: var(--ui-bg-secondary);color: var(--ui-text)}.intervention-team-tabs{justify-content: center}.rival-compact-lineup{display: grid}.rival-compact-lineup article{display: grid;grid-template-columns: 38px 1fr auto;gap: 8px;padding: 6px 3px;border-bottom: 1px solid var(--ui-border);font-size: .82rem}.rival-compact-lineup article>b{color: var(--ui-text-secondary)}.rival-compact-lineup mark{background: transparent;color: var(--ui-warning)}.rival-compact-lineup article.has-alert{background: var(--ui-surface-elevated)}.rival-changes-summary{display: block;margin-top: 8px;color: var(--ui-text-secondary);line-height: 1.4}.rival-tactical-view{display: grid;grid-template-columns: minmax(520px,1.4fr) minmax(260px,.6fr);gap: 16px}.rival-tactical-view .tactical-pitch{min-height: 610px}.rival-tactical-view aside{padding: 14px;background: var(--ui-surface-elevated);border: 1px solid var(--ui-border)}.rival-tactical-view aside h3{margin-top: 0}.rival-tactical-view aside h4{margin-bottom: 6px}
+@media(max-width:1000px){.intervention-panel>.tactical-workspace{grid-template-columns: 1fr}.intervention-panel>footer{align-items: stretch;flex-direction: column}}
 .change-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .5rem; }
-.change-comparison article { display: grid; gap: .2rem; padding: .65rem; border: 1px solid #c8c8c8; background: #fff; }
-.change-comparison span { font-size: .7rem; font-weight: 800; letter-spacing: .1em; color: #6d6d6d; }
+.change-comparison article { display: grid; gap: .2rem; padding: .65rem; border: 1px solid var(--ui-border); background: var(--ui-surface); }
+.change-comparison span { font-size: .7rem; font-weight: 800; letter-spacing: .1em; color: var(--ui-text-secondary); }

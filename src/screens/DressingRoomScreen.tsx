@@ -1,97 +1,116 @@
 import { useState } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
+import { DressingRoomProblems } from '../components/DressingRoomProblems'
+import { ChangeHistory } from '../components/ChangeHistory'
+import { AlertItem, CompactIndicator, PlayerIdentity, PlayerSection, PlayerTable, SectionHeader, StatusBadge } from '../components/PlayerUi'
 import { initialDressingRoomState } from '../data/dressingRoomData'
 import { players } from '../data/mockData'
 import {
-  getAuthorityDescription, getAuthorityLabel, getCoachRelationshipLabel,
-  getCohesionDescription, getCohesionLabel, getDressingRoomHappinessLabel,
-  getDressingRoomSummary, getInfluenceLabel, getMoodDescription, getMoodLabel,
+  getAuthorityDescription, getAuthorityLabel,
+  getCohesionDescription, getCohesionLabel,
+  getDressingRoomSummary, getMoodDescription,
+  getHappinessLabel,
 } from '../domain/humanState'
+import { getDressingRoomCommitments, getDressingRoomOverview, getDressingRoomPresentation, getDressingRoomProblems, ROOM_INFLUENCE_LABELS, ROOM_PRIORITY_LABELS } from '../domain/dressingRoomPresentation'
 import type { Player } from '../domain/models'
-import { EXPECTATION_ASSESSMENT_LABELS, getPresidentTrustLabel } from '../domain/inbox'
-import type { ClubExpectationsState } from '../domain/inbox'
-import { getPlayerHappiness, getTeamAuthority, getTeamHappiness } from '../domain/trainingEngine'
+import type { PlayerSeasonStats, PromiseState } from '../domain/gameState'
+import { getTeamAuthority, getTeamHappiness } from '../domain/trainingEngine'
 import type { TrainingGameState } from '../domain/trainingTypes'
 import type { PlayerClubCompensation, PlayerFeePlan } from '../domain/playerFinance'
-import { getPlayerFeeLabel, getTeamFeeSummary, TEAM_FEE_ASSESSMENT_LABELS } from '../domain/playerFinance'
+import { getTeamFeeSummary } from '../domain/playerFinance'
 import './DressingRoomScreen.css'
 
-type DressingRoomScreenProps = { cohesion: number; trainingState: TrainingGameState; expectations: ClubExpectationsState; playerFees: Record<number, PlayerFeePlan>; playerCompensations: Record<number, PlayerClubCompensation>; onBack: () => void }
+type DressingRoomScreenProps = {
+  cohesion: number; morale: number; trainingState: TrainingGameState
+  playerFees: Record<number, PlayerFeePlan>; playerCompensations: Record<number, PlayerClubCompensation>
+  playerSeasonStats: Record<number, PlayerSeasonStats>; injuredPlayerIds: number[]; onBack: () => void
+  promises?: readonly PromiseState[]; onOpenSquad?: () => void
+}
 
-export function DressingRoomScreen({ cohesion, trainingState, expectations, playerFees, playerCompensations, onBack }: DressingRoomScreenProps) {
+export function DressingRoomScreen({ cohesion, morale, trainingState, playerFees, playerCompensations, playerSeasonStats, injuredPlayerIds, onBack, promises = [], onOpenSquad }: DressingRoomScreenProps) {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null)
-  const mood = getTeamHappiness(trainingState)
   const authority = getTeamAuthority(trainingState)
+  const happiness = getTeamHappiness(trainingState)
   const playerById = new Map(players.map((player) => [player.id, player]))
-  const unhappyPlayers = Object.values(trainingState.players).filter((state) => getPlayerHappiness(state) < 58).length
-  const influentialPlayers = initialDressingRoomState.players
-    .filter((profile) => profile.socialRole && profile.influence >= 65)
-    .sort((a, b) => b.influence - a.influence)
-    .slice(0, 4)
+  const { unhappyPlayers, issues } = getDressingRoomPresentation(initialDressingRoomState, trainingState)
   const feeSummary = getTeamFeeSummary(playerFees, playerCompensations)
+  const problems = getDressingRoomProblems(initialDressingRoomState, trainingState, players, feeSummary, playerFees)
+  const { watchPlayers, hierarchy, voices } = getDressingRoomOverview(initialDressingRoomState, trainingState, players, problems)
+  const commitments = getDressingRoomCommitments(promises, players)
 
   return <section className="dressing-room-screen">
-    <header className="screen-header">
-      <button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>
-      <h2>Estado del vestuario</h2>
-    </header>
-    <p className="dressing-room-description">{getDressingRoomSummary(cohesion, mood, authority, unhappyPlayers)}</p>
+    <div className="management-theme dressing-room-dashboard">
+      <header className="management-screen-header">
+        <div><h2>Estado del vestuario</h2><p className="management-screen-description">{getDressingRoomSummary(cohesion, morale, authority, unhappyPlayers)}</p></div>
+        <button className="management-back-button" type="button" onClick={onBack}>Panel del club →</button>
+      </header>
 
-    <section className="dressing-room-summary" aria-label="Resumen del vestuario">
-      <article><h3>Cohesión</h3><strong>{getCohesionLabel(cohesion)}</strong><p>{getCohesionDescription(cohesion)}</p></article>
-      <article><h3>Ánimo</h3><strong>{getMoodLabel(mood)}</strong><p>{getMoodDescription(mood)}</p></article>
-      <article><h3>Autoridad</h3><strong>{getAuthorityLabel(authority)}</strong><p>{getAuthorityDescription(authority)}</p></article>
-    </section>
+      <section className="dressing-room-summary" aria-label="Resumen del vestuario">
+        <CompactIndicator label="Cohesión" value={getCohesionLabel(cohesion)} level={cohesion} description={getCohesionDescription(cohesion)} icon="group" />
+        <CompactIndicator label="Felicidad" value={getHappinessLabel(happiness)} level={happiness} description={getMoodDescription(happiness)} icon="mood" />
+        <CompactIndicator label="Autoridad" value={getAuthorityLabel(authority)} level={authority} description={getAuthorityDescription(authority)} icon="authority" />
+      </section>
 
-    <section className="dressing-room-section">
-      <h3>Situación actual</h3>
-      <div className="dressing-room-issues">{initialDressingRoomState.issues.map((issue) => <article className={`dressing-room-issue is-${issue.severity}`} key={issue.id}><strong>{issue.title}</strong><p>{issue.description}</p></article>)}</div>
-    </section>
+      {issues.length > 0 && <section className="dressing-room-section" aria-label="Situación actual">
+        <div className="dressing-room-issues">{issues.slice(0, 3).map((issue) => <AlertItem key={issue.id} title={issue.title} description={issue.description} tone={issue.severity} />)}</div>
+      </section>}
 
-    <section className="dressing-room-section dressing-room-fees">
-      <h3>Cuotas del equipo</h3>
-      <strong className={`dressing-room-fee-assessment is-${feeSummary.severity?.toLowerCase() ?? 'clear'}`}>{TEAM_FEE_ASSESSMENT_LABELS[feeSummary.assessment]}</strong>
-      <div className="dressing-room-fee-counts">
-        <span><b>{feeSummary.counts.upToDate}</b> al día o pagada</span><span><b>{feeSummary.counts.pending}</b> pendientes</span><span><b>{feeSummary.counts.specialAgreement}</b> acuerdo especial</span><span><b>{feeSummary.counts.exempt}</b> {feeSummary.counts.exempt === 1 ? 'exento' : 'exentos'}</span>{feeSummary.counts.paidByClub > 0 && <span><b>{feeSummary.counts.paidByClub}</b> cobra del club</span>}
+      <div className="dressing-room-workspace">
+        <section className="player-section dressing-room-roster club-sheet club-sheet--stacked club-sheet--taped">
+          <div className="dressing-room-panel-heading">
+            <SectionHeader title="Jugadores a seguir" icon="players" />
+            {onOpenSquad && <button className="dressing-room-text-link" type="button" onClick={onOpenSquad}>Ver plantilla →</button>}
+          </div>
+          <PlayerTable className="dressing-room-table" label="Jugadores a seguir">
+            <thead><tr><th scope="col">Jugador</th><th scope="col">Situación</th><th scope="col">Influencia</th><th scope="col">Prioridad</th></tr></thead>
+            <tbody>{watchPlayers.map((entry) => {
+              const player = playerById.get(entry.playerId)
+              if (!player) return null
+              return <tr key={player.id} className={selectedPlayer?.id === player.id ? 'is-selected' : undefined} onClick={() => setSelectedPlayer(player)}>
+                <td><PlayerIdentity player={player} onSelect={() => setSelectedPlayer(player)} /></td>
+                <td className="dressing-room-player-situation">{entry.situation}</td>
+                <td>{ROOM_INFLUENCE_LABELS[entry.influence]}</td>
+                <td><StatusBadge tone={entry.priority === 'SEVERE' ? 'negative' : entry.priority === 'RELEVANT' ? 'warning' : entry.priority === 'SUPPORT' ? 'positive' : 'info'}>{ROOM_PRIORITY_LABELS[entry.priority]}</StatusBadge></td>
+              </tr>
+            })}</tbody>
+          </PlayerTable>
+          {watchPlayers.length > 5 && <p className="dressing-room-roster-note">{watchPlayers.length} jugadores en seguimiento · Desplaza la lista para verlos todos</p>}
+          {watchPlayers.length === 0 && <p className="management-empty">Ningún jugador requiere atención especial.</p>}
+        </section>
+
+        <DressingRoomProblems problems={problems} players={players} onSelectPlayer={setSelectedPlayer} compact maxVisible={3} />
+
+        <PlayerSection title="Jerarquía del vestuario" icon="group" className="dressing-room-hierarchy club-sheet" scrollable>
+          <ul>{hierarchy.map(group => <li key={group.influence}>
+            <div><span>{group.label}</span><strong>{group.count}</strong></div>
+            <meter min={0} max={players.length || 1} value={group.count} aria-label={group.label}>{group.count}</meter>
+          </li>)}</ul>
+        </PlayerSection>
+
+        <PlayerSection title="Voces del vestuario" icon="voices" className="dressing-room-voices-panel club-sheet" scrollable>
+          <div className="management-person-list">{voices.map((voice) => {
+            const player = playerById.get(voice.playerId)
+            return player && <article key={player.id}>
+              <div className="dressing-room-voice-heading"><PlayerIdentity player={player} onSelect={() => setSelectedPlayer(player)} /><span>{voice.role}</span></div>
+              <div className="management-person-context"><blockquote>“{voice.quote}”</blockquote></div>
+            </article>
+          })}{voices.length === 0 && <p className="management-empty">Ninguna voz destacada por ahora.</p>}</div>
+        </PlayerSection>
+
+        <PlayerSection title="Compromisos" icon="calendar" className="dressing-room-commitments club-sheet" scrollable>
+          {commitments.length ? <>
+            <ul className="dressing-room-commitment-list">{commitments.slice(0, 3).map(commitment => <li key={commitment.id}>
+              <strong>{commitment.description}</strong>
+              {commitment.playerId !== undefined && <button className="dressing-room-text-link" type="button" onClick={() => setSelectedPlayer(playerById.get(commitment.playerId!) ?? null)}>{playerById.get(commitment.playerId)?.name}</button>}
+              <small>{commitment.deadline}</small>
+            </li>)}</ul>
+            {commitments.length > 3 && <details className="dressing-room-more-commitments"><summary>Ver {commitments.length - 3} compromisos más</summary><ul className="dressing-room-commitment-list">{commitments.slice(3).map(commitment => <li key={commitment.id}><strong>{commitment.description}</strong><small>{commitment.playerId !== undefined && `${playerById.get(commitment.playerId)?.name} · `}{commitment.deadline}</small></li>)}</ul></details>}
+          </> : <p className="management-empty">No tienes compromisos pendientes con jugadores.</p>}
+        </PlayerSection>
+
+        <ChangeHistory changes={initialDressingRoomState.changes.slice(0, 3)} className="dressing-room-history club-sheet" compact scrollable />
       </div>
-      {feeSummary.attention.length > 0 && <div className="dressing-room-fee-attention"><h4>Requieren atención</h4>{feeSummary.attention.map((issue) => { const player = playerById.get(issue.playerId); return player && <button type="button" key={issue.playerId} onClick={() => setSelectedPlayer(player)}><strong>{player.name}</strong><span>{getPlayerFeeLabel(playerFees[issue.playerId])}</span></button> })}</div>}
-      <p className="dressing-room-fee-pressure"><b>Manolo</b>{feeSummary.manoloPressure}</p>
-    </section>
-
-    <section className="dressing-room-section">
-      <h3>Jugadores</h3>
-      <div className="dressing-room-table-wrapper"><table className="dressing-room-table" aria-label="Estado humano de los jugadores">
-        <thead><tr><th scope="col">Jugador</th><th scope="col">Rol</th><th scope="col">Felicidad</th><th scope="col">Relación contigo</th><th scope="col">Situación</th></tr></thead>
-        <tbody>{initialDressingRoomState.players.map((profile) => {
-          const player = playerById.get(profile.playerId)
-          const humanState = trainingState.players[profile.playerId]
-          if (!player || !humanState) return null
-          return <tr key={profile.playerId} tabIndex={0} onClick={() => setSelectedPlayer(player)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedPlayer(player) } }}>
-            <td><button className="player-name-button" type="button">{player.name}</button></td><td>{profile.squadRole}</td><td>{getDressingRoomHappinessLabel(getPlayerHappiness(humanState))}</td><td>{getCoachRelationshipLabel(profile.coachRelationship)}</td><td>{profile.situation ?? '—'}</td>
-          </tr>
-        })}</tbody>
-      </table></div>
-    </section>
-
-    <section className="dressing-room-section">
-      <h3>Voces del vestuario</h3>
-      <div className="dressing-room-voices">{influentialPlayers.map((profile) => {
-        const player = playerById.get(profile.playerId)
-        return player && <article key={profile.playerId}><strong>{player.name}</strong><span>{profile.socialRole}</span><small>{getInfluenceLabel(profile.influence)}</small></article>
-      })}</div>
-    </section>
-
-    <section className="dressing-room-section dressing-room-expectations">
-      <h3>Expectativas del club</h3>
-      <p className="dressing-room-section-description">El presidente valora tu trabajo en función de lo que esperaba del equipo al inicio de la temporada.</p>
-      <div className="dressing-room-president-trust"><span>Confianza del presidente</span><strong>{getPresidentTrustLabel(expectations.presidentTrust)}</strong></div>
-      <div className="dressing-room-expectation-list">{expectations.expectations.map((expectation) => <article key={expectation.id}><h4>{expectation.title}</h4><dl><div><dt>Objetivo</dt><dd>{expectation.objective}</dd></div><div><dt>Evaluación actual</dt><dd>{EXPECTATION_ASSESSMENT_LABELS[expectation.assessment]}</dd></div></dl></article>)}</div>
-    </section>
-
-    <section className="dressing-room-section">
-      <h3>Últimos cambios</h3>
-      <ul className="dressing-room-changes">{initialDressingRoomState.changes.map((change) => <li className={`is-${change.direction}`} key={change.id}><span aria-hidden="true">{change.direction === 'positive' ? '↑' : change.direction === 'negative' ? '↓' : '–'}</span>{change.text}</li>)}</ul>
-    </section>
-    {selectedPlayer && <PlayerDetail player={selectedPlayer} trainingState={trainingState.players[selectedPlayer.id]} playerFee={playerFees[selectedPlayer.id]} playerCompensation={playerCompensations[selectedPlayer.id]} onClose={() => setSelectedPlayer(null)} />}
+    </div>
+    {selectedPlayer && <PlayerDetail player={selectedPlayer} trainingState={trainingState.players[selectedPlayer.id]} seasonStats={playerSeasonStats[selectedPlayer.id]} injured={injuredPlayerIds.includes(selectedPlayer.id)} playerFee={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerFees[selectedPlayer.id]} playerCompensation={selectedPlayer.clubStatus === 'TRIAL' ? undefined : playerCompensations[selectedPlayer.id]} onClose={() => setSelectedPlayer(null)} />}
   </section>
 }

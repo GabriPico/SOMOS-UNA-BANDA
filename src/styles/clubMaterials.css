@@ -1,0 +1,435 @@
+@import './clubMaterialTokens.css';
+
+/* Shared physical surfaces. All decoration is paint, never an interaction layer. */
+.club-material-theme.app-shell {
+  background: var(--club-texture-grain), var(--club-texture-plaster), var(--club-wall);
+  background-size: 160px 160px, 240px 240px, auto;
+}
+
+.club-material-theme .content {
+  position: relative;
+  isolation: isolate;
+}
+
+.club-material-theme .content::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 58% 0 0;
+  border-top: 9px solid var(--club-paint);
+  background: var(--club-texture-grain), var(--club-texture-tiles) repeat, var(--club-ceramic);
+  background-size: 160px 160px, 128px 64px, auto;
+  box-shadow: 0 -2px 0 var(--club-grout), inset 0 2px #243c4666;
+  pointer-events: none;
+}
+
+.club-material-theme .club-sheet {
+  position: relative;
+  background: var(--club-texture-grain) repeat, var(--club-paper);
+  background-size: 160px 160px;
+  background-clip: padding-box;
+  border: 1px solid var(--club-paper-edge);
+  border-radius: 1px;
+  box-shadow: var(--club-paper-shadow);
+}
+
+.club-material-theme .club-sheet--cork {
+  border: 8px solid var(--club-cork);
+  border-image: var(--club-texture-cork) 12 / 8px / 0 round;
+  box-shadow: inset 0 0 0 1px var(--club-paper-edge), 0 0 0 1px var(--club-wood-edge), var(--club-paper-shadow);
+}
+
+.club-material-theme .club-sheet--stacked {
+  box-shadow: 0 3px 0 -1px var(--club-paper-aged), 0 4px 0 -1px var(--club-paper-rule), var(--club-paper-shadow);
+}
+
+.club-material-theme .club-sheet--clipboard {
+  border: 6px solid var(--club-paint-dark);
+  border-top-width: 9px;
+  box-shadow: inset 0 0 0 1px var(--club-paper-edge), inset 0 -3px var(--club-paper-edge), var(--club-paper-shadow);
+}
+
+.club-material-theme .club-sheet--clipboard::before {
+  content: '';
+  position: absolute;
+  z-index: 6;
+  top: -7px;
+  left: calc(50% - 34px);
+  width: 68px;
+  height: 24px;
+  background: var(--club-metal-clip) center / contain no-repeat;
+  pointer-events: none;
+}
+
+.club-material-theme .club-sheet--taped::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 12px;
+  z-index: 6;
+  background: var(--club-texture-grain), var(--club-tape);
+  clip-path: polygon(1% 0, 99% 3%, 97% 26%, 100% 47%, 97% 70%, 99% 100%, 0 96%, 2% 72%, 0 47%, 3% 22%);
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+
+/* The existing shell becomes the club's painted woodwork and signs. */
+.club-material-theme .topbar {
+  background: var(--club-texture-paint), var(--club-paper-aged);
+  border-bottom: 4px solid var(--club-paint-dark);
+  color: var(--club-paint-dark);
+  backdrop-filter: none;
+  box-shadow: inset 0 2px #f5efda, 0 2px 2px #30291f33;
+}
+
+.club-material-theme .club-brand h1 {
+  font-family: var(--club-font-heading);
+  letter-spacing: .035em;
+  font-weight: 700;
+}
+
+.club-material-theme .header-calendar strong { font-weight: 600; }
+.club-material-theme .header-calendar span { color: var(--club-ink-muted); }
+
+.club-material-theme .header-next-match {
+  position: relative;
+  background: var(--club-texture-grain), var(--club-paper);
+  color: var(--club-ink);
+  border-color: var(--club-paper-rule);
+  box-shadow: var(--club-paper-shadow);
+}
+
+.club-material-theme .header-next-match::before,
+.club-material-theme .header-next-match::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  width: 9px;
+  height: 2px;
+  border-top: 1px solid var(--club-metal-edge);
+  box-shadow: 0 1px var(--club-paper-edge);
+  pointer-events: none;
+}
+.club-material-theme .header-next-match::before { left: 7px; }
+.club-material-theme .header-next-match::after { right: 7px; }
+
+.club-material-theme .header-next-match :is(small, em) { color: var(--club-ink-muted); }
+.club-material-theme .header-next-match:hover { background-color: var(--club-paper-aged); }
+.club-material-theme .header-next-match strong { font-size: 12px; font-weight: 600; }
+
+.club-material-theme .global-continue {
+  color: var(--club-on-paint);
+  background: var(--club-texture-paint), var(--club-paint);
+  border: 1px solid var(--club-paint-dark);
+  box-shadow: var(--club-plate-shadow);
+  font-family: var(--club-font-heading);
+}
+
+.club-material-theme .global-continue:hover { background-color: var(--club-paint-light); }
+.club-material-theme .global-continue:active { box-shadow: inset 0 1px 2px #152d3e; }
+.club-material-theme .topbar :focus-visible { outline-color: var(--club-paint); }
+.club-material-theme .sidebar :focus-visible { outline-color: var(--club-on-paint); }
+
+.club-material-theme .sidebar {
+  background: var(--club-texture-paint), var(--club-paint-dark);
+  border-right: 3px solid var(--club-cement);
+  box-shadow: inset -2px 0 #152b3966;
+}
+
+.club-material-theme .main-nav { gap: 3px; }
+.club-material-theme .main-nav button {
+  color: var(--club-on-paint-muted);
+  border-radius: var(--club-radius);
+  border-bottom-color: #ffffff12;
+}
+
+.club-material-theme .main-nav button:hover {
+  color: var(--club-on-paint);
+  background: var(--club-paint);
+}
+
+.club-material-theme .main-nav button.is-active {
+  color: var(--club-paint-dark);
+  background: var(--club-texture-grain), var(--club-paper);
+  border-color: var(--club-paper-rule);
+  box-shadow: var(--club-paper-shadow);
+  font-weight: 700;
+}
+
+/* Tactics pilot: layout, dimensions and breakpoint logic stay in their files. */
+.club-material-theme .tactics-screen--visual {
+  background: none;
+  border-color: transparent;
+  border-radius: 0;
+}
+
+.club-material-theme .tactics-header {
+  border-bottom: 1px solid var(--club-paper-rule);
+  color: var(--club-paint-dark);
+}
+
+.club-material-theme .tactics-header h2 {
+  font-family: var(--club-font-heading);
+  font-weight: 700;
+  letter-spacing: .025em;
+  text-shadow: 0 1px #f5efda;
+}
+
+.club-material-theme .tactical-summary { color: var(--club-ink-muted); }
+.club-material-theme .tactical-summary > strong { color: var(--club-paint-dark); font-weight: 600; }
+.club-material-theme .screen-back-button { background: var(--club-paper); }
+.club-material-theme .screen-back-button:hover { background: var(--club-paper-aged); }
+
+.club-material-theme .tactical-instructions-panel {
+  padding: 14px 5px 6px;
+}
+
+.club-material-theme .tactics-right-column {
+  padding: 16px 5px 6px;
+}
+
+.club-material-theme :is(.tactical-instructions-panel, .tactics-lineup-panel) > h3 {
+  font-family: var(--club-font-heading);
+  color: var(--club-paint-dark);
+  letter-spacing: .045em;
+  border-bottom: 3px double var(--club-paint);
+}
+
+.club-material-theme .tactical-instruction-card { padding-inline: 2px; }
+.club-material-theme .tactical-general-settings { padding-top: 9px; }
+.club-material-theme .tactical-instruction-card h4 { font-family: var(--club-font-heading); }
+.club-material-theme .tactical-instruction-card select {
+  border-radius: var(--club-radius);
+  background: var(--club-texture-grain), var(--club-paper);
+  border-color: var(--club-paper-rule);
+  font-weight: 600;
+  box-shadow: inset 0 1px 1px #675e4720;
+}
+
+.club-material-theme .tactical-instruction-card select:hover { border-color: var(--club-paint); }
+.club-material-theme .instruction-edit-toggle { font-weight: 650; }
+.club-material-theme .instruction-edit-toggle:hover { text-decoration: underline; }
+.club-material-theme .tactical-familiarity { border-top: 1px dotted var(--club-paper-rule); }
+
+.club-material-theme .tactical-instructions-panel .assistant-lineup-proposal {
+  padding: 10px 5px 5px;
+  background: var(--club-texture-grain), var(--club-paper-aged);
+  border-top: 1px solid var(--club-paper-rule);
+  box-shadow: inset 0 -1px var(--club-paper-edge);
+}
+
+.club-material-theme .assistant-lineup-proposal button {
+  color: var(--club-on-paint);
+  background: var(--club-paint);
+  border-color: var(--club-paint-dark);
+  border-radius: var(--club-radius);
+}
+
+.club-material-theme .assistant-lineup-proposal button:hover { background: var(--club-paint-light); }
+.club-material-theme .assistant-lineup-preview {
+  background: var(--club-texture-grain), var(--club-paper);
+  border: 1px solid var(--club-paper-rule);
+  border-top: 3px solid var(--club-paint);
+  border-radius: var(--club-radius);
+  box-shadow: var(--club-paper-shadow);
+}
+
+/* The mount occupies the existing viewport; no equipment alters hit targets. */
+.club-material-theme .club-board-mount {
+  position: relative;
+  border-radius: 0;
+  background: var(--club-wall-fittings) center top / 100% auto no-repeat;
+}
+.club-material-theme .club-chalkboard {
+  background: var(--club-chalk-lines) center / 100% 100% no-repeat, var(--club-texture-chalk) repeat, var(--club-board);
+  background-size: 100% 100%, 480px 480px, auto;
+  border: 10px solid var(--club-wood);
+  border-image: none;
+  border-radius: var(--club-radius);
+  box-shadow: var(--club-board-shadow);
+  overflow: visible;
+  width: min(calc(100% - 14px), 82cqh);
+  height: calc(100% - 20px);
+  margin-top: 8px;
+}
+
+.club-material-theme .club-chalkboard::after {
+  content: '';
+  position: absolute;
+  z-index: 5;
+  inset: -10px;
+  border: 10px solid transparent;
+  border-image: var(--club-texture-wood) 8 / 10px / 0 repeat;
+  background: var(--club-screw) left top, var(--club-screw) right top, var(--club-screw) left bottom, var(--club-screw) right bottom;
+  background-size: 9px 9px;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  box-shadow: inset 0 1px var(--club-wood-highlight), inset 0 -2px var(--club-wood-edge), 0 0 0 1px var(--club-wood-edge);
+  pointer-events: none;
+}
+
+.club-material-theme .club-chalkboard::before,
+.club-material-theme .club-chalkboard :is(.tactical-halfway, .tactical-circle, .tactical-box, .tactical-goal) {
+  /* The shared pitch markers stay in the DOM; the material supplies their chalk drawing. */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.club-material-theme .club-chalk-tray {
+  position: absolute;
+  left: 30%;
+  bottom: 9px;
+  width: 40%;
+  height: 8px;
+  z-index: 6;
+  background: var(--club-wood);
+  border-top: 2px solid var(--club-wood-highlight);
+  border-bottom: 2px solid var(--club-wood-edge);
+  box-shadow: 1px 3px 3px #30291f59;
+  pointer-events: none;
+}
+.club-material-theme .club-eraser {
+  position: absolute;
+  left: 18%;
+  bottom: 5px;
+  width: 28px;
+  height: 10px;
+  background: var(--club-wood-edge);
+  border-top: 5px solid var(--club-wood-highlight);
+  border-radius: 1px;
+  transform: rotate(-3deg);
+  box-shadow: 0 1px 2px #17292080;
+}
+.club-material-theme .club-chalk-stick {
+  position: absolute;
+  right: 15%;
+  bottom: 5px;
+  width: 24px;
+  height: 4px;
+  background: var(--club-chalk);
+  border-bottom: 1px solid var(--club-paper-rule);
+  border-radius: 1px;
+  transform: rotate(4deg);
+}
+
+.club-material-theme .tactics-selection-hint {
+  color: var(--club-on-paint);
+  background: var(--club-texture-paint), var(--club-paint-dark);
+  padding: 3px 6px;
+  border-radius: var(--club-radius);
+}
+
+.club-material-theme .tactics-selection-error {
+  color: var(--club-danger);
+  background: var(--club-paper);
+  padding: 3px 6px;
+}
+
+/* Player magnets keep every existing status, tooltip, link and drag state. */
+.club-material-theme .tactical-player-card--field {
+  color: var(--club-ink);
+  background: var(--club-texture-grain), var(--club-paper);
+  border: 1px solid var(--club-paper-rule);
+  border-top: 2px solid var(--club-paint);
+  border-radius: 1px 1px 2px 1px;
+  box-shadow: inset 0 -2px var(--club-paper-edge), 1px 2px 1px #152b2473, 2px 3px 4px #152b2440;
+}
+
+.club-material-theme .tactical-player-card--field::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  top: -4px;
+  left: 7px;
+  width: 7px;
+  height: 7px;
+  background: var(--club-paint);
+  border: 1px solid var(--club-paint-dark);
+  border-radius: 50%;
+  box-shadow: inset 0 1px #9db3ba80, 0 1px 1px #172b23;
+  pointer-events: none;
+}
+
+.club-material-theme .tactical-card-number { color: var(--club-ink-muted); }
+.club-material-theme .tactical-player-card--field .tactical-card-position { color: var(--club-ink-muted); }
+.club-material-theme .tactical-card-name.player-profile-link { color: var(--ui-interactive); }
+.club-material-theme .tactical-card-stamina { background: var(--club-neutral-bg); border-radius: 1px; }
+.club-material-theme :is(.tactical-card-position, .lineup-row-slot).is-out-of-position { color: var(--club-warning); }
+.club-material-theme .tactical-card-special { border-radius: var(--club-radius); }
+
+.club-material-theme .tactical-player-card--field.is-selected {
+  background-color: var(--ui-interactive-bg);
+  border-color: var(--club-paint);
+  outline: 2px solid var(--club-chalk);
+  box-shadow: 1px 2px 3px #102c2c66;
+}
+
+.club-material-theme .tactical-player-card--field.has-negative { border-color: var(--club-danger); }
+.club-material-theme .tactical-player-card--field.is-unavailable { background-color: var(--club-danger-bg); }
+.club-material-theme .tactical-player-card.drop-warning { --drop-color: var(--club-warning); }
+.club-material-theme .tactical-player-card:is(.drop-primary, .drop-secondary, .drop-compatible, .drop-warning) {
+  border-color: var(--drop-color);
+  background-color: color-mix(in srgb, var(--drop-color) 12%, var(--club-paper));
+}
+.club-material-theme .tactical-player-card.is-drop-hover {
+  background-color: color-mix(in srgb, var(--drop-color, var(--club-danger)) 22%, var(--club-paper));
+  box-shadow: none;
+}
+.club-material-theme .tactical-player-card.is-drag-source { opacity: .42; }
+.club-material-theme .tactical-drag-preview {
+  border-radius: var(--club-radius);
+  background: var(--club-texture-grain), var(--club-paper);
+  box-shadow: var(--club-paper-shadow);
+}
+
+/* Printed team sheet: restrained rules and clear semantic colors. */
+.club-material-theme .lineup-table-heading { background: var(--ui-table-head); }
+.club-material-theme .lineup-list-scroll h4 {
+  color: var(--club-ink-muted);
+  background: var(--club-paper);
+  font-weight: 650;
+}
+.club-material-theme .lineup-player-row:nth-of-type(even) { background: var(--ui-row-alternate); }
+.club-material-theme .lineup-player-row:has(.tactical-card-select:hover) { background: var(--ui-surface-elevated); }
+.club-material-theme .lineup-player-row.is-selected {
+  background: var(--ui-interactive-bg);
+  box-shadow: inset 3px 0 var(--club-paint);
+}
+.club-material-theme .lineup-player-row.has-negative { background: var(--club-danger-bg); }
+.club-material-theme .tactics-selected-player {
+  background: var(--club-paper-aged);
+  border-color: var(--club-paper-rule);
+  border-left-color: var(--club-paint);
+  box-shadow: 0 1px 1px #675e4726;
+}
+.club-material-theme .selected-player-full { border-radius: var(--club-radius); }
+
+@media (max-height: 850px) and (min-width: 1101px) {
+  .club-material-theme .tactical-instructions-panel { padding: 12px 4px 4px; }
+  .club-material-theme .tactics-right-column { padding: 15px 3px 4px; }
+  .club-material-theme .tactical-general-settings { padding-top: 6px; }
+}
+
+@media (max-width: 720px) {
+  .club-material-theme .content::before { inset-block-start: 320px; }
+  .club-material-theme .tactical-instruction-groups { gap: 8px; }
+  .club-material-theme .club-chalkboard { border-width: 8px; }
+  .club-material-theme .club-chalkboard::after { inset: -8px; border-width: 8px; border-image-width: 8px; }
+  .club-material-theme .club-chalk-tray { left: 140px; width: 150px; }
+}
+
+@media (max-width: 650px) {
+  /* The existing mobile layout hides this icon; let its text use the full sheet. */
+  .club-material-theme .tactical-instructions-panel .assistant-lineup-proposal { grid-template-columns: minmax(0, 1fr); }
+  /* Reserve room for names inside the paper while retaining every table column. */
+  .club-material-theme :is(.lineup-table-heading, .tactical-player-card.lineup-player-row) {
+    grid-template-columns: 22px 18px minmax(0, 1fr) 39px 20px 29px 14px;
+    gap: 3px;
+    padding-inline: 2px;
+  }
+  .club-material-theme .lineup-table-heading { font-size: 7px; letter-spacing: 0; }
+  .club-material-theme .lineup-row-quality { font-size: 8px; }
+  .club-material-theme .lineup-player-row .player-portrait { width: 18px; }
+}

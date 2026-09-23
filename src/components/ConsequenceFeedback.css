@@ -1,0 +1,9 @@
+.consequence-feedback { display: grid; gap: 10px; max-width: min(360px, calc(100vw - 24px)); pointer-events: none; position: fixed; right: 18px; top: 52px; width: 100%; z-index: 1200; }
+.consequence-toast { animation: consequence-in .28s ease-out, consequence-out .35s ease-in 3.25s forwards; background: var(--ui-surface-elevated); border-left: 5px solid var(--ui-border); box-shadow: 0 8px 24px var(--ui-overlay); color: var(--ui-text); padding: 12px 14px; }
+.consequence-toast span { display: block; font-size: 10px; font-weight: 900; letter-spacing: .12em; margin-bottom: 4px; }
+.consequence-toast p { font-size: 14px; line-height: 1.35; margin: 0; }
+.consequence-toast.is-positive { border-color: var(--ui-positive); }.consequence-toast.is-negative { border-color: var(--ui-danger); }.consequence-toast.is-memory { border-color: var(--ui-border); }.consequence-toast.is-warning { border-color: var(--ui-border); }
+@keyframes consequence-in { from { opacity: 0; transform: translateX(40px) } to { opacity: 1; transform: translateX(0) } }
+@keyframes consequence-out { to { opacity: 0; transform: translateX(30px) } }
+@media (max-width:600px) { .consequence-feedback { right: 12px; top: 44px; } .consequence-toast { padding: 10px 12px; } }
+@media (prefers-reduced-motion:reduce) { .consequence-toast { animation: none; } }

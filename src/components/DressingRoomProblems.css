@@ -1,0 +1,7 @@
+.dressing-room-problems .player-table-wrapper { max-height: 158px; overflow-y: auto; }
+.dressing-room-problems-table { min-width: 660px; }
+.dressing-room-problems-table th { position: sticky; top: 0; z-index: 1; }
+.dressing-room-problems-table tbody tr { cursor: default; }
+.dressing-room-problems-table .dressing-room-problem-subject { white-space: normal; min-width: 210px; }
+.dressing-room-problem-state { color: var(--player-muted); font-size: var(--ui-secondary, 12px); }
+.dressing-room-problems-table .player-status-badge { min-width: 68px; text-align: center; }

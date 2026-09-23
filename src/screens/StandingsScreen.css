@@ -1,25 +1,25 @@
-.standings-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
+.standings-screen { background: var(--ui-surface); border: 1px solid var(--ui-border); padding: 20px; }
 .standings-table-wrapper { overflow-x: auto; }
 .standings-table { border-collapse: collapse; min-width: 850px; width: 100%; }
-.standings-table th, .standings-table td { border-bottom: 1px solid #ddd; padding: 10px 8px; text-align: center; white-space: nowrap; }
-.standings-table thead th { background: #f7f7f7; font-size: 12px; font-weight: 600; }
+.standings-table th, .standings-table td { border-bottom: 1px solid var(--ui-border); padding: 10px 8px; text-align: center; white-space: nowrap; }
+.standings-table thead th { background: var(--ui-surface-elevated); font-size: 12px; font-weight: 600; }
 .standings-table th:nth-child(2), .standings-table tbody th { text-align: left; }
 .standings-table tbody th { font-weight: 500; }
 .standings-table .points { font-weight: 700; }
 .standings-table .position { border-left: 3px solid transparent; }
-.standings-table .position-promotion { border-left-color: #3d7d50; }
-.standings-table .position-playoff { border-left-color: #be8a2a; }
-.standings-table tr.is-user-team { background: #f2f6f3; }
+.standings-table .position-promotion { border-left-color: var(--ui-positive); }
+.standings-table .position-playoff { border-left-color: var(--ui-warning); }
+.standings-table tr.is-user-team { background: var(--ui-surface-elevated); }
 .standings-table tr.is-user-team th { font-weight: 700; }
 .recent-form { display: flex; gap: 4px; justify-content: center; }
-.outcome { align-items: center; border-radius: 50%; color: #fff; display: inline-flex; font-size: 10px; font-weight: 700; height: 22px; justify-content: center; width: 22px; }
-.outcome-G { background: #3d7d50; }
-.outcome-E { background: #c69a32; }
-.outcome-P { background: #a94a4a; }
-.standings-legend { color: #666; display: flex; flex-wrap: wrap; font-size: 13px; gap: 18px; margin-top: 14px; }
+.outcome { align-items: center; border-radius: 50%; color: var(--ui-text); display: inline-flex; font-size: 10px; font-weight: 700; height: 22px; justify-content: center; width: 22px; }
+.outcome-G { background: var(--ui-positive-bg); }
+.outcome-E { background: var(--ui-warning-bg); }
+.outcome-P { background: var(--ui-danger-bg); }
+.standings-legend { color: var(--ui-text-secondary); display: flex; flex-wrap: wrap; font-size: 13px; gap: 18px; margin-top: 14px; }
 .standings-legend span { align-items: center; display: flex; gap: 6px; }
 .zone-mark { border-radius: 1px; display: inline-block; height: 12px; width: 3px; }
-.zone-mark.promotion { background: #3d7d50; }
-.zone-mark.playoff { background: #be8a2a; }
+.zone-mark.promotion { background: var(--ui-positive-bg); }
+.zone-mark.playoff { background: var(--ui-warning-bg); }
 
 @media (max-width: 720px) { .standings-screen { padding: 14px; } }

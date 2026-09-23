@@ -1,0 +1,20 @@
+.player-portrait {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 30px;
+  background: var(--ui-surface-elevated);
+  border-radius: 4px;
+}
+
+.player-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.player-portrait--medium { width: 38px; height: 44px; }
+.player-portrait--large { width: 200px; height: 230px; }

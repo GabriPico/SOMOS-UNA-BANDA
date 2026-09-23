@@ -1,5 +1,18 @@
 # Sistema de jugadores
 
+La charla previa aporta estados emocionales pequeños a cada convocado al iniciar
+el partido. Influyen en su conducta y ánimo, con respuestas según personalidad,
+relación, felicidad y autoridad; no alteran atributos, Calidad General ni
+familiaridad. Se atenúan usando los minutos disputados del motor. La preparación
+táctica queda fijada al entrar en el vestuario. Véase [PREMATCH_TALK.md](PREMATCH_TALK.md).
+
+La asignaciÃ³n determinista de personalidades respeta la edad: `Veterano` nunca se genera antes de los 30 aÃ±os y gana peso progresivamente a partir de 32â€“35; `LÃ­der` puede aparecer a cualquier edad con una ponderaciÃ³n ligeramente mayor al acumular experiencia. El rasgo deportivo `VETERANO` se valida igualmente con edad mÃ­nima de 30.
+
+El primer amistoso usa el historial de convocatorias por partido, pero no aplica
+máximo de 18 ni excluye jugadores a prueba. La lista anunciada restringe los
+jugadores disponibles para el encuentro y se comunica como mensaje persistente
+dentro del grupo del equipo.
+
 Documento canónico del sistema implementado. La fuente ejecutable de verdad son
 `src/domain/models.ts`, `playerRatings.ts`, `playerGeneration.ts` y
 `positionFamiliarity.ts`.
@@ -151,68 +164,209 @@ que está tipado pero todavía no aplica dispersión adicional.
 
 ## Ficha y pantalla Equipo
 
-Equipo muestra Pos, Nombre, Calidad, Forma, PJ, G, valoración media, últimas
-cinco valoraciones, Edad, Personalidad, Felicidad y estado de Cuota para 20
-jugadores. Calidad General y calidad por posición siguen siendo cálculos internos
-0–100, pero se presentan mediante una escala compartida de 1–5 estrellas con
-medias estrellas. Forma, Felicidad, Condición y Cansancio se presentan mediante
-etiquetas cualitativas; los atributos deportivos 1–20 y las estadísticas
-objetivas de partido permanecen numéricos. El estado de cuota procede del plan de
-cuota del club y no expone importes ni aumenta el presupuesto deportivo. Al seleccionar una fila abre
-`src/components/PlayerDetail.tsx`, compartido con Tácticas.
+Equipo muestra dorsal, retrato y nombre, todas las posiciones naturales, edad,
+PJ(TIT), minutos, goles, felicidad, estado y observaciones en una tabla compacta.
+Permite buscar, filtrar por posición y ordenar. Seleccionar una fila actualiza
+la ficha permanente de la derecha, `src/components/PlayerDetail.tsx`, compartida
+con Tácticas. El nombre de una fila o de la ficha lateral navega al perfil dedicado
+`PlayerProfileScreen`, que reutiliza `PlayerDetail` en variante `page`. El retrato
+y el resto de la fila siguen seleccionando. El botón «Ver ficha completa» del
+resumen abre la misma pantalla. La ficha lateral conserva identidad, calidad, rol,
+personalidad, medidas, posiciones, estadísticas y estado; los atributos y el
+perfil de vestuario ampliable se reservan a la ficha completa. Otros accesos
+conservan su modal actual.
+
+Calidad General y calidad por posición siguen siendo cálculos internos 0–100,
+presentados mediante la escala compartida de 1–5 estrellas con medias estrellas.
+Los atributos deportivos conservan internamente su escala 1–20, pero se muestran
+con **0–5 estrellas**, redondeadas a la media estrella más cercana mediante
+`round((valor - 1) / 19 * 10) / 2`. No se expone el valor interno en texto ni
+tooltip. Forma, Felicidad, Condición y Cansancio usan etiquetas cualitativas.
+Las estadísticas objetivas de partido permanecen numéricas. Las titularidades y
+minutos ausentes se muestran como «—»; un historial parcial de minutos se indica
+en el tooltip. No se deducen minutos a partir de apariciones.
+
+La parte superior de la ficha reúne Calidad General, rol en el
+equipo y personalidad actual. El rol reutiliza las expectativas y el rol social
+existentes en el vestuario; no crea nuevas reglas de minutos. Edad, altura, peso
+y pierna dominante se agrupan. Equipo y perfil usan una leyenda compacta de
+posiciones sin mini campo; la explicación del rol está en su tooltip. Altura y peso se asignan en
+`generatePlayerMeasurements` con una semilla independiente de los atributos,
+respetan valores explícitos y son descriptivos: no modifican el rendimiento ni
+generan estados de sobrepeso. Los campos nuevos son opcionales para conservar
+compatibilidad. Dorsal y fecha de nacimiento solo se muestran cuando existen.
+El estado de cuota procede del plan de cuota del club y no expone importes ni
+aumenta el presupuesto deportivo.
 
 Estado del vestuario reutiliza esos mismos planes para derivar un resumen social
 de cuotas y mostrar solo casos pendientes. Cobrar del club es excepcional,
 determinista, de importe modesto y conserva el contexto del acuerdo; exenciones
 y acuerdos especiales son más habituales.
 
-La ficha muestra datos personales, humanos y deportivos, Calidad General, mejor
-posición, calidad de posiciones naturales, perfil, rendimiento de temporada y
-atributos base. Las valoraciones válidas se guardan en `PlayerSeasonStats` cuando
-el jugador disputa minutos; de ahí se derivan la media y las últimas cinco sin
-inventar datos para el histórico previo. Los atributos
-de portería se ocultan para jugadores de campo. Desde Tácticas puede añadir el
-contexto del puesto actual sin reemplazar los atributos reales mostrados.
+La ficha completa agrupa los atributos base actuales en técnicos, mentales y físicos.
+Solo los porteros naturales muestran el bloque de portería, sustituyendo alcance
+aéreo por juego aéreo de portero. Desde Tácticas se añade el contexto del puesto
+actual sin reemplazar los atributos base mostrados. El perfil desplegable conserva
+forma, relaciones, cuotas y valoraciones. Las valoraciones válidas se guardan en
+`PlayerSeasonStats` cuando el jugador disputa minutos; de ahí se derivan la media
+y las últimas cinco sin inventar datos para el histórico previo. Las últimas
+cinco se ocultan mientras no exista histórico. La ficha abierta desde Estado del
+vestuario recibe las mismas estadísticas y lesiones que desde Equipo.
+
+### Retratos y presentación del vestuario
+
+`src/data/playerPortraits.ts` resuelve por `Player.id` el archivo original en
+`public/assets/players/portraits/`. La convención es `<id>.png`; un mapping opcional
+permite conservar otro nombre o extensión. `PlayerPortrait` se utiliza en Equipo,
+Estado del vestuario, voces, Tácticas y ficha individual, con el mismo archivo en todos los
+tamaños. Si falta o no puede cargarse, muestra `placeholder.svg`, una silueta
+neutra. El fallo es local al componente; no cambia el estado de partida.
+
+Todos los tamaños usan `object-fit: contain`, sin recorte, filtros ni deformación.
+Los originales conservan transparencia y permanecen como assets independientes.
+Nunca se generan ni se modifican caras. Para incorporar los archivos definitivos,
+consultar [PLAYER_PORTRAITS.md](PLAYER_PORTRAITS.md).
+
+El vestuario presenta tres indicadores compactos con nombre, etiqueta, barra de
+nivel 0–100 y descripción breve. Las barras usan cohesión, felicidad y autoridad
+actuales, aproximadas visualmente al múltiplo de 10 más cercano; su color sigue
+la etiqueta cualitativa. No muestran porcentajes ni cambian escalas o umbrales.
+Situación actual conserva hasta cuatro asuntos existentes priorizados por gravedad.
+La sección Problemas aparece después y antes de Jugadores. Su tabla conserva toda la plantilla mediante scroll
+interior y cabecera fija. `squadRole` se presenta como «Expectativa», manteniendo
+su significado de minutos esperados; la autoridad individual usa
+`managerAuthority` traducida con los mismos umbrales de autoridad del dominio.
+No se generan nuevas expectativas, conflictos ni consecuencias.
+
+Problemas es una vista derivada en `getDressingRoomProblems`: recoge situaciones
+individuales registradas, asuntos negativos o de atención existentes, relación
+«Mala / Muy mala», autoridad «Cuestionada / Muy cuestionada» y los casos de cuota
+que ya devuelve `getTeamFeeSummary`. Las categorías humanas reutilizan los helpers
+actuales; las finanzas conservan exclusiones de acuerdos, exentos y compensaciones.
+Solo se incluyen jugadores presentes en la plantilla y los asuntos colectivos.
+
+`situationIssueId` enlaza opcionalmente una situación individual con su aviso
+general mediante ID estable, para conservar su severidad sin duplicar el mismo
+problema. Es compatible con perfiles antiguos que no tengan ese campo. Los asuntos
+positivos no se consideran problemas. La tabla usa Severidad, Jugador, Asunto y
+Estado, ordena los casos por gravedad y permite abrir la ficha desde el nombre.
+El scroll interior conserva todos los casos sin desplazar el protagonismo de la
+tabla principal. Si no hay casos muestra «No hay problemas relevantes ahora mismo.».
+
+Los estados «Activo», «Pendiente» y «Restricción activa» describen el dato actual;
+no implican un nuevo flujo de resolución, conversaciones ni sanciones. Un caso
+derivado desaparece cuando su fuente deja de indicarlo. Las situaciones iniciales
+siguen existiendo hasta que se actualice su fuente, todavía mock. No se convierten
+riesgos de personalidad, históricos de decisiones o malestar general en conflictos
+activos ni se atribuyen causas no registradas.
+
+El sistema visual global oscuro/claro se documenta en [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md).
+Todas las pantallas comparten los tokens de tema. En escritorio ancho, Cambios recientes
+es un historial lateral con mayor presencia, agrupado por signo y sin fechas
+inventadas. Voces y cuotas permanecen debajo de la tabla principal. Las cuotas
+siguen derivándose mediante `getTeamFeeSummary`; la petición de Manolo solo aparece
+cuando hay retrasos. Asuntos, situaciones individuales y cambios siguen usando
+los datos existentes de `initialDressingRoomState`, sin simular una actualización
+dinámica que todavía no existe. Objetivos y confianza presidencial dejan de
+mostrarse aquí; sus datos permanecen en la partida para su futura presentación
+en Panel / Objetivos.
 
 ## Tácticas y rating actual
+
+En Táctica, condición física, cansancio e incidencia puntual se presentan como
+tres dimensiones cualitativas independientes. La incidencia vive en el estado
+dinámico serializable del jugador, puede afectar temporalmente el rendimiento
+efectivo y desaparece por avance temporal; no se incorpora al modelo base ni a
+la Calidad General permanente.
 
 Las formaciones implementadas son 4-4-2, 4-3-3, 4-2-3-1, 3-5-2 y 5-4-1. Se
 pueden intercambiar titulares y suplentes, y también dos slots del once.
 
-Un suplente muestra Calidad General mediante estrellas. Un titular muestra
-`calculateTacticalRating(player, tacticalPosition)`, nunca un valor almacenado.
-La ficha contextual y la tarjeta representan ese resultado mediante la misma
-escala de estrellas, junto con familiaridad y adaptación cualitativa.
+El XI inicial y las propuestas del segundo entrenador reutilizan una asignación
+global de jugadores a los slots de la formación activa. La asignación minimiza
+primero puestos improvisados y después puestos meramente compatibles; las
+diferencias de rating, condición y percepción del ayudante solo desempatan dentro
+de ese orden estructural. La falibilidad del segundo afecta sus preferencias, no
+la interpretación básica de los puestos requeridos por la formación.
+
+En Tácticas, un clic en tarjeta, posiciones o retrato selecciona al jugador. Un único
+`selectedPlayerId` vincula campo, tabla derecha y resumen compacto superior. Dos
+clics sobre jugadores distintos permiten intercambiarlos. La X del resumen o el
+campo vacío cancelan la selección. El nombre del jugador y VER FICHA COMPLETA abren
+el perfil dedicado, usando el mismo `PlayerDetail` de Equipo en variante `page`.
+La variante `summary` conserva la vista compacta del seleccionado. Abrir un nombre
+no selecciona ni intercambia; arrastrar desde el nombre sí usa la operación táctica.
+La ficha completa muestra Calidad General y
+`calculateTacticalRating(player, tacticalPosition)` mediante estrellas, nunca un
+valor almacenado, junto con familiaridad y adaptación cualitativa. Las tarjetas
+del campo priorizan retrato, dorsal existente, nombre corto, puesto ocupado,
+corazón de condición y barra de stamina, con avisos independientes de incidencias.
+El cansancio alimenta la barra, aproximada a decenas y sin porcentajes visibles.
+
+La columna derecha muestra titulares y suplentes en una tabla visual continua con Calidad General
+mediante estrellas, calculada desde los atributos base actuales. Sus selecciones
+se sincronizan con las tarjetas del campo. El banquillo muestra únicamente los
+convocados fuera del once. Al final hay un selector desplegable de candidatos
+antes de anunciar la lista y un acceso de consulta a no convocados después.
+La selección, instrucciones y once se conservan al cerrar la ficha completa.
+Las posiciones naturales aparecen bajo cada nombre completo, con principal y
+secundarias diferenciadas. El puesto ocupado tiene su propia columna.
+
+Clics y arrastre reutilizan `moveAvailableLineupPlayer`, que comprueba convocatoria
+y elegibilidad y delega en `moveLineupPlayer`, incluida la regla del portero natural.
+El arrastre por Pointer Events sirve a campo y tabla, ratón y táctil; empieza tras
+7 px de movimiento y tiene preview compacta, destino resaltado y scroll local.
+Las coordenadas pertenecen a los slots de la formación, nunca al jugador.
+El feedback distingue principal, secundaria, compatible e improvisada a partir de
+`getPositionFamiliarity`; improvisada muestra aviso sin añadir restricciones.
+No se modifican atributos, ratings ni penalizaciones posicionales.
 
 Las instrucciones visibles son:
 
-- Con balón: Mentalidad (Ofensiva/Equilibrada/Cauta), Estilo de pase (En
-  corto/Mixto/Directo), Ritmo (Alto/Medio/Bajo) y Tras recuperación
-  (Contraataque/Equilibrada/Mantener posición).
-- Sin balón: Altura de presión (Alta/Media/Baja), Intensidad de presión
-  (Alta/Media/Baja), Tras pérdida (Presión tras pérdida/Mixto/Repliegue), Perder
-  tiempo (Sí/No) y Ser agresivos (Sí/No).
+- Ajustes generales: Formación y Mentalidad (Ofensiva/Equilibrada/Cauta).
+- Con balón: Pase (En corto/Mixto/Directo) y Ritmo (Alto/Medio/Bajo).
+- En transición: Tras recuperar (Contraataque/Equilibrada/Mantener posición)
+  y Tras pérdida (Presión tras pérdida/Mixto/Repliegue).
+- Sin balón: Altura (Alta/Media/Baja), Presión (Alta/Media/Baja), Perder tiempo
+  (Sí/No) y Ser agresivos (Sí/No).
 
-Actualmente son estado local de UI; no influyen todavía en un motor de partido.
+Las instrucciones ocupan una columna compacta a la izquierda del campo. Formación
+y Mentalidad se editan directamente; los otros tres bloques alternan resumen y
+selects mediante CAMBIAR / LISTO, con un solo bloque abierto simultáneamente.
+Estas diez opciones editan el `TacticalPlan` existente en App y la partida;
+el rediseño no cambia sus efectos en entrenamiento o simulación.
+
+La familiaridad general calculada por entrenamiento se muestra debajo de Formación
+y Mentalidad con texto, color y barra aproximada. Se reutilizan los niveles vigentes
+Muy baja, Baja, Media, Alta y Muy alta. La propuesta del segundo cierra la columna
+izquierda; no ocupa una banda horizontal sobre el campo.
+
+El perfil dedicado reúne identidad, club, posiciones, calidad, rol, personalidad,
+medidas, pie, estado, atributos y estadísticas disponibles. Mantiene observaciones
+y el perfil de vestuario ampliable; no inventa asistencias ni notas de staff.
+La navegación vive en App, con el ID de jugador y el origen conservado. Una frontera
+`Activity` de React mantiene el estado y oculta la pantalla de origen; al volver se
+restauran foco y desplazamientos. Selección, filtros, grupo táctico abierto, propuesta
+y once no se reinician. Este estado de navegación no forma parte de la partida.
 
 ## Familiaridad y atributos efectivos
 
-`positionFamiliarity.ts` contiene un grafo bidireccional. Se toma la distancia
-mínima desde cualquiera de las posiciones naturales:
+`positionFamiliarity.ts` contiene un grafo bidireccional y compatibilidades de banda.
+La clasificación ejecutable vigente, conforme a las decisiones del sistema, es:
 
-- 0: `NATURAL`, penalización 0.
-- 1: `RELATED`, penalización 1.
-- 2: `UNFAMILIAR`, penalización 2.
-- 3 o más: `VERY_UNFAMILIAR`, penalización 3.
+- `PREFERRED`: posición principal o secundaria; penalización 0.
+- `COMPATIBLE`: compatibilidad de banda o distancia 1 desde una posición natural;
+  penalización 0.
+- `IMPROVISED`: los demás puestos; penalización 2 sobre atributos relevantes.
 
 Relaciones actuales: DFC–LD/LI/MCD; LD–CAD; LI–CAI; CAD–MD/ED; CAI–MI/EI;
 MD–MC/ED; MI–MC/EI; MCD–MC; MC–MP; MP–DC/ED/EI; ED–DC; EI–DC. `POR` no tiene
-aristas: cualquier cruce POR↔campo es `VERY_UNFAMILIAR`.
+aristas: cualquier cruce POR↔campo es `IMPROVISED`.
 
 `getEffectiveAttributesForPosition` copia los atributos base y resta la
 penalización únicamente a los atributos con peso positivo en la fórmula del slot,
 con mínimo temporal 1. `calculateTacticalRating` aplica la fórmula normal a esa
-copia. Ni los atributos base, ni las posiciones naturales, ni la Calidad General
+copia, con un punto de valoración por puesto preferido y límite 100. Ni los atributos base, ni las posiciones naturales, ni la Calidad General
 cambian.
 
 ## Convocatoria oficial
@@ -234,9 +388,27 @@ Quedarse fuera solo modifica el componente humano de tiempo de juego cuando el j
 El entrenamiento conserva una copia guardable de los atributos base y estados
 decimales por atributo. El valor efectivo suma el bonus provisional, nunca supera
 20 y puede recibir penalizaciones físicas temporales antes de integrarse en el
-futuro motor de partido. La ficha abierta desde Entrenamiento muestra `↑` para
-bonus menores que uno y `(+N)` desde el primer punto efectivo.
+motor de partido. La ficha muestra `↑` cuando existe un bonus provisional
+positivo, sin revelar su valor exacto. Las estrellas reflejan los atributos base
+actuales; el rating táctico utiliza los atributos efectivos y la familiaridad.
 
 La consolidación puede elevar el atributo base al cerrar una semana. Para
 porteros, el entrenamiento sustituye cualquier trabajo aéreo de campo por
 `juegoAereoPortero`; nunca entrena `alcanceAereo` como equivalente.
+
+## Resumen social del vestuario
+
+`dressingRoomPresentation.ts` deriva una selección de hasta seis jugadores a
+seguir desde sus incidencias actuales y, cuando existe, un apoyo influyente al
+entrenador. La gravedad ordena las prioridades; un jugador no ocupa varias filas.
+La influencia proviene de `TrainingPlayerState.lockerRoomInfluence` y la jerarquía
+cuenta exactamente los miembros de la plantilla actual en sus cuatro categorías.
+No se modifican atributos, roles, autoridad, felicidad ni influencia al consultar.
+
+Las voces son una representación breve de los estados existentes, no nuevas
+conversaciones persistentes. Compromisos proyecta las promesas activas de
+`GameState.promises`, respetando identidad y estado; las incidencias no generan
+promesas automáticamente. Su resolución sigue perteneciendo al dominio existente.
+Los asuntos e historial mock conservan su fuente hasta la implementación de un
+ciclo de vida completo. Los datos individuales siguen disponibles en Equipo y
+PlayerDetail; Estado del vestuario prioriza ahora las situaciones colectivas.

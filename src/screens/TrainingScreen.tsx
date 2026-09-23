@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlayerDetail } from "../components/PlayerDetail";
 import { players } from "../data/mockData";
 import type {
@@ -28,6 +28,7 @@ import { getAuthorityLabel, getConditionLabel, getFamiliarityLabel, getFatigueLa
 import { getPlayersToWatch } from "../domain/trainingPresentation";
 import "./TrainingScreen.css";
 import type { StaffPerson } from "../domain/staff";
+import { ContextualTour } from "../components/ContextualTour";
 
 type Props = {
   tacticalPlan: TacticalPlan;
@@ -36,10 +37,18 @@ type Props = {
   injuredPlayerIds?: number[];
   staffMembers: StaffPerson[];
   guided?: boolean;
+  tutorialActive?: boolean;
+  tutorialCompleted?: boolean;
+  tutorialStep?: number;
+  onTutorialStepChange?: (step: number) => void;
+  onTutorialComplete?: () => void;
   onTrainingStateChange: (state: TrainingGameState) => void;
   onBack: () => void;
   onOpenTactics: () => void;
   onFinishEditing?: () => void;
+  reviewRequiredSessionId?: string;
+  onSessionPlanSaved?: (sessionId: string) => void;
+  validationAttempt?: number;
 };
 const absenceReasons = [
   "Trabajo",
@@ -47,6 +56,13 @@ const absenceReasons = [
   "Motivos personales",
   "Molestias",
 ];
+const TRAINING_TUTORIAL_STEPS = [
+  { selector: '[data-tour-target="training-week"]', placement: 'viewport', title: 'Prepara la semana', text: 'Cada semana tienes dos entrenamientos. Decide qué quieres trabajar antes de que llegue el día de la sesión.' },
+  { selector: '[data-tour-target="training-blocks-tuesday"]', title: 'Elige qué trabajar', text: 'Cada entrenamiento tiene dos bloques. Elige qué quieres trabajar en cada uno. Algunas actividades pueden ocupar los dos bloques de la sesión.' },
+  { selector: '[data-tour-target="training-effects-tuesday"]', title: 'No todo sirve para lo mismo', text: 'Cada trabajo mejora aspectos distintos. Algunos también cargan más físicamente al equipo y aumentan el riesgo de molestias.' },
+  { selector: '[data-tour-target="training-physical-state"]', title: 'Mira cómo llega el equipo', text: 'La condición, el cansancio y las molestias importan. Cargar demasiado a un jugador puede perjudicar su rendimiento o aumentar el riesgo de lesión.' },
+  { selector: '[data-tour-target="training-continue"]', title: 'Cuando estés listo...', text: 'Cuando avances el tiempo llegará el entrenamiento. Veremos quién aparece, cómo responde el equipo y si ocurre alguna incidencia.' },
+] as const;
 
 function TrainingSummary({
   state,
@@ -54,6 +70,7 @@ function TrainingSummary({
 }: {
   state: TrainingGameState;
   plan: TacticalPlan;
+  validationError?: boolean;
 }) {
   const values = [
     [
@@ -70,6 +87,7 @@ function TrainingSummary({
     <section
       className="training-summary"
       aria-label="Estado general del equipo"
+      data-tour-target="training-physical-state"
     >
       {values.map(([label, value]) => (
         <div key={label}>
@@ -152,7 +170,7 @@ function TrainingEffectsPreview({
     session.intensity,
   );
   return (
-    <section className="training-effects">
+    <section className="training-effects" data-tour-target={`training-effects-${session.id}`}>
       <h4>Efectos previstos</h4>
       <dl>
         {preview.effects.map(([name, level]) => (
@@ -236,11 +254,15 @@ function TrainingSessionCard({
   onChange,
   staffMembers = [],
   plan,
+  validationError = false,
+  requiresReview = false,
 }: {
   session: FunctionalTrainingSession;
   onChange: (next: FunctionalTrainingSession) => void;
   staffMembers?: StaffPerson[];
   plan: TacticalPlan;
+  validationError?: boolean;
+  requiresReview?: boolean;
   canExecute?: boolean;
   onExecute?: () => void;
 }) {
@@ -248,8 +270,9 @@ function TrainingSessionCard({
   if (session.status === "completed")
     return <CompletedSession session={session} />;
   const isFull = FULL_SESSION_BLOCKS.includes(session.blocks[0]);
+  const edit = (next: FunctionalTrainingSession) => onChange({ ...next, planningStatus: session.planningStatus === 'PLANNED' ? 'DIRTY' : session.planningStatus });
   const setBlock = (index: 0 | 1, block: TrainingBlock) =>
-    onChange({
+    edit({
       ...session,
       blocks: FULL_SESSION_BLOCKS.includes(block)
         ? [block, block]
@@ -271,16 +294,14 @@ function TrainingSessionCard({
       )
       .map((member) => member.id);
   return (
-    <article className="training-session-card">
+    <article className={`training-session-card is-${(session.planningStatus ?? 'UNPLANNED').toLowerCase()}${validationError ? ' has-validation-error' : ''}`}>
       <header>
         <div>
           <span>Sesión {session.id === "tuesday" ? "1" : "2"}</span>
           <h3>{session.day}</h3>
         </div>
         <span className="session-status">
-          {session.planningStatus === "PLANNED"
-            ? "PLANIFICADA"
-            : "POR PLANIFICAR"}
+          {session.planningStatus === "PLANNED" ? "✓ PLANIFICADA" : session.planningStatus === 'DIRTY' ? 'CAMBIOS SIN GUARDAR' : "POR PLANIFICAR"}
         </span>
       </header>
       <fieldset>
@@ -293,7 +314,7 @@ function TrainingSessionCard({
               className={session.intensity === level ? "is-selected" : ""}
               aria-pressed={session.intensity === level}
               onClick={() =>
-                onChange({
+                edit({
                   ...session,
                   intensity: level,
                 })
@@ -304,7 +325,7 @@ function TrainingSessionCard({
           ))}
         </div>
       </fieldset>
-      <div className="training-block-selectors">
+      <div className="training-block-selectors" data-tour-target={`training-blocks-${session.id}`}>
         <label>
           Bloque 1
           <select
@@ -374,7 +395,7 @@ function TrainingSessionCard({
         ))}
       </div>
       <TrainingEffectsPreview session={session} />
-      {session.planningStatus !== "PLANNED" && (
+      {(session.planningStatus !== "PLANNED" || requiresReview) && (
         <button
           className="primary-action"
           type="button"
@@ -418,19 +439,38 @@ export function TrainingScreen({
   activeSessionId,
   injuredPlayerIds = [],
   guided = false,
+  tutorialActive = false,
+  tutorialCompleted = false,
+  tutorialStep = 0,
+  onTutorialStepChange,
+  onTutorialComplete,
   onTrainingStateChange,
   onBack,
   onOpenTactics,
   onFinishEditing,
+  reviewRequiredSessionId,
+  onSessionPlanSaved,
+  validationAttempt = 0,
 }: Props) {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const updateSession = (next: FunctionalTrainingSession) =>
+  const [showHelp, setShowHelp] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
+  const invalidSessions = trainingState.sessions.filter((session) => session.status !== 'completed' && session.planningStatus !== 'PLANNED');
+  const invalidSessionCount = invalidSessions.length;
+  useEffect(() => {
+    if (!validationAttempt || !invalidSessionCount) return;
+    setShowValidation(true);
+    document.querySelector('.training-sessions')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [validationAttempt, invalidSessionCount]);
+  const updateSession = (next: FunctionalTrainingSession) => {
     onTrainingStateChange({
       ...trainingState,
       sessions: trainingState.sessions.map((session) =>
         session.id === next.id ? next : session,
       ),
     });
+    if (next.id === reviewRequiredSessionId && next.planningStatus === 'PLANNED') onSessionPlanSaved?.(next.id);
+  };
   const selectedState = selectedPlayer
     ? trainingState.players[selectedPlayer.id]
     : null;
@@ -466,23 +506,33 @@ export function TrainingScreen({
           <h2>Planificación de entrenamiento</h2>
           <span>Semana {trainingState.week}</span>
         </div>
+        {tutorialCompleted && <button className="training-help-button" type="button" onClick={() => setShowHelp((value) => !value)}>AYUDA</button>}
       </header>
-      {guided && (
+      {guided && tutorialCompleted && (
         <aside className="onboarding-prompt">
-          <span>PRIMERA SEMANA</span>
+          <span>{plannedCount === 2 ? "ENTRENAMIENTO PREPARADO" : "PRIMER ENTRENAMIENTO"}</span>
           <p>
             {plannedCount === 2
-              ? "SEMANA PLANIFICADA"
-              : `${plannedCount} de 2 sesiones planificadas`}
+              ? "La sesión está lista. Ya puedes continuar."
+              : "Elige los bloques de trabajo para preparar tu primera sesión."}
           </p>
         </aside>
       )}
+      {showHelp && <aside className="training-help-summary"><div><strong>Cómo funciona el entrenamiento</strong><p>Planificas dos sesiones semanales con dos bloques cada una. Los trabajos tienen efectos deportivos y cargas físicas diferentes. La condición, el cansancio y las molestias de la plantilla importan.</p><p>Guardar una planificación no ejecuta la sesión: el entrenamiento ocurre cuando utilizas CONTINUAR y el calendario llega a ese momento.</p></div><button type="button" onClick={() => setShowHelp(false)}>CERRAR</button></aside>}
+      {showValidation && invalidSessions.length > 0 && <aside className="training-save-error" role="alert">
+        {invalidSessions.length === 2
+          ? 'Guarda la planificación de los entrenamientos antes de continuar.'
+          : invalidSessions[0].planningStatus === 'DIRTY'
+            ? `Has realizado cambios en el entrenamiento del ${invalidSessions[0].day.toLowerCase()} que todavía no has guardado.`
+            : `Te falta guardar la planificación del entrenamiento del ${invalidSessions[0].day.toLowerCase()}. Revisa la sesión y pulsa GUARDAR PLANIFICACIÓN antes de continuar.`}
+      </aside>}
+      {reviewRequiredSessionId && <aside className="training-save-error" role="alert">Has dicho al segundo entrenador que revisarías la sesión del jueves. Haz los cambios que consideres y pulsa GUARDAR PLANIFICACIÓN antes de continuar.</aside>}
       <TrainingSummary state={trainingState} plan={tacticalPlan} />
       <TacticalTrainingSummary
         plan={tacticalPlan}
         onOpenTactics={onOpenTactics}
       />
-      <section className="training-sessions" aria-label="Planificación semanal">
+      <section className="training-sessions" aria-label="Planificación semanal" data-tour-target="training-week">
         {trainingState.sessions.map((session) => (
           activeSessionId && session.id !== activeSessionId && session.status !== "completed" ? null :
           <TrainingSessionCard
@@ -490,11 +540,13 @@ export function TrainingScreen({
             session={session}
             staffMembers={staffMembers}
             plan={tacticalPlan}
+            validationError={showValidation && session.status !== 'completed' && session.planningStatus !== 'PLANNED'}
+            requiresReview={session.id === reviewRequiredSessionId}
             onChange={updateSession}
           />
         ))}
       </section>
-      {activeSessionId && onFinishEditing && <aside className="training-edit-finish"><p>Los cambios quedan guardados en la planificación pendiente.</p><button className="primary-action" type="button" onClick={onFinishEditing}>GUARDAR CAMBIOS Y CONTINUAR</button></aside>}
+      {activeSessionId && onFinishEditing && <aside className="training-edit-finish"><p>{invalidSessions.length ? 'Guarda la planificación de la sesión antes de continuar.' : 'La planificación está guardada.'}</p><button className="primary-action" type="button" disabled={invalidSessions.length > 0} onClick={onFinishEditing}>CONTINUAR</button></aside>}
       {trainingState.weekClosed && (
         <p className="week-closed-notice">
           Semana procesada. Sus efectos no volverán a aplicarse.
@@ -509,6 +561,7 @@ export function TrainingScreen({
           onClose={() => setSelectedPlayer(null)}
         />
       )}
+      {tutorialActive && onTutorialStepChange && onTutorialComplete && <ContextualTour steps={TRAINING_TUTORIAL_STEPS} step={tutorialStep} onStepChange={onTutorialStepChange} onComplete={onTutorialComplete} skipLabel="SALTAR TUTORIAL" />}
     </section>
   );
 }

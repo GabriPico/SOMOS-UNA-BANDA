@@ -10,6 +10,8 @@ import { FORMATION_SLOTS, getAttackRouteWeights, tacticalSignature } from './mat
 import { behavioralState, contextForRoute, duelScore } from './matchDuels'
 import type { AttackRoute, MatchEvent, MatchMood, MatchPlayer, MatchPlayerStats, MatchState, MatchStatistics, MatchTeamSide, MatchTeamState } from './matchTypes'
 import { getSubstitutionRules } from './substitutionRules'
+import { getPhysicalIssueEffects } from './physicalIssues'
+import type { TalkEmotions } from './preMatchTalkTypes'
 
 const USER_TEAM_ID = 'fc-poblenou'
 const clamp = (value: number, minimum = 0, maximum = 100) => Math.max(minimum, Math.min(maximum, value))
@@ -40,7 +42,7 @@ function effectiveAttributes(player: Player, training: TrainingPlayerState, posi
 function clubMatchPlayer(player: Player, training: TrainingPlayerState, position: PlayerPosition, onPitch: boolean): MatchPlayer {
   const happiness = getPlayerHappiness(training); const mood: MatchMood = happiness < 42 && training.personality === 'Caliente' ? 'FRUSTRATED' : happiness < 38 ? 'DISCONNECTED' : happiness > 78 ? 'MOTIVATED' : 'NEUTRAL'
   const baseMatchAttributes = getEffectiveMatchAttributes(training)
-  return { id: player.id, teamId: USER_TEAM_ID, name: player.name, position, naturalPositions: [player.primaryPosition, ...player.secondaryPositions], attributes: effectiveAttributes(player, training, position), baseMatchAttributes, personality: training.personality, happiness, authority: training.authorityWithCoach, condition: training.fitness, fatigue: training.fatigue, minutesPlayed: 0, yellowCards: 0, redCard: false, injured: false, onPitch, performance: 50, actions: 0, mood, matchStats: blankPlayerStats(), fatigueNoticeLevel: 0 }
+  return { id: player.id, teamId: USER_TEAM_ID, name: player.name, position, naturalPositions: [player.primaryPosition, ...player.secondaryPositions], attributes: effectiveAttributes(player, training, position), baseMatchAttributes, personality: training.personality, happiness, authority: training.managerAuthority, condition: training.fitness, fatigue: training.fatigue, minutesPlayed: 0, yellowCards: 0, redCard: false, injured: false, onPitch, performance: 50, actions: 0, mood, matchStats: blankPlayerStats(), fatigueNoticeLevel: 0, currentIssue: training.currentIssue ? { ...training.currentIssue } : undefined }
 }
 function varyAttributes(attributes: PlayerAttributes, seed: number): PlayerAttributes {
   return Object.fromEntries(Object.entries(attributes).map(([key, value], index) => [key, clamp(value + (hash(`${seed}:${key}:${index}`) % 5) - 2, 1, 20)])) as PlayerAttributes
@@ -62,12 +64,21 @@ function familiarityFromTraining(training: TrainingGameState, plan: TacticalPlan
   const instructions = Object.fromEntries(Object.entries(training.familiarity.instructions).map(([key, values]) => [key, Object.fromEntries(Object.entries(values).map(([option, value]) => [option, value.current]))]))
   return { formation: training.familiarity.formations[plan.formation]?.current ?? 35, attack: (current('mentality') + current('passingStyle') + current('tempo')) / 3, transitionAttack: current('afterRecovery'), defense: (current('pressingHeight') + current('pressingIntensity')) / 2, transitionDefense: current('afterLoss'), setPieces: training.familiarity.setPieces.current, formations, instructions }
 }
-export type CreateMatchInput = { match: LeagueMatch; homeName: string; awayName: string; clubPlayers: Player[]; rivalPlayers: RivalPlayer[]; lineupIds: number[]; plan: TacticalPlan; training: TrainingGameState; opponentFormation: Formation; seed: number; cohesion: number }
+export type CreateMatchInput = { match: LeagueMatch; homeName: string; awayName: string; clubPlayers: Player[]; rivalPlayers: RivalPlayer[]; lineupIds: number[]; plan: TacticalPlan; training: TrainingGameState; opponentFormation: Formation; seed: number; cohesion: number; prematchEmotions?: Record<number, TalkEmotions> }
 export function createMatchState(input: CreateMatchInput): MatchState {
   const clubIsHome = input.match.homeTeamId === USER_TEAM_ID
   const slots = FORMATION_SLOTS[input.plan.formation]
   const starters = input.lineupIds.slice(0, 11)
   const clubPlayerStates = Object.fromEntries(input.clubPlayers.map((player) => { const slot = starters.indexOf(player.id); const position = slot >= 0 ? slots[slot] : player.primaryPosition; return [player.id, clubMatchPlayer(player, input.training.players[player.id], position, slot >= 0)] }))
+  for (const player of Object.values(clubPlayerStates)) {
+    const emotions = input.prematchEmotions?.[player.id]
+    if (!emotions) continue
+    player.prematchEmotions = { ...emotions }
+    if (emotions.nerves >= 2) player.mood = 'NERVOUS'
+    else if (emotions.involvement <= -2) player.mood = 'DISCONNECTED'
+    else if (emotions.confidence >= 2) player.mood = 'CONFIDENT'
+    else if (emotions.motivation >= 2) player.mood = 'MOTIVATED'
+  }
   const opponentId = clubIsHome ? input.match.awayTeamId : input.match.homeTeamId
   const opponent = opponentPlayers(opponentId, input.rivalPlayers, input.opponentFormation, input.seed)
   const clubTeam: MatchTeamState = { teamId: USER_TEAM_ID, name: clubIsHome ? input.homeName : input.awayName, lineup: { formation: input.plan.formation, starters, bench: input.clubPlayers.filter((p) => !starters.includes(p.id)).map((p) => p.id), slots }, tactics: { ...input.plan }, players: clubPlayerStates, familiarity: familiarityFromTraining(input.training, input.plan), cohesion: input.cohesion, routeSuccess: {}, routeAttempts: {} }
@@ -154,7 +165,7 @@ function simulateAttack(state: MatchState, attackingSide: MatchTeamSide) {
 function maybeInjury(state: MatchState, side: MatchTeamSide) {
   const value = team(state, side); const candidates = activePlayers(value).filter((p) => !p.injured); if (!candidates.length) return
   const player = candidates[Math.floor(random(state, `injury-player:${side}`) * candidates.length)]
-  const risk = .00035 + Math.max(0, player.fatigue - 60) * .000035 + Math.max(0, 65 - player.condition) * .00002 + (value.tactics.pressingIntensity === 'Alta' ? .00025 : 0)
+  const risk = (.00035 + Math.max(0, player.fatigue - 60) * .000035 + Math.max(0, 65 - player.condition) * .00002 + (value.tactics.pressingIntensity === 'Alta' ? .00025 : 0)) * (getPhysicalIssueEffects(player.currentIssue)?.injuryRiskMultiplier ?? 1)
   if (random(state, `injury:${side}`) < risk) { player.injured = true; pushEvent(state, { minute: state.minute, kind: 'INJURY', teamId: value.teamId, playerId: player.id, text: `${state.minute}' ${player.name} no puede continuar por molestias.` }); state.phase = 'PAUSED_FOR_DECISION'; state.pauseReason = 'INJURY' }
 }
 function assistantObservation(state: MatchState, assistant?: StaffPerson) {

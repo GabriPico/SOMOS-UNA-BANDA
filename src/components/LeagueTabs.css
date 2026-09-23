@@ -1,4 +1,4 @@
-.league-tabs { border-bottom: 1px solid #ddd; display: flex; gap: 4px; margin: 20px 0; overflow-x: auto; }
-.league-tabs button { background: transparent; border: 0; border-bottom: 2px solid transparent; color: #666; cursor: pointer; padding: 9px 12px; text-transform: uppercase; white-space: nowrap; }
-.league-tabs button.is-active { border-bottom-color: #333; color: #222; font-weight: 600; }
+.league-tabs { border-bottom: 1px solid var(--ui-border); display: flex; gap: 4px; margin: 20px 0; overflow-x: auto; }
+.league-tabs button { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--ui-text-secondary); cursor: pointer; padding: 9px 12px; text-transform: uppercase; white-space: nowrap; }
+.league-tabs button.is-active { border-bottom-color: var(--ui-border); color: var(--ui-text); font-weight: 600; }
 .league-tabs button:disabled { cursor: default; opacity: .55; }

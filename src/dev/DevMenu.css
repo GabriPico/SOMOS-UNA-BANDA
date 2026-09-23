@@ -1,14 +1,25 @@
-.dev-tools { position: fixed; right: 12px; top: 10px; z-index: 1000; }
+.dev-tools { align-items:center; background:#171717; color:#fff; display:flex; justify-content:flex-end; left:0; min-height:32px; padding:3px 12px; position:fixed; right:0; top:0; z-index:2000; }
 .dev-trigger { background: #222; border: 0; border-radius: 4px; color: #fff; cursor: pointer; font-size: 11px; padding: 7px 9px; }
-.dev-panel { background: #fff; border: 1px solid #bbb; border-radius: 4px; box-shadow: 0 8px 24px #0002; margin-top: 6px; padding: 10px; width: 250px; }
+.dev-panel { background: #fff; border: 1px solid #bbb; border-radius: 4px; box-shadow: 0 8px 24px #0002; color:#222; max-height:calc(100vh - 48px); overflow:auto; padding: 10px; position:absolute; right:12px; top:34px; width:min(520px, calc(100vw - 24px)); }
+body:has(.dev-tools) .app-shell{padding-top:38px}
 .dev-panel header { align-items: center; display: flex; font-size: 12px; justify-content: space-between; }
 .dev-panel header button { background: none; border: 0; cursor: pointer; font-size: 20px; }
 .dev-panel label { display: grid; font-size: 11px; gap: 3px; margin: 8px 0; }
-.dev-panel input { border: 1px solid #ccc; border-radius: 3px; padding: 6px; }
+.dev-panel input, .dev-panel select { border: 1px solid #ccc; border-radius: 3px; padding: 6px; }
 .dev-panel small { color: #a22; display: block; font-size: 10px; margin-bottom: 6px; }
+.dev-panel .dev-checkbox { align-items:center; display:flex; gap:6px; }
+.dev-panel .dev-checkbox input { margin:0; }
+.dev-panel .dev-checkbox-help { color:#666; }
 .dev-scenario-list { display: grid; gap: 3px; max-height: 55vh; overflow-y: auto; }
 .dev-scenario-list button, .dev-reset { background: #fff; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; padding: 6px 8px; text-align: left; }
 .dev-scenario-list button.is-active { background: #eee; border-color: #888; }
 .dev-scenario-list button:disabled { color: #999; cursor: not-allowed; }
 .dev-reset { background: #222; color: #fff; margin-top: 8px; text-align: center; width: 100%; }
 .dev-reset:disabled { opacity: .4; }
+.dev-onboarding-config { border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin: 10px 0; padding: 10px 0; }
+.dev-onboarding-config h3 { font-size: 10px; letter-spacing: .07em; margin: 0 0 8px; }
+.dev-onboarding-reset { background: #7b341e; border: 0; border-radius: 3px; color: white; cursor: pointer; font-size: 11px; font-weight: 800; padding: 8px; width: 100%; }
+.dev-onboarding-reset:disabled { cursor: not-allowed; opacity: .4; }
+.dev-generated-state { color: #666 !important; line-height: 1.5; margin: 7px 0 0 !important; }
+.dev-consequences { border-top:1px solid #ddd; margin-top:10px; padding-top:8px; }.dev-consequences summary { cursor:pointer; font-size:11px; font-weight:900; }.dev-consequences h3 { font-size:10px; letter-spacing:.06em; margin:12px 0 5px; }.dev-consequences dl { display:grid; grid-template-columns:1fr 1fr; gap:3px 12px; margin:0; }.dev-consequences dl div { display:flex; justify-content:space-between; }.dev-consequences p,.dev-consequences article { font-size:10px; margin:4px 0; }.dev-consequences article,.dev-state-table div { border-bottom:1px solid #eee; display:grid; gap:2px; padding:4px 0; }.dev-state-table { max-height:180px; overflow:auto; }
+.dev-narrative { border-top:1px solid #ddd; font-size:10px; margin-top:10px; padding-top:8px; }.dev-narrative summary { cursor:pointer; font-size:11px; font-weight:900; }.dev-narrative dl { display:grid; gap:4px; }.dev-narrative dl div { display:grid; grid-template-columns:120px 1fr; }.dev-narrative dd { font-family:monospace; margin:0; overflow-wrap:anywhere; }

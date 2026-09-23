@@ -1,0 +1,114 @@
+.tactical-player-card { position: relative; isolation: isolate; display: grid; grid-template-columns: 36px minmax(0, 1fr); grid-template-rows: 27px 18px 16px 18px; column-gap: 5px; width: 140px; min-width: 0; padding: 7px 9px; border: 1px solid var(--ui-border); border-radius: 7px; background: var(--ui-bg-secondary); color: var(--ui-text); box-shadow: 0 4px 12px rgb(0 0 0 / 24%); text-align: left; }
+.tactical-player-card--field { position: absolute; transform: translate(-50%, -50%); width: 110px; padding: 5px 7px; grid-template-columns: 28px minmax(0, 1fr); grid-template-rows: 20px 14px 16px 12px 14px; }
+.tactical-player-card .tactical-card-select { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; padding: 0; background: transparent; border: 0; border-radius: inherit; cursor: pointer; }
+.tactical-player-card .tactical-card-select:disabled { cursor: not-allowed; }
+.tactical-player-card .tactical-card-select:focus-visible { outline-offset: 3px; }
+.tactical-player-card .tactical-card-portrait, .tactical-player-card .tactical-card-name { position: relative; z-index: 2; border: 0; background: none; color: inherit; padding: 0; cursor: pointer; font: inherit; text-align: left; }
+.tactical-player-card .tactical-card-portrait { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+.management-theme .tactical-player-card .player-portrait { width: 35px; height: 42px; }
+.management-theme .tactical-player-card--field .player-portrait { height: 34px; }
+.tactical-card-number { grid-column: 2; grid-row: 1; padding-top: 1px; font-size: 18px; line-height: 1; font-weight: 700; color: var(--ui-text-secondary); pointer-events: none; }
+.tactical-player-card .tactical-card-name { grid-column: 1 / -1; grid-row: 3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 650; line-height: 1.2; }
+.tactical-card-name:hover { text-decoration: underline; }
+.tactical-card-position { grid-column: 2; grid-row: 2; font-size: 10px; line-height: 1.1; color: var(--ui-interactive); pointer-events: none; }
+.tactical-card-physical { grid-column: 1 / -1; grid-row: 4; display: flex; align-items: center; gap: 7px; padding-top: 3px; }
+.tactical-card-condition { z-index: 2; display: inline-flex; }
+.tactical-card-condition svg { width: 14px; height: 14px; }
+.tactical-card-stamina { position: relative; z-index: 2; display: block; width: 100%; height: 6px; border-radius: 2px; background: var(--ui-neutral-bg); overflow: hidden; }
+.tactical-card-stamina > span { display: block; height: 100%; background: currentColor; }
+.tactical-card-stamina-unknown { font-size: 10px; color: var(--ui-text-secondary); }
+.tactical-player-card .is-positive { color: var(--ui-positive); }.tactical-player-card .is-warning { color: var(--ui-warning); }.tactical-player-card .is-negative { color: var(--ui-danger); }
+.tactical-card-special { position: absolute; top: -7px; right: -7px; z-index: 3; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 5px; border: 1px solid currentColor; background: var(--ui-bg-secondary); font-size: 16px; line-height: 1; }
+.tactical-player-card.has-negative { border-color: var(--ui-danger); }
+.tactical-player-card.is-unavailable { background: color-mix(in srgb, var(--ui-danger-bg) 50%, var(--ui-bg-secondary)); }
+.tactical-player-card.is-selected { z-index: 4; border-color: var(--ui-accent-hover); outline: 2px solid var(--ui-accent); outline-offset: 1px; background: var(--ui-interactive-bg); box-shadow: 0 0 20px rgb(7 99 255 / 40%); }
+.tactical-player-card:has(.tactical-card-select:hover) { border-color: var(--ui-interactive); }
+.tactical-player-card--field .tactical-card-number { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+.tactical-player-card--field .tactical-card-portrait { grid-column: 2; justify-self: center; }
+.tactical-player-card--field .tactical-card-position { grid-column: 1 / -1; grid-row: 4; text-align: center; }
+.tactical-player-card--field .tactical-card-name { text-align: center; }
+.tactical-player-card--field .tactical-card-physical { grid-row: 5; }
+.tactical-player-card.lineup-player-row { display: grid; grid-template-columns: 27px 15px 22px minmax(0, 1fr) 49px 51px 17px; grid-template-rows: 1fr; align-items: center; gap: 4px; min-height: 31px; width: 100%; padding: 3px 4px; margin: 0; border: 1px solid transparent; border-bottom-color: var(--ui-border); border-radius: 3px; background: transparent; box-shadow: none; }
+.lineup-player-row .lineup-row-slot { grid-column: 1; grid-row: 1; color: var(--ui-interactive); font-size: 10px; pointer-events: none; }
+.lineup-player-row .tactical-card-number { grid-column: 2; grid-row: 1; font-size: 10px; padding: 0; }
+.lineup-player-row .tactical-card-portrait { grid-column: 3; grid-row: 1; display: flex; align-items: center; line-height: 0; }
+.management-theme .lineup-player-row .player-portrait { width: 20px; height: 22px; }
+.lineup-player-row .tactical-card-name { grid-column: 4; grid-row: 1; font-size: 11px; }
+.lineup-player-row .tactical-card-position { grid-column: 5; grid-row: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 9px; color: var(--ui-text-secondary); }
+.lineup-row-quality { grid-column: 5; grid-row: 1; font-size: 10px; pointer-events: none; }
+.lineup-row-quality .star-rating { letter-spacing: 0; }
+.lineup-player-row .tactical-card-physical { grid-column: 6; grid-row: 1; gap: 4px; padding: 0; }
+.lineup-player-row .tactical-card-condition svg { width: 12px; height: 12px; }
+.lineup-player-row .tactical-card-stamina { height: 5px; }
+.lineup-player-row .tactical-card-special { grid-column: 7; grid-row: 1; position: relative; inset: auto; border: 0; background: none; width: 17px; height: 17px; font-size: 13px; }
+.tactical-player-card.lineup-player-row.is-selected { border-color: var(--ui-accent); outline: 1px solid var(--ui-accent); outline-offset: -1px; background: var(--ui-interactive-bg); box-shadow: inset 3px 0 var(--ui-accent); }
+.tactical-player-card.lineup-player-row.has-negative { border-left-color: var(--ui-danger); background: color-mix(in srgb, var(--ui-danger-bg) 45%, transparent); }
+@media (max-width: 1600px) and (min-width: 1251px) { .tactical-player-card--field { width: 86px; padding-inline: 4px; } .tactical-player-card--field .tactical-card-name { font-size: 10px; } .tactical-player-card.lineup-player-row { grid-template-columns: 23px 12px 18px minmax(0, 1fr) 45px 41px 15px; gap: 3px; padding-inline: 2px; } .lineup-player-row .tactical-card-position { display: none; } .lineup-player-row .lineup-row-quality { grid-column: 5; font-size: 9px; } .lineup-player-row .tactical-card-physical { grid-column: 6; } .lineup-player-row .tactical-card-special { grid-column: 7; } .lineup-player-row .tactical-card-name { font-size: 10px; } }
+@media (max-width: 720px) { .tactical-player-card--field { width: 76px; padding-inline: 3px; grid-template-columns: 20px minmax(0, 1fr); } .tactical-player-card--field .tactical-card-name { font-size: 9px; } .tactical-player-card.lineup-player-row { grid-template-columns: 23px 12px 18px minmax(0, 1fr) 46px 41px 15px; gap: 3px; } .lineup-player-row .tactical-card-position { display: none; } .lineup-player-row .lineup-row-quality { grid-column: 5; font-size: 9px; } .lineup-player-row .tactical-card-physical { grid-column: 6; } .lineup-player-row .tactical-card-special { grid-column: 7; } }
+
+.tactical-card-name > span { display: block; overflow: hidden; text-overflow: ellipsis; }
+.lineup-player-row .tactical-card-position { display: none; }
+.lineup-player-row .tactical-card-name small { display: block; font-size: 9px; line-height: 1.1; font-weight: 400; color: var(--ui-text-secondary); }
+.tactical-player-card { touch-action: none; user-select: none; transition: border-color 170ms, background-color 170ms, opacity 170ms, box-shadow 170ms, top 170ms, left 170ms; }
+.tactical-player-card, .tactical-player-card button { cursor: grab; }
+.tactical-player-card img { -webkit-user-drag: none; }
+.tactical-player-card--field { width: clamp(82px, 5.5vw, 106px); grid-template-rows: 18px 12px 16px 12px 12px 14px; }
+.management-theme .tactical-player-card--field .player-portrait { height: 30px; width: 30px; }
+.tactical-player-card--field > .tactical-natural-positions { grid-column: 1 / -1; grid-row: 5; }
+.tactical-player-card--field .tactical-card-physical { grid-row: 6; }
+.tactical-natural-positions { display: block; font-size: 9px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.tactical-natural-positions b { color: var(--ui-text); font-weight: 400; }
+.tactical-natural-positions small { display: inline; color: var(--ui-text-secondary); font-size: .9em; font-weight: 400; }
+.tactical-card-position.is-out-of-position, .lineup-row-slot.is-out-of-position { color: #f3a251; }
+.tactical-player-card.lineup-player-row { min-height: 38px; }
+.lineup-player-row .tactical-natural-positions { text-align: left; margin-top: 2px; }
+.lineup-player-row .tactical-card-name .tactical-natural-positions small { display: inline; }
+.lineup-player-row .lineup-row-slot { font-size: 9px; }
+.lineup-player-row .tactical-card-name { font-size: 11px; }
+.is-dragging, .is-dragging * { cursor: grabbing !important; }
+.tactical-player-card.is-drag-source { opacity: .42; border-color: var(--ui-interactive); }
+.tactical-player-card.drop-primary { --drop-color: var(--ui-positive); }
+.tactical-player-card.drop-secondary { --drop-color: var(--ui-warning); }
+.tactical-player-card.drop-compatible { --drop-color: var(--ui-interactive); }
+.tactical-player-card.drop-warning { --drop-color: #f3a251; }
+.tactical-player-card:is(.drop-primary, .drop-secondary, .drop-compatible, .drop-warning) { border-color: color-mix(in srgb, var(--drop-color) 60%, var(--ui-border)); background: color-mix(in srgb, var(--drop-color) 10%, var(--ui-bg-secondary)); }
+.tactical-player-card.is-drop-hover { outline: 2px solid var(--drop-color, var(--ui-danger)); outline-offset: 1px; background: color-mix(in srgb, var(--drop-color, var(--ui-danger)) 25%, var(--ui-bg-secondary)); box-shadow: 0 0 18px color-mix(in srgb, var(--drop-color) 25%, transparent); }
+.tactical-drag-preview { position: fixed; pointer-events: none; z-index: 30; display: flex; align-items: center; gap: 9px; width: 180px; padding: 7px 10px; border: 1px solid var(--ui-interactive); border-radius: 7px; background: var(--ui-bg-secondary); box-shadow: 0 7px 25px var(--ui-overlay); }
+.management-theme .tactical-drag-preview .player-portrait { width: 32px; height: 40px; }
+.tactical-drag-preview > div { min-width: 0; }
+.tactical-drag-preview strong { display: block; font-size: 11px; }
+.tactical-drag-preview small { font-size: 10px; color: var(--ui-text-secondary); }
+@media (max-height: 850px) and (min-width: 1101px) {
+  .tactical-player-card--field { width: clamp(80px, 5.5vw, 94px); grid-template-rows: 15px 9px 14px 11px 11px 12px; padding: 4px 5px; }
+  .management-theme .tactical-player-card--field .player-portrait { height: 25px; width: 25px; }
+  .tactical-player-card--field .tactical-card-name { font-size: 10px; }
+  .tactical-player-card--field .tactical-card-number { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .tactical-player-card { transition: none; } }
+@container (max-height: 470px) {
+  .tactical-player-card--field { grid-template-rows: 11px 9px 12px 10px 10px 10px; padding-block: 3px; }
+  .management-theme .tactical-player-card--field .player-portrait { height: 21px; width: 21px; }
+  .tactical-player-card--field .tactical-card-name { font-size: 9px; }
+  .tactical-player-card--field .tactical-card-number { font-size: 14px; }
+}
+
+.tactical-player-card--field { width: clamp(62px, 16cqw, 102px); grid-template-columns: 22px minmax(0, 1fr); grid-template-rows: 17px 11px 15px 12px 13px; border-radius: 4px; padding: 4px 5px; box-shadow: 0 2px 5px rgb(0 0 0 / 20%); }
+.tactical-player-card--field .tactical-card-physical { grid-row: 5; }
+.tactical-player-card--field .tactical-card-name { font-size: clamp(10px, 2cqw, 12px); }
+.tactical-player-card.lineup-player-row { grid-template-columns: 29px 24px minmax(0, 1fr) 52px 27px 43px 17px; gap: 4px; min-height: 38px; padding: 3px 4px; border-radius: 0; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--ui-border) 65%, transparent); }
+.lineup-player-row .tactical-card-number { display: none; }
+.lineup-player-row .tactical-card-portrait { grid-column: 2; }
+.lineup-player-row .tactical-card-name { grid-column: 3; font-size: clamp(11px, .8vw, 13px); }
+.lineup-player-row .lineup-row-quality { grid-column: 4; font-size: 10px; }
+.lineup-player-row .tactical-card-physical { display: contents; }
+.lineup-player-row .tactical-card-condition { grid-column: 5; grid-row: 1; justify-self: center; }
+.lineup-player-row .tactical-card-stamina, .lineup-player-row .tactical-card-stamina-unknown { grid-column: 6; grid-row: 1; }
+.lineup-player-row .tactical-card-special { grid-column: 7; }
+.lineup-player-row .tactical-natural-positions { font-size: 10px; }
+.lineup-player-row .tactical-card-name .tactical-natural-positions small { font-size: 9px; }
+@container (max-height: 550px) {
+  .tactical-player-card--field { grid-template-columns: 18px minmax(0, 1fr); grid-template-rows: 13px 10px 13px 11px 12px; padding: 3px; }
+  .management-theme .tactical-player-card--field .player-portrait { width: 23px; height: 23px; }
+  .tactical-player-card--field .tactical-card-number { font-size: 14px; }
+  .tactical-player-card--field .tactical-card-physical { gap: 4px; }
+}

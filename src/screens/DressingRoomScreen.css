@@ -1,51 +1,177 @@
-.dressing-room-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
-.dressing-room-description { color: #555; line-height: 1.5; margin: 16px 0 20px; max-width: 900px; }
-.dressing-room-summary { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.dressing-room-summary article { border: 1px solid #ddd; padding: 14px; }
-.dressing-room-summary h3, .dressing-room-section > h3 { font-size: 13px; letter-spacing: .04em; margin: 0 0 8px; text-transform: uppercase; }
-.dressing-room-summary strong { display: block; font-size: 20px; }
-.dressing-room-summary p, .dressing-room-issue p { color: #666; margin: 4px 0 0; }
-.dressing-room-section { margin-top: 24px; }
-.dressing-room-issues { display: grid; gap: 8px; }
-.dressing-room-issue { border: 1px solid #ddd; border-left-width: 4px; padding: 11px 12px; }
-.dressing-room-issue.is-positive { border-left-color: #4d6b54; }
-.dressing-room-issue.is-warning { border-left-color: #b7791f; }
-.dressing-room-issue.is-negative { border-left-color: #9b3a32; }
-.dressing-room-fees { border: 1px solid #ddd; padding: 14px; }
-.dressing-room-fee-assessment { display: block; font-size: 18px; margin-bottom: 12px; }
-.dressing-room-fee-assessment.is-minor, .dressing-room-fee-assessment.is-relevant { color: #8a611b; }
-.dressing-room-fee-assessment.is-severe { color: #9b3a32; }
-.dressing-room-fee-counts { display: flex; flex-wrap: wrap; gap: 8px; }
-.dressing-room-fee-counts span { background: #f7f7f7; border: 1px solid #e2e2e2; padding: 7px 10px; }
-.dressing-room-fee-attention { border-top: 1px solid #ddd; display: grid; gap: 7px; margin-top: 14px; padding-top: 12px; }
-.dressing-room-fee-attention h4 { font-size: 12px; margin: 0; text-transform: uppercase; }
-.dressing-room-fee-attention button { align-items: center; background: #fff; border: 0; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; padding: 8px 0; text-align: left; }
-.dressing-room-fee-attention button span { color: #8a611b; }
-.dressing-room-fee-pressure { background: #f7f4ec; display: flex; flex-direction: column; margin: 14px 0 0; padding: 11px 12px; }
-.dressing-room-fee-pressure b { font-size: 12px; text-transform: uppercase; }
-.dressing-room-table-wrapper { overflow-x: auto; }
-.dressing-room-table { border-collapse: collapse; min-width: 760px; width: 100%; }
-.dressing-room-table th, .dressing-room-table td { border-bottom: 1px solid #ddd; padding: 10px 12px; text-align: left; white-space: nowrap; }
-.dressing-room-table th { background: #f7f7f7; font-weight: 600; }
-.dressing-room-table tbody tr { cursor: pointer; }
-.dressing-room-table tbody tr:hover, .dressing-room-table tbody tr:focus { background: #f4f7f4; outline: 2px solid #4d6b54; outline-offset: -2px; }
-.dressing-room-voices { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.dressing-room-voices article { border: 1px solid #ddd; display: flex; flex-direction: column; padding: 12px; }
-.dressing-room-voices span { color: #555; margin-top: 3px; }
-.dressing-room-voices small { color: #244d31; font-weight: 600; margin-top: 8px; }
-.dressing-room-section-description { color: #555; margin: -2px 0 14px; }
-.dressing-room-president-trust { border: 1px solid #ddd; display: flex; justify-content: space-between; margin-bottom: 12px; padding: 14px; }
-.dressing-room-expectation-list { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.dressing-room-expectation-list article { border: 1px solid #ddd; padding: 14px; }
-.dressing-room-expectation-list h4 { font-size: 13px; margin: 0 0 12px; text-transform: uppercase; }
-.dressing-room-expectation-list dl { margin: 0; }
-.dressing-room-expectation-list dl div { margin-top: 10px; }
-.dressing-room-expectation-list dt { color: #666; font-size: 12px; }
-.dressing-room-expectation-list dd { font-weight: 600; margin: 2px 0 0; }
-.dressing-room-changes { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
-.dressing-room-changes li { border-bottom: 1px solid #eee; display: flex; gap: 9px; padding: 7px 0; }
-.dressing-room-changes li span { font-weight: 700; }
-.dressing-room-changes .is-positive span { color: #416249; }
-.dressing-room-changes .is-negative span { color: #9b3a32; }
-@media (max-width: 800px) { .dressing-room-summary { grid-template-columns: 1fr; } .dressing-room-voices { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dressing-room-expectation-list { grid-template-columns: 1fr; } }
-@media (max-width: 480px) { .dressing-room-voices { grid-template-columns: 1fr; } }
+﻿/* The existing amateur dressing room is decoration only, with no lettering. */
+.club-material-theme .content--dressing-room {
+  background: linear-gradient(rgba(248, 245, 237, .08), rgba(248, 245, 237, .02)), url('/assets/materials/club-dressing-room.png') 58% 42% / cover no-repeat;
+}
+.club-material-theme .content.content--dressing-room::before { content: none; }
+.dressing-room-screen { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.club-material-theme .dressing-room-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--club-scene-gap);
+  min-width: 0;
+  width: 100%;
+  max-width: 1480px;
+  min-height: 0;
+  background: transparent;
+}
+.dressing-room-dashboard .management-screen-header { align-items: center; gap: 12px; }
+.dressing-room-dashboard .management-screen-header > div { min-width: 0; }
+.dressing-room-dashboard .management-back-button { white-space: nowrap; }
+.dressing-room-summary { display: grid; gap: var(--club-scene-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(70px, 15dvh, 165px); }
+.dressing-room-dashboard .player-compact-indicator {
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 5px 10px;
+  padding: 10px 14px;
+  background: var(--club-texture-grain), var(--club-paper);
+  border-top: 3px solid var(--tone-fill);
+  box-shadow: var(--club-paper-shadow);
+}
+.dressing-room-dashboard .management-indicator-icon { display: grid; width: 30px; height: 30px; }
+.dressing-room-dashboard .player-compact-indicator-heading,
+.dressing-room-dashboard .management-status-bar,
+.dressing-room-dashboard .player-compact-indicator p { grid-column: 2; }
+.dressing-room-dashboard .player-compact-indicator-heading strong { font-size: 18px; }
+.dressing-room-dashboard .player-compact-indicator p { font-size: 12px; line-height: 1.35; }
+.dressing-room-section { min-width: 0; }
+.dressing-room-issues { display: grid; gap: var(--club-scene-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dressing-room-dashboard .management-alert { padding: 8px 11px; gap: 9px; box-shadow: var(--club-paper-shadow); }
+.dressing-room-dashboard .management-alert-icon { width: 22px; height: 22px; }
+.dressing-room-dashboard .management-alert strong { display: block; font-size: 12px; line-height: 1.35; }
+.dressing-room-dashboard .management-alert p { margin-top: 3px; font-size: 11px; line-height: 1.35; }
+
+/* Independent sheets leave the room visible between both rows. Lists retain
+   their contents and scroll locally when they exceed the available height. */
+.dressing-room-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: 'roster problems hierarchy' 'history voices commitments';
+  align-items: start;
+  gap: var(--club-scene-gap);
+  min-width: 0;
+  min-height: 0;
+}
+.dressing-room-roster { grid-area: roster; }
+.dressing-room-problems { grid-area: problems; }
+.dressing-room-hierarchy { grid-area: hierarchy; }
+.dressing-room-voices-panel { grid-area: voices; }
+.dressing-room-commitments { grid-area: commitments; }
+.dressing-room-history { grid-area: history; }
+.dressing-room-dashboard .player-section { display: flex; flex-direction: column; min-height: 0; max-height: 100%; }
+.dressing-room-dashboard .player-section-title { flex-shrink: 0; padding: 10px 12px; font-family: var(--club-font-heading); font-size: 13px; color: var(--club-paint-dark); background: var(--club-texture-grain), var(--club-paper-aged); }
+.dressing-room-dashboard .management-count { margin-left: auto; color: var(--club-paint-dark); }
+.dressing-room-dashboard .player-section-body { padding: 10px 12px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.dressing-room-dashboard .dressing-room-roster { padding-top: 7px; align-self: start; }
+.dressing-room-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding-right: 12px; }
+.dressing-room-dashboard .dressing-room-roster .player-section-title { background: transparent; }
+.dressing-room-dashboard .dressing-room-problems .player-section-title { border-left: 3px solid var(--club-warning-fill); }
+.dressing-room-text-link { padding: 2px 0; border: 0; background: none; color: var(--club-paint); font: inherit; font-size: 11px; text-align: left; cursor: pointer; text-underline-offset: 3px; }
+.dressing-room-text-link:hover { text-decoration: underline; }
+.dressing-room-panel-heading > button { flex-shrink: 0; }
+.dressing-room-table { min-width: 460px; table-layout: fixed; }
+.dressing-room-table th:nth-child(1) { width: 29%; }
+.dressing-room-table th:nth-child(2) { width: 39%; }
+.dressing-room-table th:nth-child(3) { width: 16%; }
+.dressing-room-table th:nth-child(4) { width: 16%; }
+.dressing-room-dashboard .dressing-room-table th { padding: 8px; font-size: 10px; letter-spacing: 0; color: var(--club-paint-dark); }
+.dressing-room-dashboard .dressing-room-table td { height: 44px; padding: 5px 8px; font-size: 12px; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; }
+.dressing-room-dashboard .dressing-room-table .player-status-badge { padding: 2px 6px; font-size: 11px; }
+.dressing-room-dashboard .dressing-room-table .player-identity { gap: 3px; flex-wrap: wrap; }
+.dressing-room-dashboard .dressing-room-table .player-identity-button { gap: 6px; min-height: 28px; font-size: 12px; }
+.dressing-room-dashboard .dressing-room-table .player-portrait { width: 24px; height: 29px; flex-shrink: 0; }
+.dressing-room-dashboard .dressing-room-table .trial-player-badge { font-size: 9px; }
+.dressing-room-dashboard .dressing-room-table .dressing-room-player-situation { color: var(--club-ink-muted); }
+.dressing-room-dashboard .dressing-room-table tbody tr { background: transparent; }
+.dressing-room-dashboard .dressing-room-table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--club-paper-aged) 40%, transparent); }
+.dressing-room-dashboard .dressing-room-table tbody tr:hover { background: var(--club-paper-aged); }
+.dressing-room-dashboard .dressing-room-table tbody tr.is-selected { background: var(--ui-interactive-bg); box-shadow: inset 3px 0 var(--club-paint); }
+.dressing-room-roster .player-table-wrapper { min-height: 0; max-height: 250px; overflow: auto; overscroll-behavior: contain; }
+.dressing-room-table thead { position: sticky; top: 0; z-index: 1; }
+.dressing-room-roster-note { margin: 0; padding: 5px 12px; font-size: 11px; color: var(--club-ink-muted); }
+
+/* Only an explicitly expanded list scrolls. The first three concerns are visible. */
+.dressing-room-dashboard .dressing-room-problems-scroll { min-height: 0; max-height: 220px; overflow-y: auto; overscroll-behavior: contain; }
+.dressing-room-problem-list { padding: 0; margin: 0; list-style: none; }
+.dressing-room-problem-list li { padding: 7px 12px; border-bottom: 1px solid var(--club-paper-rule); }
+.dressing-room-problem-list li:last-child { border-bottom: 0; }
+.dressing-room-problem-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dressing-room-problem-heading :is(button, strong) { padding: 0; border: 0; background: none; color: var(--club-ink); font-size: 12px; font-weight: 600; text-align: left; }
+.dressing-room-problem-heading button { cursor: pointer; text-decoration: underline; text-decoration-color: var(--club-paper-rule); text-underline-offset: 2px; }
+.dressing-room-problem-heading button:hover { color: var(--ui-interactive); text-decoration-color: currentColor; }
+.dressing-room-problem-list p { margin: 2px 0 0; font-size: 11px; line-height: 1.35; }
+.dressing-room-problem-list .dressing-room-problem-state { font-size: inherit; }
+.dressing-room-dashboard .dressing-room-problem-heading .player-status-badge { font-size: 10px; }
+.dressing-room-problems-toggle { margin: auto 12px 6px; padding-top: 5px; }
+.dressing-room-hierarchy ul { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; }
+.dressing-room-hierarchy li > div { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.dressing-room-hierarchy meter { display: block; width: 100%; height: 6px; margin-top: 4px; border: 0; border-radius: 2px; background: var(--club-paper-aged); }
+.dressing-room-hierarchy meter::-webkit-meter-bar { background: var(--club-paper-aged); border: 0; height: 6px; }
+.dressing-room-hierarchy meter::-webkit-meter-optimum-value { background: var(--club-paint-light); }
+.dressing-room-hierarchy meter::-moz-meter-bar { background: var(--club-paint-light); }
+.dressing-room-dashboard .management-person-list { gap: 10px; }
+.dressing-room-dashboard .management-person-list article + article { padding-top: 8px; border-top: 1px solid var(--club-paper-rule); }
+.dressing-room-dashboard .management-person-list .player-identity { gap: 4px; flex-wrap: wrap; }
+.dressing-room-dashboard .management-person-list .player-identity-button { gap: 6px; font-size: 12px; }
+.dressing-room-dashboard .management-person-list .player-portrait { width: 22px; height: 26px; }
+.dressing-room-voice-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 10px; }
+.dressing-room-voice-heading > span { color: var(--club-ink-muted); font-size: 10px; }
+.dressing-room-dashboard .management-person-context { display: block; padding-left: 28px; font-size: 10px; line-height: 1.3; }
+.dressing-room-dashboard blockquote { margin: 4px 0 0; color: var(--club-ink); font-size: 12px; font-style: italic; line-height: 1.4; }
+.dressing-room-commitment-list { margin: 0; padding: 0; list-style: none; }
+.dressing-room-commitment-list li { display: grid; gap: 3px; font-size: 12px; line-height: 1.4; }
+.dressing-room-commitment-list li + li { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--club-paper-rule); }
+.dressing-room-commitment-list strong { font-weight: 600; }
+.dressing-room-commitment-list small { color: var(--club-ink-muted); font-size: 11px; }
+.dressing-room-more-commitments { margin-top: 10px; font-size: 11px; }
+.dressing-room-more-commitments summary { color: var(--club-paint); cursor: pointer; }
+.dressing-room-more-commitments > ul { max-height: 140px; overflow-y: auto; padding-top: 8px; }
+.dressing-room-dashboard .dressing-room-commitments .management-empty { padding: 0; font-size: 12px; line-height: 1.6; }
+.dressing-room-dashboard .management-history-compact { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.dressing-room-dashboard .management-history .player-section-title { padding: 8px 12px; }
+.dressing-room-dashboard .management-history .player-section-body { padding: 10px 12px; }
+.dressing-room-dashboard .management-history-compact li { display: flex; align-items: start; gap: 8px; }
+.dressing-room-dashboard .management-history-marker { flex-shrink: 0; width: 18px; height: 20px; font-size: 16px; }
+.dressing-room-dashboard .management-history-compact p { margin: 0; font-size: 12px; line-height: 1.4; }
+.dressing-room-dashboard .management-history-compact small { font-size: 10px; color: var(--club-ink-muted); }
+
+@media (min-width: 1101px) and (min-height: 650px) {
+  .dressing-room-screen, .club-material-theme .dressing-room-dashboard { flex: 1; }
+  .dressing-room-dashboard > :not(.dressing-room-workspace) { flex-shrink: 0; }
+  .dressing-room-workspace { flex: 1; grid-template-rows: minmax(0, 1.2fr) minmax(0, 1fr); }
+}
+@media (max-height: 850px) and (min-width: 1101px) {
+  .dressing-room-summary { margin-top: clamp(24px, 5dvh, 44px); }
+  .club-material-theme .dressing-room-dashboard { gap: 12px; }
+  .dressing-room-dashboard .player-compact-indicator { padding-block: 7px; }
+  .dressing-room-dashboard .player-section-title { padding-block: 8px; }
+  .dressing-room-dashboard .player-section-body { padding-block: 8px; }
+  .dressing-room-dashboard .management-person-list { gap: 7px; }
+}
+@media (max-width: 1400px) {
+  .dressing-room-workspace { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .dressing-room-table { min-width: 440px; }
+}
+@media (max-width: 1100px), (max-height: 649px) {
+  .dressing-room-workspace { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'roster roster' 'problems hierarchy' 'history voices' 'commitments commitments'; }
+  .dressing-room-dashboard .player-section { max-height: none; }
+  .dressing-room-dashboard .player-section-body { max-height: 260px; }
+  .dressing-room-summary { margin-top: clamp(80px, 14dvh, 150px); }
+}
+@media (max-width: 950px) {
+  .dressing-room-issues { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .dressing-room-workspace { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'roster roster' 'problems hierarchy' 'voices commitments' 'history history'; }
+  .dressing-room-dashboard .management-person-list { grid-template-columns: minmax(0, 1fr); }
+  .dressing-room-dashboard .management-history-compact { grid-template-columns: minmax(0, 1fr); }
+  .dressing-room-dashboard .management-screen-header { flex-wrap: wrap; }
+  .dressing-room-dashboard .player-compact-indicator { grid-template-columns: minmax(0, 1fr); padding: 8px; }
+  .dressing-room-dashboard .management-indicator-icon { display: none; }
+  .dressing-room-dashboard .player-compact-indicator-heading,
+  .dressing-room-dashboard .management-status-bar,
+  .dressing-room-dashboard .player-compact-indicator p { grid-column: 1; }
+  .dressing-room-dashboard .player-compact-indicator-heading { flex-wrap: wrap; gap: 3px; }
+}
+@media (max-width: 600px) {
+  .dressing-room-summary { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .dressing-room-workspace { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'roster' 'problems' 'hierarchy' 'voices' 'commitments' 'history'; }
+  .dressing-room-panel-heading { flex-wrap: wrap; padding-bottom: 6px; }
+  .dressing-room-panel-heading > button { margin-left: 12px; }
+}

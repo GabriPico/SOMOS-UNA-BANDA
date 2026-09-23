@@ -1,6 +1,7 @@
 import type { GameState, TemporalCheckpoint, TemporalEvent } from './gameState'
 import type { FeeMonth, PlayerFeePlan } from './playerFinance'
 import type { StaffPerson, StaffSearchRequest } from './staff'
+import { advancePhysicalIssues } from './physicalIssues'
 
 const USER_TEAM_ID = 'fc-poblenou'
 const FEE_MONTHS: Record<number, FeeMonth> = { 9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre', 1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril', 5: 'mayo' }
@@ -96,7 +97,7 @@ export function advanceGame(state: GameState, completedTrainingSessionIds: strin
     events = events.map((event) => event.id === generatedEvent.id ? { ...event, status: 'RESOLVED' as const } : event)
   }
   if (checkpoint.type === 'TRAINING') checkpoint = { ...checkpoint, ...resolveStaffAvailability(advanced.staff.members, checkpoint.relatedId ?? 'training', checkpoint.at, advanced.temporal.seed) }
-  advanced = { ...advanced, temporal: { ...advanced.temporal, currentDateTime: checkpoint.at, phase: checkpoint.at.includes('19:30') ? 'EVENING' : 'AFTERNOON', activeCheckpoint: checkpoint, pendingConversations, events } }
+  advanced = { ...advanced, training: { ...advanced.training, players: advancePhysicalIssues(advanced.training.players, state.temporal.currentDateTime, checkpoint.at) }, temporal: { ...advanced.temporal, currentDateTime: checkpoint.at, phase: checkpoint.at.includes('19:30') ? 'EVENING' : 'AFTERNOON', activeCheckpoint: checkpoint, pendingConversations, events } }
   return { state: advanced, checkpoint }
 }
 

@@ -1,28 +1,381 @@
-.inbox-screen { background: #fff; border: 1px solid #ddd; padding: 20px; }
-.inbox-description { color: #555; margin: 14px 0 18px; }
-.inbox-counts { display: flex; gap: 8px; margin: 16px 0 12px; }
-.inbox-layout { display: grid; grid-template-columns: minmax(250px, 34%) minmax(0, 1fr); min-height: 430px; }
-.inbox-list { border: 1px solid #ddd; }
-.inbox-list > h3, .inbox-message-detail > h3 { background: #f7f7f7; font-size: 12px; letter-spacing: .05em; margin: 0; padding: 9px 12px; text-transform: uppercase; }
-.inbox-list-item { background: #fff; border: 0; border-top: 1px solid #e4e4e4; cursor: pointer; display: flex; flex-direction: column; padding: 11px 12px; text-align: left; width: 100%; }
-.inbox-list-item:hover { background: #f7f7f7; }
-.inbox-list-item.is-selected { background: #eef2ef; box-shadow: inset 3px 0 #4d6b54; }
-.inbox-list-item.is-requires-response { box-shadow: inset 3px 0 #a36516; }
-.inbox-list-item.is-selected.is-requires-response { background: #faf5ec; }
-.inbox-list-sender { color: #555; font-size: 13px; }
-.new-message-dot { color: #3f684b; font-size: 9px; margin-right: 6px; }
-.inbox-list-item strong { margin: 3px 0; }
-.inbox-list-item small, .message-status-line { color: #777; }
-.inbox-message-detail { border: 1px solid #ddd; border-left: 0; min-width: 0; padding: 0 20px 20px; }
-.inbox-message-detail > h3 { margin: 0 -20px 20px; }
-.message-sender-type { color: #555; font-size: 12px; margin-bottom: 3px; text-transform: uppercase; }
-.inbox-message-detail h4 { font-size: 20px; margin: 0; }
-.message-status-line { font-size: 13px; margin-top: 5px; }
-.message-player-link { background: none; border: 0; color: #244d31; cursor: pointer; padding: 0; text-decoration: underline; }
-.message-body { line-height: 1.65; max-width: 75ch; white-space: pre-line; }
-.message-responses { border-top: 1px solid #ddd; display: grid; gap: 8px; margin-top: 24px; padding-top: 16px; }
-.message-responses h5 { font-size: 13px; margin: 0; text-transform: uppercase; }
-.message-responses button { background: #fff; border: 1px solid #bbb; cursor: pointer; padding: 8px 10px; text-align: left; }
-.message-responses button:hover { background: #f5f5f5; }
-.message-responses small, .message-resolved-note { color: #666; }
-@media (max-width: 760px) { .inbox-layout { grid-template-columns: 1fr; } .inbox-message-detail { border-left: 1px solid #ddd; border-top: 0; } }
+/* Mensajes uses the same paper, paint and type as Equipo and Tácticas. */
+.club-material-theme.app-shell:has(.content--inbox) {
+  height: 100dvh;
+  min-height: 700px;
+}
+
+.club-material-theme .content--inbox {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px 24px 28px;
+  overflow: clip;
+  background: var(--club-wall);
+}
+
+.club-material-theme .content--inbox::before {
+  inset: 0;
+  border: 0;
+  background: url('/assets/materials/club-messages-office.png') 100% 100% / cover no-repeat;
+  box-shadow: none;
+}
+
+.club-material-theme .content--inbox > .onboarding-prompt { flex-shrink: 0; }
+.club-material-theme .inbox-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.inbox-heading { position: relative; z-index: 2; flex-shrink: 0; margin-bottom: 20px; }
+.inbox-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  background: var(--club-texture-grain), var(--club-paper);
+  border: 1px solid var(--club-paper-rule);
+  box-shadow: var(--club-paper-shadow);
+}
+.inbox-title > .management-icon { width: 27px; height: 27px; color: var(--club-paint); }
+.inbox-title h2 {
+  color: var(--club-paint-dark);
+  font: 700 23px var(--club-font-heading);
+  letter-spacing: .025em;
+}
+.inbox-title p { margin: 3px 0 0; color: var(--club-ink-muted); font-size: 11px; }
+.inbox-heading .screen-back-button { box-shadow: var(--club-paper-shadow); }
+
+.club-material-theme .inbox-layout {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: minmax(260px, 29%) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.club-material-theme .inbox-list {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  min-height: 0;
+  max-height: 100%;
+  padding-top: 12px;
+}
+.inbox-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 3px double var(--club-paint);
+}
+.inbox-list-heading h3 {
+  margin: 0;
+  color: var(--club-paint-dark);
+  font: 600 15px var(--club-font-heading);
+}
+.inbox-list-heading > span { color: var(--club-ink-muted); font-size: 12px; }
+.inbox-conversations { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.inbox-list-item {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--club-paper-rule);
+  border-radius: 0;
+  background: transparent;
+  color: var(--club-ink);
+  text-align: left;
+  cursor: pointer;
+}
+.inbox-list-item:hover { background: var(--club-paper-aged); }
+.club-material-theme .inbox-list-item.is-selected {
+  background: var(--ui-interactive-bg);
+  box-shadow: inset 4px 0 var(--club-paint);
+}
+.club-material-theme .inbox-screen :focus-visible {
+  outline: 2px solid var(--club-paint);
+  outline-offset: -3px;
+}
+.club-material-theme .conversation-avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--club-paper-rule);
+  border-radius: 50%;
+  background: var(--club-paper-aged);
+  color: var(--club-paint-dark);
+  font: 600 13px var(--club-font-heading);
+}
+.club-material-theme .conversation-avatar--group {
+  color: var(--club-on-paint);
+  background: var(--club-texture-paint), var(--club-paint);
+  border-color: var(--club-paint-dark);
+}
+.club-material-theme .conversation-avatar--staff { background: var(--club-positive-bg); color: var(--club-positive); }
+.club-material-theme .conversation-avatar--player { background: var(--ui-interactive-bg); }
+.conversation-avatar .management-icon { width: 23px; height: 23px; }
+.conversation-row-content { display: grid; min-width: 0; gap: 4px; }
+.conversation-row-heading { display: flex; align-items: start; gap: 6px; justify-content: space-between; }
+.conversation-row-heading strong { font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; font-weight: 600; }
+.is-unread .conversation-row-heading strong { font-weight: 750; }
+.conversation-role { color: var(--club-ink-muted); font-size: 11px; }
+.conversation-preview { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--club-ink-muted); font-size: 12px; line-height: 1.5; }
+.conversation-unread {
+  flex-shrink: 0;
+  min-width: 19px;
+  padding: 2px 5px;
+  border-radius: 10px;
+  background: var(--club-paint);
+  color: var(--club-on-paint);
+  text-align: center;
+  font-size: 10px;
+}
+.conversation-indicators { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 8px; margin-top: 2px; }
+.conversation-indicators time { color: var(--club-ink-muted); font-size: 10px; }
+.conversation-indicators mark { padding: 2px 5px; background: var(--club-warning-bg); color: var(--club-warning); font-size: 10px; font-weight: 600; }
+.inbox-list-footer { padding: 11px 14px; color: var(--club-ink-muted); font-size: 11px; }
+.inbox-list-empty { padding: 14px; color: var(--club-ink-muted); font-size: 13px; }
+
+/* Shadowed bare hand, sleeve and bezel; the chat stays interactive.
+   Source phone bounds: (365, 114), 494 × 994 in the 1024 × 1536 PNG.
+   Register both image axes to the existing 494:1024 layout so replacing the
+   photograph does not enlarge the phone or change the responsive sizing. */
+.inbox-phone-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  padding-right: clamp(0px, calc(36vw - 400px), 190px);
+  container-type: size;
+}
+.inbox-handheld {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(392px, calc((100cqh + 44px) * 494 / 1024), calc(100cqw - 28px));
+  aspect-ratio: 494 / 1024;
+  transform: none;
+}
+.inbox-phone-hand {
+  position: absolute;
+  z-index: -1;
+  top: calc(-100% * 114 / 994);
+  left: calc(-100% * 365 / 494);
+  width: calc(100% * 1024 / 494);
+  height: calc(100% * 1536 / 994);
+  max-width: none;
+  /* Darken only the photograph, leaving the live display fully illuminated. */
+  filter: grayscale(1) brightness(.68);
+  pointer-events: none;
+  user-select: none;
+}
+.inbox-phone {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  scroll-margin-top: calc(var(--ui-header-height) + 24px);
+}
+.club-material-theme .inbox-message-detail {
+  position: absolute;
+  /* The live display replaces the blank ivory area of the photograph. */
+  left: calc(100% * 26 / 494);
+  top: calc(100% * 25 / 994);
+  width: calc(100% * 440 / 494);
+  height: calc(100% * 944 / 994);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12% / 5.5%;
+  background: var(--club-paper);
+}
+.phone-statusbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+  padding: 6px 15px 0;
+  background: var(--club-paper);
+  color: var(--club-ink);
+  pointer-events: none;
+}
+.phone-statusbar time { font-size: 10px; font-weight: 600; }
+.phone-device-indicators { width: 40px; height: 13px; }
+.phone-hardware {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 24.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 51%;
+  height: 3.8%;
+  border-radius: 0 0 14px 14px;
+  background: #111412;
+  box-shadow: inset 0 -1px #43463f;
+  pointer-events: none;
+}
+.phone-hardware span { width: 26%; height: 3px; border-radius: 6px; background: #242925; box-shadow: 0 1px #444b43; }
+.phone-hardware i { width: 5px; height: 5px; border: 1px solid #36423d; border-radius: 50%; background: #15282b; }
+.phone-bottom { display: grid; place-items: center; height: 17px; flex-shrink: 0; background: var(--club-paper); pointer-events: none; }
+.phone-bottom span { width: 35%; height: 4px; border-radius: 8px; background: #242a27; }
+.club-material-theme .conversation-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--club-paper-rule);
+  background: var(--club-paper);
+  color: var(--club-ink);
+}
+.conversation-contact { flex: 1; min-width: 0; }
+.conversation-header h3 { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
+.conversation-header p { margin: 3px 0 0; color: var(--club-ink-muted); font-size: 11px; }
+.conversation-participants-button { display: grid; place-items: center; flex-shrink: 0; padding: 8px; border: 1px solid var(--club-paper-rule); background: transparent; color: var(--club-paint); cursor: pointer; }
+.conversation-participants-button:hover { background: var(--club-paper-aged); }
+.conversation-participants-button .management-icon { width: 19px; height: 19px; }
+.participant-list { flex-shrink: 0; max-height: 32%; overflow-y: auto; padding: 10px 14px; border-bottom: 1px solid var(--club-paper-rule); background: var(--club-paper); font-size: 12px; line-height: 1.5; }
+.participant-list h4, .participant-list p { margin: 4px 0; }
+.participant-list strong { color: var(--club-paint-dark); }
+.message-history {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 12px 18px;
+  background: var(--club-texture-grain);
+}
+.message-entry { display: flex; flex-direction: column; flex-shrink: 0; width: 100%; }
+.message-entry.is-sent { align-items: flex-end; }
+.message-entry.is-received { align-items: flex-start; }
+.message-day-separator {
+  align-self: center;
+  max-width: 100%;
+  margin: 14px auto;
+  padding: 5px 10px;
+  border: 1px solid var(--club-paper-rule);
+  border-radius: 5px;
+  background: var(--club-paper);
+  color: var(--club-ink-muted);
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.message-day-separator::first-letter { text-transform: uppercase; }
+.message-bubble {
+  max-width: 90%;
+  padding: 9px 11px 6px;
+  border: 1px solid #cfcbbb;
+  border-radius: 3px 11px 11px;
+  background: #faf7ee;
+  box-shadow: 0 1px 1px #3d382119;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.club-material-theme .message-entry.is-sent .message-bubble { background: #dce5df; border-color: #bacabd; border-radius: 11px 3px 11px 11px; }
+.message-bubble.is-group-start { margin-top: 12px; }
+.message-bubble.is-group-follow { margin-top: 4px; }
+.message-day-separator + .message-bubble { margin-top: 0; }
+.message-bubble p { margin: 3px 0; }
+.club-material-theme .message-author { color: var(--club-paint); font-size: 11px; font-weight: 700; }
+.message-bubble time { display: block; margin-top: 5px; color: var(--club-ink-muted); font-size: 10px; text-align: right; }
+.message-reactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.message-reactions span { padding: 2px 6px; border: 1px solid var(--club-paper-rule); border-radius: 12px; background: var(--club-paper); font-size: 11px; }
+.message-responses { display: grid; width: 90%; gap: 6px; margin-top: 10px; }
+.message-responses > span { color: var(--club-ink-muted); font-size: 11px; }
+.message-responses button { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; border: 1px solid var(--club-paint); border-radius: 4px; background: var(--club-paper); color: var(--club-paint-dark); font-size: 12px; line-height: 1.4; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+.message-responses button:hover { background: var(--ui-interactive-bg); }
+.message-responses .management-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.message-bubble.is-call-up { width: 94%; max-width: 94%; white-space: normal; }
+.call-up-content { padding: 2px; }
+.call-up-competition { color: var(--club-paint); font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+.call-up-content h4 { margin: 6px 0; font-size: 15px; line-height: 1.4; }
+.call-up-date { font-weight: 600; }
+.call-up-venue { color: var(--club-ink-muted); }
+.call-up-content dl { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 12px 0; padding: 9px 0; border-block: 1px solid var(--club-paper-rule); }
+.call-up-content dt { color: var(--club-ink-muted); font-size: 10px; }
+.call-up-content dd { margin: 2px 0 0; font-weight: 700; }
+.call-up-content section > strong { font-size: 12px; }
+.call-up-content ul { columns: 2; margin: 7px 0 12px; padding: 0; list-style: none; font-size: 11px; }
+.call-up-content li { break-inside: avoid; padding: 2px 5px 2px 0; }
+.call-up-encouragement { display: block; margin-top: 10px; }
+.conversation-composer { flex-shrink: 0; padding: 10px; border-top: 1px solid var(--club-paper-rule); background: var(--club-paper); }
+.conversation-input-row { display: flex; align-items: center; gap: 8px; padding: 4px 5px 4px 10px; border: 1px solid var(--club-paper-rule); border-radius: 19px; background: #faf7ee; }
+.conversation-input-row > .management-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--club-ink-muted); }
+.conversation-input-row input { flex: 1; min-width: 0; width: 100%; height: 30px; padding: 0; border: 0; border-radius: 0; background: none; color: var(--club-ink-muted); font-size: 11px; box-shadow: none; }
+.conversation-input-row button { display: grid; place-items: center; width: 32px; height: 32px; padding: 6px; border: 1px solid var(--club-paint-dark); border-radius: 50%; background: var(--club-paint); color: var(--club-on-paint); cursor: pointer; }
+.conversation-input-row button:hover { background: var(--club-paint-light); }
+.conversation-input-row button .management-icon { width: 17px; height: 17px; }
+.conversation-composer > p { margin: 6px 2px 0; color: var(--club-ink-muted); font-size: 10px; line-height: 1.4; text-align: center; }
+.conversation-empty { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 25px; color: var(--club-ink-muted); text-align: center; font-size: 13px; line-height: 1.6; }
+.conversation-empty .management-icon { width: 30px; height: 30px; color: var(--club-paint); }
+.conversation-empty h3, .conversation-empty p { margin: 0; }
+
+@media (max-height: 850px) and (min-width: 761px) {
+  .club-material-theme .content--inbox { padding: 12px 18px 20px; }
+  .inbox-heading { margin-bottom: 14px; }
+  .inbox-title { padding-block: 6px; }
+  .inbox-list-item { padding-block: 12px; }
+}
+@media (max-width: 1100px) {
+  .club-material-theme .content--inbox { padding-inline: 16px; }
+  .club-material-theme .inbox-layout { grid-template-columns: minmax(250px, 36%) minmax(0, 1fr); gap: 24px; }
+  .inbox-phone-stage { padding-right: 0; }
+}
+@media (max-width: 760px) {
+  .club-material-theme.app-shell:has(.content--inbox) { height: auto; min-height: calc(100dvh - var(--ui-dev-offset, 0px)); }
+  .club-material-theme .content--inbox { padding: 14px 12px 30px; }
+  .club-material-theme .content--inbox::before { background-size: auto 100%; }
+  .inbox-heading { gap: 10px; margin-bottom: 18px; }
+  .inbox-title { padding: 8px 10px; }
+  .inbox-title h2 { font-size: 21px; }
+  .inbox-title > .management-icon { display: none; }
+  .inbox-title p { font-size: 10px; }
+  .club-material-theme .inbox-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; gap: 26px; }
+  .club-material-theme .inbox-list { max-height: 340px; }
+  .inbox-list-item { padding: 11px 12px; }
+  .inbox-phone-stage { container-type: normal; padding: 12px 6px 40px 14px; }
+  .inbox-handheld { width: min(320px, calc(100% - 18px)); }
+}
+@media (max-width: 440px) {
+  .club-material-theme .content--inbox { padding-inline: 10px; }
+  .club-material-theme .conversation-header { gap: 7px; padding-inline: 8px; }
+  .conversation-header .conversation-avatar { width: 30px; height: 30px; font-size: 11px; }
+  .conversation-header h3 { font-size: 13px; }
+  .phone-statusbar { height: 29px; padding-inline: 12px; }
+  .phone-device-indicators { width: 34px; }
+  .phone-statusbar time { font-size: 9px; }
+  .message-history { padding-inline: 8px; }
+  .message-bubble { max-width: 95%; padding-inline: 9px; }
+  .message-responses { width: 95%; }
+  .call-up-content ul { columns: 1; }
+  .conversation-input-row { gap: 5px; padding-left: 8px; }
+  .conversation-input-row > .management-icon { display: none; }
+}

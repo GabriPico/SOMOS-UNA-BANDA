@@ -1,0 +1,104 @@
+/* Only the title group carries the translucent surface. The header row remains
+   the layout container for the existing actions and filters. */
+.app-shell .content :is(.screen-header:not(.tactics-header), .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) {
+  --screen-heading-row-inset: 2px;
+  min-height: 46px;
+  padding: 5px 2px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--club-paint-dark, var(--ui-text));
+}
+
+.app-shell .content :is(.screen-header, .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) {
+  --screen-heading-inset: 14px;
+  --screen-heading-row-inset: 14px;
+  padding-inline: var(--screen-heading-inset);
+  border-bottom-color: transparent;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.app-shell .content :is(.team-header > div:first-child, .inbox-title, .management-screen-header > div) {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-shell .content :is(.screen-header:not(.tactics-header), .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) h2 {
+  margin: 0;
+  font-family: var(--club-font-heading, 'Bahnschrift', 'Arial Narrow', 'Segoe UI', sans-serif);
+  font-size: clamp(21px, 1.7vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+
+.app-shell .content :is(.screen-header, .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) h2 {
+  color: #173f5b;
+  opacity: 1;
+  text-shadow: none;
+}
+
+/* Reuse the existing title wrappers (or the heading itself when there is no
+   subtitle). Compensate the padding to preserve the row's layout footprint. */
+.app-shell .content :is(.screen-header, .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) > :is(h2, div:has(> h2), .inbox-title) {
+  width: fit-content;
+  max-width: 680px;
+  min-width: 0;
+  flex: 0 1 auto;
+  justify-self: start;
+  padding: 5px var(--screen-heading-inset);
+  margin: -5px calc(var(--screen-heading-row-inset) - 2 * var(--screen-heading-inset)) -6px calc(0px - var(--screen-heading-row-inset));
+  border: 0;
+  border-bottom: 1px solid #879da9;
+  border-radius: 0;
+  background: rgba(246, 243, 234, .92);
+  backdrop-filter: blur(2px);
+  box-shadow: none;
+}
+
+.app-shell .content .inbox-title > div { min-width: 0; }
+
+.app-shell .content :is(.team-header p, .inbox-title p, .management-screen-description, .training-header > div > span, .next-match-header .next-match-kickoff, .pre-match-heading p, .friendly-call-up-screen > header p) {
+  margin: 3px 0 0;
+  color: #536b7a;
+  opacity: 1;
+  text-shadow: none;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* The tactical summary keeps its own layout, sizes and weights. */
+.app-shell .content .tactics-header .tactical-summary,
+.app-shell .content .tactics-header .tactical-summary > * {
+  color: #536b7a;
+  opacity: 1;
+  text-shadow: none;
+}
+
+.app-shell .content .tactics-header .tactical-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.app-shell .content .tactics-header .tactical-summary > strong { margin-right: 16px; }
+
+/* Preserve the existing line wrapping and header height in narrow windows. */
+@media (max-width: 800px) {
+  .app-shell .content :is(.screen-header, .team-header, .management-screen-header, .next-match-header, .pre-match-heading, .friendly-call-up-screen > header) {
+    --screen-heading-inset: 2px;
+    --screen-heading-row-inset: 2px;
+  }
+}

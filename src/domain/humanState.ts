@@ -44,6 +44,8 @@ export type DressingRoomPlayerProfile = {
   squadRole: SquadRole
   coachRelationship: number
   situation?: string
+  /** Links the individual situation to its existing collective issue, when present. */
+  situationIssueId?: DressingRoomIssue['id']
   socialRole?: string
   influence: number
 }
@@ -83,9 +85,9 @@ export function getInfluenceLabel(value: number): SocialInfluence {
   return 'Poca influencia'
 }
 
-export const getCohesionDescription = (value: number) => value >= 70 ? 'El grupo está bastante unido' : value >= 55 ? 'El grupo mantiene una convivencia normal' : 'El grupo necesita recuperar la unidad'
-export const getMoodDescription = (value: number) => value >= 62 ? 'La mayoría está contenta' : value >= 50 ? 'El ánimo general es estable' : 'Hay bastante descontento en la plantilla'
-export const getAuthorityDescription = (value: number) => value >= 62 ? 'El vestuario confía en ti' : value >= 50 ? 'La mayoría acepta tus decisiones' : 'Algunos jugadores cuestionan tus decisiones'
+export const getCohesionDescription = (value: number) => value >= 70 ? 'El grupo está bastante unido.' : value >= 55 ? 'El grupo mantiene una convivencia normal.' : 'El grupo necesita recuperar la unidad.'
+export const getMoodDescription = (value: number) => value >= 62 ? 'La mayoría está contenta con la dinámica del equipo.' : value >= 50 ? 'El ánimo general es estable.' : 'Hay bastante descontento en la plantilla.'
+export const getAuthorityDescription = (value: number) => value >= 62 ? 'El vestuario confía en ti.' : value >= 50 ? 'La mayoría acepta tus decisiones.' : 'Algunos jugadores cuestionan tus decisiones.'
 
 export function getDressingRoomSummary(cohesion: number, mood: number, authority: number, unhappyPlayers: number) {
   const atmosphere = mood >= 62 ? 'bueno' : mood >= 50 ? 'estable' : 'complicado'

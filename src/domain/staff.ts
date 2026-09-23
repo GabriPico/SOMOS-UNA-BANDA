@@ -2,6 +2,7 @@ export type StaffRole = 'PRIMER_ENTRENADOR' | 'SEGUNDO_ENTRENADOR' | 'DELEGADO' 
 export type ClubPersonnelRole = 'ENCARGADO_DEL_CAMPO'
 export type StaffPersonality = 'RESPONSABLE' | 'CERCANO' | 'EXIGENTE' | 'SERVICIAL' | 'TRANQUILO' | 'ENTUSIASTA' | 'AUTORITARIO' | 'DESPISTADO'
 export type AssistantProfile = 'FUTBOLERO' | 'METODICO' | 'MOTIVADOR' | 'CONOCE_LA_CATEGORIA' | 'JOVEN_CON_IDEAS' | 'VETERANO_PRACTICO'
+export type AssistantArchetype = 'CONNECTED_YOUNGSTER' | 'CLUB_VETERAN' | 'FORMER_CAPTAIN' | 'TRUSTED_ASSISTANT'
 export type PersonalityKnowledge = 'UNKNOWN' | 'CLUES' | 'KNOWN'
 export type AvailabilityLevel = 'VERY_HIGH' | 'HIGH' | 'MEDIUM' | 'LOW'
 export type CompensationType = 'MONTHLY' | 'FREE' | 'PRESIDENT_FAVOR' | 'PRESIDENT_PAYS' | 'PAY_PER_ATTENDANCE'
@@ -43,6 +44,11 @@ export type StaffPerson = {
   currentSituation: string
   presidentContext?: string
   isUsuallyAvailable: boolean
+  assistantArchetype?: AssistantArchetype
+  relationshipWithManager?: number
+  satisfaction?: number
+  relationshipLocked?: boolean
+  groupRelationship?: number
   coachProfile?: { tacticalTendencies?: string[]; groupManagement?: string; discipline?: string; managementStyle?: string }
 }
 
@@ -78,6 +84,12 @@ export const PERSONALITY_LABELS: Record<StaffPersonality, string> = {
   TRANQUILO: 'Tranquilo', ENTUSIASTA: 'Entusiasta', AUTORITARIO: 'Autoritario', DESPISTADO: 'Despistado',
 }
 export const AVAILABILITY_LABELS: Record<AvailabilityLevel, string> = { VERY_HIGH: 'Muy alta', HIGH: 'Alta', MEDIUM: 'Media', LOW: 'Baja' }
+export function describeStaffRelationship(value = 50) {
+  return value >= 85 ? 'Plena confianza' : value >= 70 ? 'Buena' : value >= 55 ? 'Correcta' : value >= 40 ? 'Distante' : value >= 25 ? 'Tensa' : 'Muy deteriorada'
+}
+export function describeStaffSatisfaction(value = 50) {
+  return value >= 80 ? 'Muy satisfecho' : value >= 65 ? 'Satisfecho' : value >= 45 ? 'Expectante' : value >= 30 ? 'Preocupado' : 'Muy descontento'
+}
 
 const clamp = (value: number, minimum = 0, maximum = 100) => Math.max(minimum, Math.min(maximum, value))
 const mean = (values: number[]) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0

@@ -1,0 +1,67 @@
+.player-profile-screen { min-width: 0; max-width: 1800px; margin-inline: auto; }
+.player-profile-navigation { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 4px 14px; }
+.player-profile-navigation > div:first-child { display: grid; gap: 7px; }
+.player-profile-navigation button { width: fit-content; padding: 0; border: 0; color: var(--ui-interactive); background: none; font-size: 13px; cursor: pointer; }
+.player-profile-navigation > div > span { font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--ui-text-secondary); }
+.player-detail--page { border: 0; border-radius: 3px; padding-bottom: 8px; }
+.player-detail--page .player-detail-header { grid-template-columns: clamp(170px, 17vw, 260px) minmax(0, 1fr) 190px; min-height: 210px; padding: 0 22px; border-bottom: 1px solid var(--ui-border); }
+.management-theme .player-detail--page .player-portrait--large { height: 210px; }
+.player-detail--page .player-detail-identity { padding: 20px 24px; }
+.player-detail--page .player-detail-number { font-size: 26px; color: var(--ui-text-secondary); }
+.player-detail--page .player-detail-identity h3 { font-size: clamp(28px, 3vw, 48px); overflow-wrap: normal; }
+.player-detail--page .player-detail-identity p { font-size: 17px; }
+.player-detail--page .player-detail-identity em { font-size: 13px; }
+.player-detail--page .tactical-natural-positions { text-align: left; font-size: 13px; margin-top: 9px; }
+.player-detail--page .player-detail-happiness { align-self: center; border: 0; background: none; padding-left: 20px; }
+.player-detail--page .player-detail-happiness .happiness-indicator { flex-direction: row; align-items: center; font-size: 18px; }
+.player-detail--page .player-detail-content { display: grid; grid-template-columns: minmax(200px, .8fr) minmax(0, 1.8fr) minmax(210px, .8fr); gap: 0 24px; padding: 0 24px; }
+.player-detail--page .player-overview { grid-column: 1 / -1; grid-template-columns: minmax(200px, .8fr) minmax(0, 1.8fr) minmax(210px, .8fr); gap: 24px; padding-block: 17px; }
+.management-theme .player-detail--page .player-overview h4 { font-size: 11px; margin-bottom: 7px; }
+.management-theme .player-detail--page .player-overview strong { font-size: 16px; }
+.management-theme .player-detail--page .player-overview p { font-size: 13px; }
+.player-detail--page .player-overview-quality .star-rating { font-size: 26px; }
+.player-detail--page .player-personal-info { grid-column: 1 / -1; justify-content: flex-start; gap: 35px; font-size: 14px; padding-block: 12px; }
+.player-detail--page .player-positions-panel { grid-column: 1; grid-row: 3; }
+.player-detail--page .player-position-map { flex-direction: column; align-items: start; gap: 12px; }
+.player-detail--page .position-pitch { width: 100%; max-width: 260px; }
+.player-detail--page .player-position-map ul { gap: 6px; }
+.player-detail--page .player-tactical-context { grid-column: 1; grid-row: 4; align-content: start; align-self: start; gap: 8px; padding-top: 8px; }
+.player-detail--page .player-attributes-panel { grid-column: 2; grid-row: 3 / 5; }
+.player-detail--page .player-detail-section { padding-block: 15px; }
+.player-detail--page .attribute-groups { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.player-detail--page .attribute-group { padding-left: 12px; }
+.player-detail--page .attribute-group:first-child { padding-left: 0; }
+.player-detail--page .attribute-group h5 { font-size: 12px; margin-bottom: 11px; }
+.player-detail--page .attribute-group dl { gap: 10px; }
+.player-detail--page .player-attribute-row { grid-template-columns: minmax(0, 1fr) auto; font-size: 12px; gap: 7px; }
+.management-theme .player-detail--page .attribute-stars { font-size: 14px; }
+.player-detail--page .player-state-sections { grid-column: 3; grid-row: 3 / 5; display: flex; flex-direction: column; gap: 4px; }
+.player-detail--page .player-state-sections > section + section { padding-left: 0; border-left: 0; border-top: 1px solid var(--ui-border); }
+.player-detail--page .player-state-sections small { font-size: 12px; line-height: 1.5; }
+.profile-physical-state { display: grid; gap: 10px; margin-top: 12px; font-size: 12px; }
+.profile-physical-state > div > span { font-size: 10px; color: var(--ui-text-secondary); }
+.profile-physical-state .tactical-card-physical { width: min(100%, 210px); margin-top: 4px; }
+.profile-physical-state .is-positive { color: var(--ui-positive); }.profile-physical-state .is-warning { color: var(--ui-warning); }.profile-physical-state .is-negative { color: var(--ui-danger); }
+.player-detail--page .player-performance { grid-column: 1 / -1; }
+.player-detail--page .player-performance dl { gap: 24px; }
+.player-detail--page .player-performance dt { font-size: 12px; }
+.player-detail--page .player-performance dd { font-size: 23px; }
+.player-detail--page .player-profile-extra { grid-column: 1 / -1; border-top: 0; padding-block: 13px; }
+.player-detail--page .player-profile-extra summary { font-size: 12px; }
+@media (max-width: 1450px) {
+  .player-detail--page .player-detail-content { grid-template-columns: minmax(180px, .8fr) minmax(0, 1.8fr); gap: 0 20px; }
+  .player-detail--page .player-state-sections { grid-column: 1 / -1; grid-row: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .player-detail--page .player-state-sections > section + section { border-top: 0; }
+  .player-detail--page .player-performance { grid-row: 5; }
+  .player-detail--page .player-detail-header { min-height: 180px; }
+  .management-theme .player-detail--page .player-portrait--large { height: 180px; }
+}
+@media (max-width: 800px) {
+  .player-detail--page .player-detail-header { grid-template-columns: 110px minmax(0, 1fr); padding-inline: 5px; }
+  .player-detail--page .player-detail-identity { padding-inline: 10px; }
+  .player-detail--page .player-detail-happiness { grid-column: 1 / -1; padding: 10px; }
+  .player-detail--page .player-detail-content, .player-detail--page .player-overview { display: block; }
+  .player-detail--page .player-overview > div { margin-bottom: 14px; }
+  .player-detail--page .player-state-sections { display: block; }
+  .player-detail--page .player-performance dl { gap: 8px; }
+}

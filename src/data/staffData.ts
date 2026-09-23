@@ -1,5 +1,5 @@
 import type { SportsBudget } from '../domain/economy'
-import type { ClubPersonnel, StaffCandidate, StaffCapabilities, StaffPerson, StaffState } from '../domain/staff'
+import type { AssistantArchetype, ClubPersonnel, StaffCandidate, StaffCapabilities, StaffPerson, StaffState } from '../domain/staff'
 import { SITO } from './characters'
 
 const skills = (values: Partial<StaffCapabilities>): StaffCapabilities => ({
@@ -23,6 +23,45 @@ const youngAssistant: StaffPerson = {
   compensation: { type: 'PRESIDENT_FAVOR', amount: 0, presidentAgreement: 'El presidente ha arreglado su incorporación por un favor personal.' },
   presidentProtection: 'INITIALLY_IMPOSED', arrivalStory: 'El presidente pidió que se le diera una oportunidad: es hijo de un socio al que conoce desde hace años.',
   currentSituation: 'Está aprendiendo el oficio y ayuda en casi cualquier tarea.', presidentContext: '“A este dale una oportunidad. Ya hablaremos más adelante.”', isUsuallyAvailable: true,
+  assistantArchetype: 'CONNECTED_YOUNGSTER', relationshipWithManager: 58, satisfaction: 62, groupRelationship: 50,
+}
+
+const clubVeteranAssistant: StaffPerson = {
+  id: 'staff-toni', role: 'SEGUNDO_ENTRENADOR', name: 'Ramon Vidal', personality: 'DESPISTADO', personalityKnowledge: 'CLUES',
+  knownClues: ['Conoce cada rincón del campo y saluda a todo el mundo por su nombre.'], currentDescription: 'Lleva media vida haciendo de todo en el club y sigue viniendo porque esta es su casa.',
+  capabilities: skills({ training: 51, footballKnowledge: 61, observation: 48, groupManagement: 67, authority: 43, organization: 55, commitment: 86, reliability: 57, availability: 82 }),
+  assistantProfile: 'VETERANO_PRACTICO', availability: 'HIGH', availabilityNotes: ['Rara vez falta, aunque alguna vez se despista con los horarios.'], compensation: { type: 'FREE', amount: 0 },
+  presidentProtection: 'PROTECTED', arrivalStory: 'Ha sido jugador, ayudante y entrenador de base; Manolo le tiene un cariño enorme.', currentSituation: 'Ayuda por experiencia y mantiene unido al grupo.', isUsuallyAvailable: true,
+  assistantArchetype: 'CLUB_VETERAN', relationshipWithManager: 62, satisfaction: 68, groupRelationship: 74,
+}
+
+const formerCaptainAssistant: StaffPerson = {
+  id: 'staff-toni', role: 'SEGUNDO_ENTRENADOR', name: 'Hugo Navarro', personality: 'EXIGENTE', personalityKnowledge: 'CLUES',
+  knownClues: ['Fue capitán y todavía habla con sus antiguos compañeros como uno de ellos.'], currentDescription: 'Una lesión le apartó del campo el curso pasado. Ya entrenaba fútbol base y ha decidido seguir junto al equipo.',
+  capabilities: skills({ training: 73, footballKnowledge: 77, observation: 75, groupManagement: 82, authority: 84, organization: 69, commitment: 85, reliability: 78, availability: 83 }),
+  assistantProfile: 'FUTBOLERO', availability: 'VERY_HIGH', availabilityNotes: ['Está plenamente implicado en su nueva función.'], compensation: { type: 'FREE', amount: 0 },
+  presidentProtection: 'RECOMMENDED', arrivalStory: 'Era uno de los líderes del vestuario hasta que una lesión le obligó a dejar de competir.', currentSituation: 'Aprende el oficio sin perder su enorme ascendencia sobre la plantilla.', isUsuallyAvailable: true,
+  assistantArchetype: 'FORMER_CAPTAIN', relationshipWithManager: 60, satisfaction: 66, groupRelationship: 90,
+}
+
+const trustedAssistant: StaffPerson = {
+  id: 'staff-toni', role: 'SEGUNDO_ENTRENADOR', name: 'Dani Serra', personality: 'RESPONSABLE', personalityKnowledge: 'KNOWN',
+  knownClues: ['Ya habéis trabajado juntos y os entendéis con pocas palabras.'], currentDescription: 'Tu persona de máxima confianza profesional. Ha llegado antes para conocer el club y preparar vuestra entrada.',
+  capabilities: skills({ training: 87, footballKnowledge: 88, observation: 86, groupManagement: 80, authority: 78, organization: 88, commitment: 94, reliability: 91, availability: 90 }),
+  assistantProfile: 'METODICO', availability: 'VERY_HIGH', availabilityNotes: ['Ha venido contigo y prioriza el proyecto.'], compensation: { type: 'FREE', amount: 0 },
+  presidentProtection: 'NONE', arrivalStory: 'Habéis entrenado juntos anteriormente y aceptó acompañarte.', currentSituation: 'Se ha adelantado para hablar con la gente y estudiar la plantilla.', isUsuallyAvailable: true,
+  assistantArchetype: 'TRUSTED_ASSISTANT', relationshipWithManager: 100, satisfaction: 100, relationshipLocked: true, groupRelationship: 72,
+}
+
+const ASSISTANTS: Record<AssistantArchetype, StaffPerson> = { CONNECTED_YOUNGSTER: youngAssistant, CLUB_VETERAN: clubVeteranAssistant, FORMER_CAPTAIN: formerCaptainAssistant, TRUSTED_ASSISTANT: trustedAssistant }
+export function selectAssistantArchetype(seed: number): AssistantArchetype {
+  const chance = (((seed >>> 0) * 1103515245 + 12345) >>> 0) % 100
+  return chance < 45 ? 'CONNECTED_YOUNGSTER' : chance < 75 ? 'CLUB_VETERAN' : chance < 93 ? 'FORMER_CAPTAIN' : 'TRUSTED_ASSISTANT'
+}
+
+export type InitialStaffOverrides = {
+  assistantArchetype?: AssistantArchetype
+  delegate?: 'DEFAULT' | 'PRESENT' | 'ABSENT'
 }
 
 export const veteranDelegate: StaffPerson = {
@@ -66,15 +105,11 @@ export function createSportsBudget(seed: number): SportsBudget {
 }
 
 /** Composición inicial reproducible. Los umbrales son provisionales y fáciles de rebalancear. */
-export function createInitialStaffState(seed: number): StaffState {
-  const roll = ((seed >>> 0) * 1664525 + 1013904223) >>> 0
-  const chance = roll % 100
+export function createInitialStaffState(seed: number, overrides: InitialStaffOverrides = {}): StaffState {
   const sportsBudget = createSportsBudget(seed)
   const generatedHeadCoach = { ...headCoach, compensation: { type: 'MONTHLY' as const, amount: sportsBudget.minimumCoachCompensation } }
-  const members: StaffPerson[] = [generatedHeadCoach]
-  if (chance >= 25 && chance < 55) members.push(youngAssistant)
-  else if (chance >= 55 && chance < 72) members.push(veteranDelegate)
-  else if (chance >= 72) members.push(youngAssistant, veteranDelegate)
-  if (chance >= 99) members.push(permanentPhysio)
-  return { ...initialStaffState, members, candidates: [externalCandidate] }
+  const archetype = overrides.assistantArchetype ?? selectAssistantArchetype(seed)
+  const includeDelegate = overrides.delegate !== 'ABSENT'
+  const members: StaffPerson[] = [generatedHeadCoach, structuredClone(ASSISTANTS[archetype]), ...(includeDelegate ? [structuredClone(veteranDelegate)] : [])]
+  return { ...structuredClone(initialStaffState), members, candidates: [structuredClone(externalCandidate)] }
 }

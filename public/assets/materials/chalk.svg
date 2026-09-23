@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480">
+  <filter id="chalk" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".21 .31" numOctaves="3" stitchTiles="stitch" seed="42"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope=".14"/></feComponentTransfer>
+  </filter>
+  <path fill="#e1e4cd" filter="url(#chalk)" d="M0 0h480v480H0z"/>
+  <g fill="none" stroke="#d1d6bb" stroke-linecap="round">
+    <path opacity=".022" stroke-width="26" d="M35 94q65-18 160-4M69 307q134-26 237-3M269 415l139-8M299 162l124-12"/>
+    <path opacity=".024" stroke-width="9" d="M32 111q56-13 120-8m-21 178 180 8m-30 99 135-8"/>
+    <path opacity=".06" stroke-width=".6" d="m73 160 97-8m115 133 90-9m-294 131 109-10m30-319 102 4"/>
+  </g>
+</svg>

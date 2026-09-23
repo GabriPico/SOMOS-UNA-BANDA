@@ -1,0 +1,111 @@
+﻿.management-icon { width: 20px; height: 20px; flex-shrink: 0; }
+button, input, select, textarea { color: inherit; }
+:where(button, input, select, textarea) { border-radius: var(--ui-radius); }
+:where(button:not([class]), .screen-back-button) { border: 1px solid var(--ui-border); background: var(--ui-surface-elevated); padding: 8px 12px; cursor: pointer; }
+:where(input, select, textarea) { background: var(--ui-bg-secondary); border: 1px solid var(--ui-border); }
+:where(button):disabled { cursor: not-allowed; opacity: .55; }
+:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 3px; }
+::selection { color: var(--ui-on-accent); background: var(--ui-accent); }
+* { scrollbar-color: var(--ui-border) var(--ui-bg-secondary); scrollbar-width: thin; }
+.management-theme :is(.primary-action, .staff-primary-button, .panel-tutorial-continue) { background: var(--ui-accent); border: 1px solid var(--ui-accent-hover); color: var(--ui-on-accent); border-radius: var(--ui-radius); }
+.management-theme :is(.primary-action, .staff-primary-button):hover { background: var(--ui-accent-hover); }
+.management-theme :is(.player-screen, .staff-screen, .training-screen, .inbox-screen, .tactics-screen, .next-match-screen, .standings-screen, .results-screen, .scorers-screen, .sanctions-screen, .pre-match-screen, .friendly-call-up-screen) { border-color: var(--ui-border); border-radius: var(--ui-radius); background: var(--ui-surface); color: var(--ui-text); }
+.management-theme .club-panel-screen { background: transparent; border: 0; padding: 0; gap: 16px; }
+.management-theme .dashboard-card { border: 1px solid var(--ui-border); border-radius: var(--ui-radius); background: linear-gradient(135deg, var(--ui-surface-elevated), var(--ui-surface)); box-shadow: var(--ui-shadow); padding: 22px; min-height: 190px; }
+.management-theme .dashboard-card h2 { color: var(--ui-text-secondary); font-size: 13px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 20px; }
+.management-theme .dashboard-card:hover { border-color: var(--ui-interactive); }
+.management-theme .card-main-value { font-size: 24px; font-weight: 650; }
+.management-theme .panel-objective { border-radius: var(--ui-radius); }
+.management-theme .player-portrait { background: transparent; }
+.management-theme .player-portrait--small { width: 28px; height: 32px; }
+.management-theme .player-portrait--medium { width: 38px; height: 44px; }
+.management-theme .player-status-badge { color: var(--tone); background: var(--tone-bg); }
+.management-theme .star-rating { color: var(--ui-warning); }
+.management-theme .management-screen-header h2 { text-transform: uppercase; }
+.management-theme .player-section-title { text-transform: uppercase; letter-spacing: .04em; }
+.happiness-indicator { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--tone); vertical-align: middle; }
+.happiness-indicator svg { width: 22px; height: 22px; flex-shrink: 0; }
+.player-status { color: var(--tone); font-weight: 500; line-height: 1.4; }
+.player-status > span { margin-right: 3px; }
+.warning-badge { color: var(--ui-warning); }
+.management-theme .inbox-layout { gap: 0; }
+.management-theme .inbox-list-item.is-selected { background: var(--ui-interactive-bg); box-shadow: inset 3px 0 var(--ui-accent); }
+.management-theme .conversation-header { background: var(--ui-surface-elevated); color: var(--ui-text); border-bottom: 1px solid var(--ui-border); }
+.management-theme .inbox-message-detail { background: var(--ui-bg-secondary); }
+.management-theme .message-entry.is-sent .message-bubble { background: var(--ui-interactive-bg); }
+.management-theme .message-author { color: var(--ui-interactive); }
+.management-theme .conversation-avatar, .management-theme .detail-avatar { color: var(--ui-interactive); background: var(--ui-interactive-bg); }
+.management-theme .conversation-composer { background: var(--ui-bg-secondary); }
+.management-theme .league-tabs button.is-active { background: var(--ui-accent); color: var(--ui-on-accent); border-color: var(--ui-accent); }
+.management-theme .tactical-pitch { background: repeating-linear-gradient(0deg, transparent 0 12.5%, rgb(255 255 255 / 2%) 12.5% 25%), var(--ui-pitch); border: 1px solid var(--ui-pitch-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+.management-theme :is(.tactical-halfway, .tactical-circle, .tactical-box), .management-theme .tactical-pitch:before { border-color: var(--ui-pitch-line); opacity: .55; }
+.management-theme .tactical-token { border: 1px solid var(--ui-border); background: var(--ui-bg-secondary); color: var(--ui-text); grid-template-columns: 26px minmax(0, 1fr); min-height: 62px; padding: 5px; width: 118px; }
+.management-theme .tactical-token > .player-portrait { grid-column: 1; grid-row: 1 / 5; width: 30px; height: 42px; align-self: end; }
+.management-theme .tactical-token > span:not(.player-portrait) { grid-column: 2; grid-row: auto; color: var(--ui-interactive); font-size: 10px; }
+.management-theme .tactical-token strong { grid-column: 2; font-size: 12px; }
+.management-theme .tactical-token small { grid-column: 2; font-size: 10px; }
+.management-theme .tactical-token strong b { display: none; }
+.management-theme .tactical-token.is-selected, .management-theme .tactical-squad button.is-selected { outline: 2px solid var(--ui-accent); background: var(--ui-interactive-bg); }
+.management-theme .tactical-squad button { grid-template-columns: 30px 1fr auto; }
+.management-theme .tactical-squad button > .player-portrait { display: inline-flex; }
+.management-theme .tactical-squad button > b { font-size: 12px; }
+.management-theme .tactical-instructions select { background: var(--ui-bg-secondary); color: var(--ui-text); }
+@media (max-width: 1000px) { .management-theme .club-panel-screen { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .management-theme .club-panel-screen { grid-template-columns: minmax(0, 1fr); } .management-theme .inbox-screen { padding: 12px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Keep the local developer toolbar outside the game's available viewport. */
+body:has(.dev-tools) { --ui-dev-offset: 38px; }
+.app-shell .topbar { top: var(--ui-dev-offset, 0px); }
+.app-shell .sidebar { top: calc(var(--ui-header-height) + var(--ui-dev-offset, 0px)); height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px)); }
+.team-workspace { --team-available-height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px) - 125px); }
+.team-workspace .player-detail--inline { max-height: var(--team-available-height); }
+.team-screen .player-table-wrapper { max-height: calc(var(--team-available-height) - 25px); }
+.player-detail-header { min-height: 160px; }
+.management-theme .player-detail .player-portrait--large { height: 160px; }
+.player-position-map { min-height: 90px; }
+.position-pitch { height: auto; max-height: 90px; }
+.player-detail .player-attribute-progress { margin: 0; line-height: 1; display: inline; }
+@media (max-width: 1050px) { .team-workspace .player-detail--inline { max-height: none; } .team-screen .player-table-wrapper { max-height: 540px; } }
+/* Keep goalkeeper skills in the free space below mental skills. */
+.attribute-group:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
+.attribute-group:nth-child(2) { grid-column: 2; grid-row: 1; }
+.attribute-group:nth-child(3) { grid-column: 3; grid-row: 1 / span 2; }
+.attribute-group:nth-child(4) { grid-column: 2; grid-row: 2; align-self: start; }
+.attribute-groups { grid-template-rows: min-content 1fr; }
+@media (min-width: 1600px) { .team-screen .team-table td { height: 36px; } }
+@media (min-width: 1051px) { .team-workspace { --team-available-height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px) - 145px); } }
+@media (max-width: 1400px) { :root { --ui-sidebar-width: 172px; } }
+@media (max-width: 800px) { :root { --ui-sidebar-width: 64px; --ui-header-height: 82px; } }
+@media (max-height: 850px) and (min-width: 801px) { :root { --ui-header-height: 72px; } }
+@media (max-width: 1450px) and (min-width: 1051px) { .team-screen .team-table th { font-size: 9px; padding-inline: 3px; } .team-table .column-happiness { width: 9%; } .team-table .column-notes { width: 15%; } }
+.team-workspace .player-detail-content { padding-bottom: 2px; }
+@media (max-width: 600px) { .player-position-map { flex-wrap: wrap; } .position-pitch { width: 100%; max-width: 170px; } }
+.management-theme .screen-header > .screen-back-button { order: 2; margin-left: auto; }
+.rating-stars-track { position: relative; display: inline-block; line-height: 1.1; color: var(--ui-neutral-bg); white-space: nowrap; vertical-align: middle; }
+.rating-stars-fill { position: absolute; inset: 0 auto 0 0; overflow: hidden; color: var(--ui-warning); white-space: nowrap; }
+.player-detail { container-type: inline-size; }
+.player-overview { display: grid; grid-template-columns: 120px minmax(0, 1fr) 110px; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--ui-border); }
+.player-overview h4 { margin: 0 0 6px; text-transform: uppercase; font-size: 10px; font-weight: 500; color: var(--ui-text-secondary); }
+.player-overview strong { font-size: 12px; font-weight: 550; }
+.player-overview p { color: var(--ui-text-secondary); margin: 4px 0 0; font-size: 11px; line-height: 1.35; }
+.player-overview-quality .star-rating { font-size: 22px; }
+.player-overview > div + div { border-left: 1px solid var(--ui-border); padding-left: 12px; }
+.player-detail .player-attribute-row { grid-template-columns: minmax(0, 1fr) max-content; }
+.player-detail .attribute-stars { font-size: 13px; letter-spacing: 0; }
+.player-detail .player-attribute-row dd { min-width: 0; position: relative; }
+.player-detail .player-attribute-progress { position: absolute; right: -6px; font-size: 9px; }
+.team-workspace .player-detail-header { min-height: 128px; }
+.management-theme .team-workspace .player-detail .player-portrait--large { height: 128px; }
+.team-workspace .player-detail-section { padding-block: 7px; }
+.team-workspace .player-personal-info { padding-block: 7px; }
+.team-workspace .player-position-map { min-height: 64px; }
+.team-workspace .position-pitch { max-height: 64px; }
+.team-workspace .attribute-group dl { gap: 4px; }
+.team-workspace .player-profile-extra { padding-top: 6px; }
+@container (max-width: 490px) {
+  .player-overview { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .player-overview-role { grid-column: 1 / -1; grid-row: 2; }
+  .player-overview > .player-overview-role { padding-left: 0; border-left: 0; }
+  .player-detail .player-attribute-row { grid-template-columns: 1fr; gap: 2px; }
+  .player-detail .player-attribute-row dd { width: max-content; }
+}

@@ -1,4 +1,6 @@
 import type { Formation, GoalEvent, PlayerAttributes, PlayerPosition, TacticalPlan } from './models'
+import type { CurrentPhysicalIssue } from './trainingTypes'
+import type { TalkEmotions } from './preMatchTalkTypes'
 
 export type MatchPhase = 'PRE_MATCH' | 'FIRST_HALF' | 'HALF_TIME' | 'SECOND_HALF' | 'PAUSED_FOR_DECISION' | 'FINISHED'
 export type MatchTeamSide = 'home' | 'away'
@@ -14,6 +16,8 @@ export type MatchPlayer = {
   performance: number; actions: number
   mood: MatchMood; matchStats: MatchPlayerStats
   fatigueNoticeLevel: number
+  currentIssue?: CurrentPhysicalIssue
+  prematchEmotions?: TalkEmotions
 }
 export type MatchLineup = { formation: Formation; starters: number[]; bench: number[]; slots: PlayerPosition[] }
 export type MatchTeamState = {

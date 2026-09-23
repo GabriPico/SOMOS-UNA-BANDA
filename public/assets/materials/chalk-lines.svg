@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" preserveAspectRatio="none">
+  <defs>
+    <filter id="hand" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency=".14" numOctaves="2" seed="16" result="rough"/>
+      <feDisplacementMap in="SourceGraphic" in2="rough" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <g fill="none" stroke="#e1e4cd" stroke-linecap="round" stroke-linejoin="round" filter="url(#hand)">
+    <g opacity=".65" stroke-width="1.8">
+      <path d="M19 25q142-1 281 0l281-1q1 187 0 376l1 375q-146 1-281 0l-282 1q-1-188 0-376Z"/>
+      <path d="M19 400q135 1 281 0t281-1"/>
+      <path d="M163 25q-1 57 0 118l137-1 137 1q1-60 0-118M163 775l-1-118 139 1 136-1 1 118"/>
+      <path d="M359 400c0 34-27 60-59 60-33 0-60-27-60-60s28-61 60-60c34 0 59 28 59 60Z"/>
+    </g>
+    <g opacity=".26" stroke-width=".65">
+      <path d="M20 27h274m9-1 278-1M20 402l281-1 279-1M164 145l136-1 136 1M161 656l138 1 140-1"/>
+      <path d="M302 341c34 1 59 29 58 59-1 34-27 62-61 61"/>
+    </g>
+    <path d="M246 24V6l108 1v17M246 776v17h108v-18" stroke-width="1.2" opacity=".5"/>
+  </g>
+</svg>

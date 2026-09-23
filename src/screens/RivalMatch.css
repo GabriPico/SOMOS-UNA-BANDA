@@ -1,2 +1,2 @@
-.rival-tactical-view .tactical-token:disabled{cursor:default;opacity:1}
-@media(max-width:1000px){.rival-tactical-view{grid-template-columns:1fr}}
+.rival-tactical-view .tactical-token:disabled{cursor: default;opacity: 1}
+@media(max-width:1000px){.rival-tactical-view{grid-template-columns: 1fr}}

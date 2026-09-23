@@ -1,5 +1,6 @@
 import type { GameState } from './gameState'
-import type { InboxMessage } from './inbox'
+import { appendConversationMessages } from './messages'
+import type { ConversationMessage } from './messages'
 import type { LeagueMatch, LeagueSanction, Player } from './models'
 import { getSanctionsForMatchday } from './leagueSanctions'
 import { calculateGeneralRating } from './playerRatings'
@@ -67,7 +68,7 @@ function omissionReaction(state: GameState, player: Player, match: LeagueMatch) 
   const ratingExpectation = Math.max(0, (calculateGeneralRating(player) - 52) / 35)
   const personality = human ? PERSONALITY_MODIFIERS[human.personality] : undefined
   const sensitivity = 1 + (personality?.playingTimeSensitivity ?? 0) * .18
-  const authorityBuffer = human ? (human.authorityWithCoach - 50) / 100 : 0
+  const authorityBuffer = human ? (human.managerAuthority - 50) / 100 : 0
   const unhappinessPressure = human ? Math.max(0, 60 - human.happiness.playingTime) / 35 : 0
   const raw = (.15 + expectedUse * 1.25 + ratingExpectation * .8 + Math.max(0, omissionStreak - 1) * .65 + unhappinessPressure - authorityBuffer) * sensitivity
   const happinessDelta = -Math.round(raw * 10) / 10
@@ -88,13 +89,27 @@ export function resolveSquadAnnouncement(current: GameState, match: LeagueMatch,
     return { matchId: match.id, playerId: player.id, status: eligibility.eligible ? (selected.has(player.id) ? 'CALLED_UP' : 'TECHNICAL_OMISSION') : eligibility.status!, recordedAt: announcedAt }
   })
   const reactions = records.filter((record) => record.status === 'TECHNICAL_OMISSION').map((record) => omissionReaction(state, players.find((player) => player.id === record.playerId)!, match))
-  reactions.forEach((reaction) => { const human = state.training.players[reaction.playerId]; if (!human) return; human.happiness.playingTime = clamp(human.happiness.playingTime + reaction.happinessDelta); human.authorityWithCoach = clamp(human.authorityWithCoach + reaction.authorityDelta) })
+  reactions.forEach((reaction) => { const human = state.training.players[reaction.playerId]; if (!human) return; human.happiness.playingTime = clamp(human.happiness.playingTime + reaction.happinessDelta); human.managerAuthority = clamp(human.managerAuthority + reaction.authorityDelta) })
   state.squadSelectionHistory.push(...records)
   state.squadSelections[match.id] = { matchId: match.id, announced: true, playerIds: [...playerIds], announcedAt, records, reactions }
   const relevant = reactions.find((reaction) => reaction.significance === 'RELEVANT' && reaction.text)
   if (relevant) {
-    const message: InboxMessage = { id: `selection-reaction-${match.id}-${relevant.playerId}`, senderType: 'staff', senderName: 'Manolo Escudero', subject: players.find((player) => player.id === relevant.playerId)?.name ?? 'Convocatoria', body: `${relevant.text} Me ha preguntado si hay algún problema con él.`, matchday: match.matchday, status: 'new', attention: 'IMPORTANT', createdAt: announcedAt }
-    if (!state.inboxMessages.some((item) => item.id === message.id)) state.inboxMessages.push(message)
+    const message: ConversationMessage = { id: `selection-reaction-${match.id}-${relevant.playerId}`, senderType: 'STAFF', senderName: 'Manolo Escudero', text: `${relevant.text} Me ha preguntado si hay algún problema con él.`, timestamp: announcedAt, read: false, responseOptions: [{ id: 'no-problem', label: 'No pasa nada' }, { id: 'need-him', label: 'Dile que necesito que venga' }, { id: 'talk-myself', label: 'Hablaré yo con él' }] }
+    state.conversations = appendConversationMessages(state.conversations, { participantId: 'manolo-escudero', participantName: 'Manolo Escudero', participantType: 'PRESIDENT', type: 'DIRECT' }, [message])
   }
+  return { state, errors: [] as string[] }
+}
+
+export function resolveFriendlySquadAnnouncement(current: GameState, match: LeagueMatch, playerIds: number[], players: Player[], announcedAt: string) {
+  if (match.competitionType !== 'FRIENDLY') return { state: current, errors: ['Esta convocatoria solo corresponde a un amistoso.'] }
+  if (current.squadSelections[match.id]?.announced) return { state: current, errors: [] as string[] }
+  const unique = [...new Set(playerIds)]
+  if (unique.length < OFFICIAL_SQUAD_MIN) return { state: current, errors: [`Necesitas al menos ${OFFICIAL_SQUAD_MIN} jugadores para disputar el amistoso.`] }
+  if (unique.some((id) => !players.some((player) => player.id === id))) return { state: current, errors: ['La convocatoria contiene un jugador desconocido.'] }
+  const selected = new Set(unique)
+  const records = players.map((player): PlayerMatchSelectionRecord => ({ matchId: match.id, playerId: player.id, status: selected.has(player.id) ? 'CALLED_UP' : 'TECHNICAL_OMISSION', recordedAt: announcedAt }))
+  const state = structuredClone(current)
+  state.squadSelections[match.id] = { matchId: match.id, announced: true, playerIds: unique, announcedAt, records, reactions: [] }
+  state.squadSelectionHistory.push(...records)
   return { state, errors: [] as string[] }
 }
