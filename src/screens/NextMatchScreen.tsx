@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { NextMatchSummary } from "../components/NextMatchSummary";
+import { MatchFixtureHeader } from "../components/MatchFixtureHeader";
+import { StarRating } from "../components/StarRating";
+import { getFormLabel } from "../domain/playerPresentation";
+import { latestClubMatch } from "../domain/competitionPresentation";
 import {
   goalEvents,
   leagueSanctions,
@@ -43,6 +46,7 @@ type NextMatchScreenProps = {
   onBack: () => void;
   onOpenTactics: () => void;
   onPlay: () => void;
+  onOpenReport: (matchId: string) => void;
 };
 const USER_TEAM_ID = "fc-poblenou";
 const outcomeLabels = { G: "V", E: "E", P: "D" } as const;
@@ -57,16 +61,19 @@ export function NextMatchScreen({
   onBack,
   onOpenTactics,
   onPlay,
+  onOpenReport,
 }: NextMatchScreenProps) {
   const nextMatch = getNextMatch(matches, USER_TEAM_ID);
+  const lastMatch = latestClubMatch(matches);
   if (!nextMatch)
     return (
-      <section className="next-match-screen">
+      <section className="next-match-screen competition-screen">
         <button className="screen-back-button" type="button" onClick={onBack}>
           ← Panel del club
         </button>
         <div className="next-match-block">
           <p>No hay ningún próximo partido programado.</p>
+          {lastMatch && <button className="competition-primary" type="button" onClick={() => onOpenReport(lastMatch.id)}>Ver acta del último partido →</button>}
         </div>
       </section>
     );
@@ -96,18 +103,17 @@ export function NextMatchScreen({
   const weaknesses = profile ? getScoutedWeaknesses(rivalPlayers, profile) : [];
 
   return (
-    <section className="next-match-screen">
-      <header className="next-match-header">
+    <section className="next-match-screen competition-screen">
+      <div className="competition-toolbar">
         <button className="screen-back-button" type="button" onClick={onBack}>
           ← Panel del club
         </button>
-        {nextMatch.competitionType === "FRIENDLY" && (
-          <strong className="friendly-label">AMISTOSO</strong>
-        )}
-        <NextMatchSummary
+        {lastMatch && <button className="competition-back" type="button" onClick={() => onOpenReport(lastMatch.id)}>Acta del último partido →</button>}
+      </div>
+        <MatchFixtureHeader
           match={nextMatch}
           teams={leagueTeams}
-          userTeamId={USER_TEAM_ID}
+          title="Próximo partido"
         />
         <section className="opponent-status">
           <h3>{opponentName}</h3>
@@ -126,7 +132,6 @@ export function NextMatchScreen({
             <span>Temporada pasada: {profile.previousSeasonPosition}.º</span>
           )}
         </section>
-      </header>
 
       <div className="next-match-columns">
         {profile && (
@@ -210,6 +215,7 @@ export function NextMatchScreen({
 
       {nextMatch.competitionType !== "FRIENDLY" && (
         <SquadSelectionSection
+          key={nextMatch.id}
           gameState={gameState}
           match={nextMatch}
           onAnnounce={onAnnounceSquad}
@@ -349,8 +355,8 @@ function SquadSelectionSection({
                     <strong>{player.name}</strong>
                     {player.clubStatus === "TRIAL" && <small>A PRUEBA</small>}
                   </td>
-                  <td>{Math.round(calculateGeneralRating(player))}</td>
-                  <td>{player.form}</td>
+                  <td><StarRating value={calculateGeneralRating(player)} /></td>
+                  <td>{getFormLabel(player.form)}</td>
                   <td>{human ? getConditionLabel(human.fitness) : "—"}</td>
                   <td>
                     {eligibility.eligible ? "Disponible" : eligibility.reason}

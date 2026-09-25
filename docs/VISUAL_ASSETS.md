@@ -1,5 +1,16 @@
 # Recursos ambientales del club
 
+## Campo de Entrenamientos ilustrado · 2026-09-24
+
+- Recurso activo: `public/assets/materials/club-training-night-illustrated.png`,
+  1672×941 px, 2.17 MB, copia íntegra de la salida de **imagegen integrado**.
+- Edición de la imagen aportada por el usuario, con su composición original:
+  campo municipal nocturno, focos, bar iluminado, gradas azules, redes, banquillo,
+  balones, conos, petos y botellas. Ilustración 2D pintada, sin texto ni logos.
+- Consumido únicamente por `TrainingScreen.css`, detrás del contenido y fuera
+  de header/sidebar. Se conservan el original del usuario y los demás escenarios.
+- [Prompt final y procedencia](TRAINING_BACKGROUND_PROMPT.md).
+
 ## Ventana, fotografía antigua y trofeo · 2026-09-16
 
 - Archivo de producto: `public/assets/materials/club-office-context.png`.
@@ -105,4 +116,81 @@ Hand anatomy: a recognizable human thumb naturally holding the LEFT outer edge, 
 Lighting and color: hand is backlit, dark charcoal grayscale, very low-key light with subtle soft tonal variations separating thumb, palm and finger joints. Absolutely NO visible skin COLOR: no beige, pink, brown, warm tones. Do not make a painted black hand or a black glove; readable human anatomy is suggested by silhouette, subtle soft shadows and faint natural crease/nail forms, WITHOUT revealing illuminated skin. No knit, seams, fabric, rubber, leather, plastic or glove texture on hand or wrist. Sleeve may have dark navy/charcoal cloth with restrained folds and cuff. Transition dark sleeve -> small shadowed wrist -> natural hand silhouette -> phone. Screen is brightest, then bezel, then discreet hand. No bright outline or rim glow.
 Background: genuinely transparent alpha outside phone, hand and sleeve. Remove any background halo/haze; keep soft photographic alpha edges, no hard cutout contour, no background, no room, no fake transparency checkerboard. Keep wrist/sleeve exiting lower-left canvas.
 Photographic realism, soft natural contact shadows, ordinary human grip. Preserve the phone and all non-hand details exactly. No text, logos, UI, watermark or extra objects.
+```
+
+## Mensajes: despacho y primer plano ilustrados · 2026-09-23
+
+- Recursos activos:
+  - `public/assets/materials/club-messages-office-illustrated.png`: 1536×1024 px,
+    1.95 MB, horizontal 3:2, opaco, misma resolución que el fondo original.
+  - `public/assets/materials/club-phone-hand-illustrated.png`: 1024×1536 px,
+    1.32 MB, con alfa real conservado y pantalla neutra para superponer el chat.
+- Editados con **imagegen integrado**, sin CLI ni API externa. Copias íntegras
+  de las salidas, sin cambiar las imágenes originales ni los recursos de otras vistas.
+- Base de cada edición: respectivamente `club-messages-office.png` y
+  `club-phone-hand-shadow.png`. Segunda entrada, solo como referencia de estilo:
+  `ChatGPT Image Sep 23, 2026, 11_26_05 PM.png`, aportada por el usuario.
+- Acabado semirrealista pintado: madera cálida, paredes y tejidos simplificados,
+  detalles contenidos y sombras suaves. Se mantiene la composición original;
+  no se incorporan la pizarra, lámpara, planta ni otros objetos de la referencia.
+- Se conservan las dos capas para mantener el montaje responsive y el chat HTML
+  existente. No se incrusta un segundo móvil en el fondo. El primer plano mantiene
+  el registro anterior, vertical y con el filtro local de gris/brillo ya existente.
+- Verificados visualmente los recursos, sus dimensiones y el alfa; no hay textos
+  legibles, mensajes, logos, botones ni HUD dentro de las imágenes.
+
+### Prompt final: despacho
+
+```text
+Use case: style-transfer. EDIT the FIRST attached image; the SECOND attached image is solely an ART STYLE reference.
+Target: the current game's actual 1536x1024 horizontal office background, image 1. Preserve its EXACT 1536x1024 resolution and 3:2 landscape aspect ratio.
+Restyle image 1 as a semi-realistic digitally painted football management videogame environment. Match image 2's illustrative/game-concept-art language: simplified material shapes, softly painted wood grain, restrained hand-painted edges, softened plaster and tile textures, controlled ambient lighting, gently modeled shadows, warm wooden surfaces with cooler muted blue/navy accents, readable forms and modest lived-in imperfections. A visible change away from photography is essential. It should look like the same artist painted both environments. No photorealism, no hyperreal surface detail, no photographic noise, no infantile cartoon, no anime, no heavy cel shading, no cinematic lighting or extreme contrast, no futuristic polish.
+COMPOSITION LOCK: image 1 is the sole source of scene geometry, content, perspective, camera position, cropping, scale and spatial arrangement. Keep exactly the same desk occupying the lower third, same wooden chair left of center, same laptop/mug/keys arrangement at the lower right, same stationery trays and pencil holder at the far left, same cream plaster wall with navy stripe and blue square tiles, same top-left window with chainlink fence and pitch, same upper-right shelf/trophy/framed team photo, same hanging jacket, same far-right opening and bench and cropped metal cabinet. Maintain each object's approximate exact footprint. The wall and desk's quiet negative space for existing HTML UI must remain equally spacious. Retain the original daylight direction from the left; borrow the reference's painted treatment, not its time of day or dramatic lighting.
+Do NOT copy image 2's composition, whiteboard, lamp, plant, ball, binders, phone, hand, curtains, nighttime setting or any other added objects. The game's existing phone and hand are a SEPARATE foreground asset, so leave them absent from this background plate to prevent a duplicate phone. They will be overlaid in code at their original position.
+NO readable text anywhere; remove any tiny lettering or logos on the old laptop. No labels, wall writing, numbers, lettering on keys, text on papers, logos, slogans, UI, messages, menus, HUD, buttons, browser chrome or monitor frames. Papers may have only indistinct blank/abstract markings. The laptop screen remains neutral blank gray. Do not add major elements. Preserve original scene, transform only its artistic treatment. Output ONE final full-frame horizontal edited background, no borders, no collage, no mockup.
+```
+
+### Prompt final: móvil y mano
+
+```text
+Use case: style-transfer.
+Image 1 is the EDIT TARGET: a 1024x1536 transparent foreground asset showing a shadowed bare human hand and dark sleeve holding an upright blank smartphone. Image 2 is ONLY AN ART STYLE REFERENCE from a football management videogame.
+Repaint image 1 in image 2's semi-realistic digital illustration / videogame concept-art language: slightly simplified shapes, hand-painted softly modeled surfaces, controlled ambient shadows, subdued charcoal/navy, restrained edge accents, no photographic skin pores or tiny cloth fibers. Match the same painted rendering of wood/walls/light/materials in that reference when applied to this foreground subject. It must look illustrated, not a photograph or a photo with a filter. No anime, no infantile cartoon, no heavy cel-shading, no glossy hyperrealism.
+LOCK image 1's exact geometry and 1024x1536 canvas. Do not shift, resize, rotate, tilt, skew or crop the phone, hand or sleeve. Preserve outer phone rectangle x=365,y=114,width=494,height=994 (ends at x=859,y=1108); preserve blank display x=391,y=139,width=440,height=944. Perfectly vertical parallel side edges, horizontal top and bottom, same rounded corners, same thin graphite bezel and central notch. The display MUST stay empty neutral ivory, with NO text, UI or messages. Its coordinates must remain exact because existing live HTML sits on top of it.
+Keep the same natural thumb along the LEFT side, palm behind/below the device, curved fingertips around the RIGHT outer edge, and dark sleeve entering from the lower left. Keep existing bare human hand anatomy in DEEP NEUTRAL SHADOW, recognizable subtle joints, no visible skin color, no beige/pink/brown highlights, no fabric on fingers, NO glove. Only the sleeve has cloth texture. Soften and simplify cloth and anatomical detail to painted shapes while preserving a plausible human grip. Keep hand secondary to the phone. Avoid pure flat black, use subtle charcoal shadow gradients.
+Background MUST retain genuine transparent alpha outside the original hand/sleeve/phone silhouette. No black rectangle, no checkerboard baked in, no room, no objects or composition copied from reference image 2. No background halo. Maintain clean soft alpha edges. Do not include any part of the reference's table, chair, lamp, whiteboard, window, plant, ball, jacket, computer, or UI. No logos, lettering, numbers, slogans, watermarks, HUD, menus or decorative text. Output ONE portrait transparent foreground PNG ONLY, same silhouette placement as input 1, suitable to overlay on the separately painted original office background.
+```
+
+## Mensajes: silueta de mano discreta · 2026-09-24
+
+- Recurso activo: `public/assets/materials/club-phone-hand-subtle.png`, PNG de
+  1024×1536 px, 1.22 MB, con alfa real comprobado. Edición con imagegen integrado
+  de `club-phone-hand-illustrated.png`, conservado como versión anterior.
+- Palma mayoritariamente oculta por el móvil; solo asoman un pulgar, dos puntas
+  de dedos y la unión en sombra con la manga. Se elimina el contorno luminoso
+  dominante y se atenúan los detalles anatómicos. Sin tonos de piel ni guante.
+- La pantalla vacía generada ocupa aproximadamente y=140, alto=909; CSS la
+  registra sobre el rectángulo del chat anterior (y=25, alto=944 en marco de 994).
+  Se conservan la anchura de montaje, la geometría HTML y el filtro local de gris
+  y brillo. No se procesa ni sustituye el fondo del despacho.
+- Copia íntegra de la salida generada, sin CLI ni dependencias. No hay textos,
+  logos, mensajes, controles o nuevos objetos incrustados en el recurso.
+
+### Prompt final
+
+```text
+Use case: precise-object-edit.
+Edit the attached transparent 1024x1536 illustrated phone/hand asset. USER CORRECTION: the hand currently reads as a large complete black hand in front of the scene. It should be only a discreet suggestion of a hand BEHIND the phone, largely concealed by the phone and by soft shadow. Do not merely recolor the same large fully visible hand to black.
+
+LOCK THE PHONE PIXEL GEOMETRY AND APPEARANCE: keep the phone exactly in place, same width, height, perfectly vertical orientation, same frame, reflection, blank ivory screen, notch and rounded corners. Outer bounds x=365,y=114,width=494,height=994; screen x=391,y=139,width=440,height=944. The phone must not move, grow, shrink, tilt or warp. Keep exact 1024x1536 canvas, genuine alpha background. Existing live HTML is registered to those coordinates.
+
+Change ONLY the visible hand/wrist:
+- Tuck almost the entire palm BEHIND the opaque phone. Reduce the exposed hand area by around 65–75%. Remove the big broad black palm silhouette currently visible left of and underneath the device.
+- Suggest a natural grip with just a narrow, soft-edged curve of thumb closely hugging the left outside bezel around its lower middle; 2 or 3 tiny partial fingertip contours peeking from BEHIND the right lower edge. Fingers must not jut out in a row as large rounded lobes.
+- The phone should visually occlude most of the hand. The wrist must connect plausibly to the existing dark sleeve but sink into shadow under the phone. Keep the sleeve dark and illustrated, in the same lower-left area, with restrained existing cloth folds.
+- Deep, low-contrast neutral charcoal shadow; no visible skin color. Only the smallest tonal difference hints at anatomy. Suppress the palm lines, nails, creases, knuckles and all brightly modeled surfaces. NO continuous gold/orange/white rim lighting around the hand. Remove the bright outline along the thumb and wrist. The hand must be MUCH less conspicuous than before.
+- Do not create a solid uniform black cutout or a glove. No fabric on fingers, no rubber/leather finish, no exposed lit skin. Hand boundaries softly dissolve near wrist/palm; tiny contours near phone are enough to imply a human grip. No smoky glow or dark opaque rectangular background.
+- The sleeve can still be recognized; the hand itself should be perceived only after the illuminated phone, quietly supported from behind. Keep the full screen uncovered and empty.
+
+Retain the same semi-realistic hand-painted videogame illustration style, no photorealism, no anime, no exaggerated cel shading. All pixels outside the revised phone/hand/sleeve silhouette must be genuinely transparent alpha. Preserve the phone exactly. No added props, text, logos, messages, interface, watermarks or background. Output ONE transparent portrait PNG, 1024x1536.
 ```

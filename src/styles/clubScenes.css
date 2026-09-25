@@ -1,5 +1,5 @@
 /* Scene, gentle contrast veil, then readable paper. Scoped to content only. */
-.club-material-theme :is(.content--squad, .content--dressing-room, .content--inbox, .content--player-profile) {
+.club-material-theme :is(.content--squad, .content--dressing-room, .content--player-profile) {
   --club-scene-paper: rgba(248, 245, 237, .88);
   --club-scene-rule: rgba(81, 100, 108, .3);
   --club-scene-gap: clamp(12px, 1.2vw, 22px);
@@ -9,7 +9,7 @@
   padding: clamp(12px, 1.2vw, 22px);
 }
 
-.club-material-theme :is(.team-roster, .dressing-room-dashboard .player-section, .dressing-room-dashboard .player-compact-indicator, .dressing-room-dashboard .management-alert, .inbox-list) {
+.club-material-theme :is(.team-roster, .dressing-room-dashboard .player-section, .dressing-room-dashboard .player-compact-indicator, .dressing-room-dashboard .management-alert) {
   background: var(--club-scene-paper);
   border-color: var(--club-scene-rule);
   box-shadow: 0 2px 4px #30291f14;
@@ -53,4 +53,17 @@
     padding: 8px 12px;
     margin-bottom: 8px;
   }
+}
+
+/* Below a useful three-column width, let the room use natural page flow. */
+@media (min-width: 1101px) and (max-width: 1280px) {
+  .club-material-theme.app-shell:has(> .content--dressing-room) { height: auto; min-height: 100dvh; }
+  .club-material-theme .dressing-room-workspace {
+    flex: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    grid-template-areas: 'roster roster' 'problems hierarchy' 'history voices' 'commitments commitments';
+  }
+  .club-material-theme .dressing-room-dashboard .player-section { max-height: none; }
+  .club-material-theme .dressing-room-dashboard .player-section-body { max-height: 260px; }
 }

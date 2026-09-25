@@ -9,6 +9,7 @@ import { matchPerformancePresentation } from './tacticalPresentation'
 import { hasValidMatchRating } from './playerPresentation'
 import { applyMatchLoadToIssue } from './physicalIssues'
 import { updateRecentResultsMood } from './consequences'
+import { createMatchReport } from './matchReport'
 
 const USER_TEAM_ID = 'fc-poblenou'
 const clamp = (value: number) => Math.max(0, Math.min(100, value))
@@ -19,6 +20,7 @@ export function applyPostMatch(currentGame: GameState, currentTraining: Training
   const calendarMatch = gameState.temporal.calendar.find((item) => item.id === match.matchId)
   if (!calendarMatch || calendarMatch.status === 'played') return { gameState: currentGame, trainingState: currentTraining, matchState: { ...match, committed: true } }
   calendarMatch.status = 'played'; calendarMatch.homeGoals = match.score.home; calendarMatch.awayGoals = match.score.away
+  gameState.matchReports = { ...gameState.matchReports, [match.matchId]: createMatchReport(match, gameState.coachName) }
   const existing = new Set(gameState.goalEvents.map((event) => event.id)); match.goalEvents.filter((event) => !existing.has(event.id)).forEach((event) => gameState.goalEvents.push({ ...event }))
   const isFriendly = match.competitionType === 'FRIENDLY'
   gameState.temporal.calendar.filter((item) => !isFriendly && item.competitionType !== 'FRIENDLY' && item.matchday === calendarMatch.matchday && item.status === 'scheduled').forEach((item) => {

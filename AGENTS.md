@@ -317,6 +317,10 @@ Si documentación y código parecen contradecirse:
 - Limitar cada tarea estrictamente a su alcance.
 - No hacer refactorizaciones masivas salvo que sean necesarias.
 - No rediseñar pantallas por iniciativa propia.
+- Los escenarios de fondo nunca llevan texto decorativo inventado: sin lemas,
+  nombres, frases, carteles, grafitis ni escritura en paredes u objetos. Toda la
+  información legible pertenece a la interfaz; los documentos ambientales solo
+  pueden tener contenido indistinguible y las pizarras, dibujos tácticos sin texto.
 - Los escenarios DEV deben reutilizar la lógica real de dominio, ser reproducibles y permanecer excluidos de producción.
 - Registrar decisiones nuevas en `docs/DECISIONS.md`.
 - Actualizar documentación específica cuando cambie un sistema de dominio.

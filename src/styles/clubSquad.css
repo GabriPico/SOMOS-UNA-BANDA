@@ -92,7 +92,6 @@
 
 .club-material-theme .team-screen { padding-top: clamp(110px, 23dvh, 250px); }
 .club-material-theme .team-workspace .club-player-file-mount--inline { position: relative; top: auto; min-height: 0; height: fit-content; max-height: 100%; padding: 12px 5px 5px; display: flex; flex-direction: column; }
-.club-material-theme .team-workspace .club-player-file { min-height: 0; max-height: none; }
 
 @media (min-width: 1101px) and (min-height: 650px) {
   .club-material-theme .team-screen { flex: 1; }

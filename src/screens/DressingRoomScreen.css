@@ -18,6 +18,10 @@
 .dressing-room-dashboard .management-screen-header > div { min-width: 0; }
 .dressing-room-dashboard .management-back-button { white-space: nowrap; }
 .dressing-room-summary { display: grid; gap: var(--club-scene-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(70px, 15dvh, 165px); }
+@media (min-width: 1501px) {
+  .dressing-room-summary { width: 54%; }
+  .dressing-room-dashboard .player-compact-indicator-heading { flex-wrap: wrap; gap: 2px 8px; }
+}
 .dressing-room-dashboard .player-compact-indicator {
   grid-template-columns: 30px minmax(0, 1fr);
   gap: 5px 10px;
@@ -88,7 +92,7 @@
 .dressing-room-table thead { position: sticky; top: 0; z-index: 1; }
 .dressing-room-roster-note { margin: 0; padding: 5px 12px; font-size: 11px; color: var(--club-ink-muted); }
 
-/* Only an explicitly expanded list scrolls. The first three concerns are visible. */
+/* Three concerns initially; expansion and short windows use the same local scroll. */
 .dressing-room-dashboard .dressing-room-problems-scroll { min-height: 0; max-height: 220px; overflow-y: auto; overscroll-behavior: contain; }
 .dressing-room-problem-list { padding: 0; margin: 0; list-style: none; }
 .dressing-room-problem-list li { padding: 7px 12px; border-bottom: 1px solid var(--club-paper-rule); }
@@ -136,7 +140,7 @@
 @media (min-width: 1101px) and (min-height: 650px) {
   .dressing-room-screen, .club-material-theme .dressing-room-dashboard { flex: 1; }
   .dressing-room-dashboard > :not(.dressing-room-workspace) { flex-shrink: 0; }
-  .dressing-room-workspace { flex: 1; grid-template-rows: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .dressing-room-workspace { flex: 1; grid-template-rows: minmax(0, 1.55fr) minmax(0, 1fr); }
 }
 @media (max-height: 850px) and (min-width: 1101px) {
   .dressing-room-summary { margin-top: clamp(24px, 5dvh, 44px); }

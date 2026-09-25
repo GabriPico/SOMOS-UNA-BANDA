@@ -27,9 +27,13 @@ import { ScorersScreen } from "./screens/ScorersScreen";
 import { SanctionsScreen } from "./screens/SanctionsScreen";
 import { NextMatchScreen } from "./screens/NextMatchScreen";
 import { DressingRoomScreen } from "./screens/DressingRoomScreen";
-import { InboxScreen } from "./screens/InboxScreen";
+import { ClubPhone } from "./components/ClubPhone";
+import { useClubPhone } from "./hooks/useClubPhone";
+import { getPhoneAttentionTarget, getPhoneGuide } from "./domain/clubPhone";
 import { FriendlyCallUpScreen } from "./screens/FriendlyCallUpScreen";
 import { MatchScreen } from "./screens/MatchScreen";
+import { MatchReportScreen } from "./screens/MatchReportScreen";
+import { getMatchReport } from "./domain/matchReport";
 import { PreMatchScreen } from "./screens/PreMatchScreen";
 import {
   advanceGame,
@@ -95,7 +99,6 @@ const navItems: { id: ScreenId; label: string }[] = [
   { id: "tactics", label: "Tácticas" },
   { id: "training", label: "Entrenamientos" },
   { id: "dressing-room", label: "Estado del vestuario" },
-  { id: "inbox", label: "Mensajes" },
   { id: "next-match", label: "Próximo partido" },
   { id: "standings", label: "Clasificación" },
   { id: "staff", label: "Staff" },
@@ -136,7 +139,40 @@ function App() {
   const [gameState, setGameState] = useState(() => hydrateGameState(createNewGameState(84731)));
   const [activeNarrative, setActiveNarrative] = useState<NarrativeScene | null>(() => createNewGameIntroductionScene(gameState));
   const [narrativeRuntime, setNarrativeRuntime] = useState<NarrativeRuntime | null>(null);
-  const [activeScreen, setActiveScreen] = useState<ScreenId>("club-panel");
+  const [activeScreen, setScreen] = useState<Exclude<ScreenId, 'inbox'>>("club-panel");
+  const phone = useClubPhone(gameState, setGameState, Boolean(activeNarrative));
+
+  function openPhoneAttention(state = gameState) {
+    const target = getPhoneAttentionTarget(state);
+    phone.open(target.conversationId, target.messageId);
+  }
+
+  function openClubPhone() {
+    if (gameState.onboarding.active === 'MESSAGES_HIGHLIGHT') {
+      const progressed = completeOnboardingMilestone(gameState, 'MESSAGES_HIGHLIGHT');
+      setGameState(progressed);
+      openPhoneAttention(progressed);
+    } else if (getPhoneGuide(gameState)) openPhoneAttention();
+    else phone.open();
+  }
+
+  // Compatibility for saved DEV destinations and existing domain checkpoints.
+  // The legacy inbox identifier opens an overlay; it can never become a screen.
+  function setActiveScreen(screen: ScreenId) {
+    if (screen === 'inbox') openPhoneAttention();
+    else setScreen(screen);
+  }
+  const [reportView, setReportView] = useState<{ matchId: string; afterMatch: boolean } | null>(null);
+  const [resultsCompetition, setResultsCompetition] = useState<'league' | 'friendly'>('league');
+  const reportMatch = gameState.temporal.calendar.find(match => match.id === reportView?.matchId);
+  const openMatchReport = (matchId: string) => {
+    const match = gameState.temporal.calendar.find(item => item.id === matchId);
+    if (!match) return;
+    if (match.matchday > 0) setSelectedLeagueMatchday(match.matchday);
+    setResultsCompetition(match.competitionType === 'FRIENDLY' ? 'friendly' : 'league');
+    setReportView({ matchId, afterMatch: false });
+    setActiveScreen('post-match');
+  };
   const [profilePlayerId, setProfilePlayerId] = useState<number | null>(null);
   const profileReturnContext = useRef<{ focus: HTMLElement | null; scrollY: number; containers: { element: Element; top: number }[] } | null>(null);
   const openPlayerProfile = (id: number) => {
@@ -163,8 +199,6 @@ function App() {
   const [trainingFocusSessionId, setTrainingFocusSessionId] = useState<string>();
   const [secondTrainingConsequence, setSecondTrainingConsequence] = useState<string>();
   const [trainingValidationAttempt, setTrainingValidationAttempt] = useState(0);
-  const [focusedConversationId, setFocusedConversationId] = useState<string>();
-  const [focusedMessageId, setFocusedMessageId] = useState<string>();
   const [preMatchErrors, setPreMatchErrors] = useState<string[]>([]);
   const trainingState = gameState.training;
   const [selectedLeagueMatchday, setSelectedLeagueMatchday] = useState(
@@ -293,11 +327,8 @@ function App() {
     }
     if (destination.kind === "SCREEN") {
       setGameState(currentGame);
-      if (destination.id === 'inbox' && currentGame.onboarding.active === 'INBOX') {
-        setFocusedConversationId('conversation-manolo-escudero');
-        setFocusedMessageId(currentGame.conversations.find((item) => item.participantId === 'manolo-escudero')?.messages.at(-1)?.id);
-      }
-      setActiveScreen(destination.id);
+      if (destination.id === 'inbox') openPhoneAttention(currentGame);
+      else setActiveScreen(destination.id);
       return;
     }
     continueGameFrom(currentGame, currentTraining);
@@ -328,6 +359,11 @@ function App() {
 
   function continueOnboardingScreen() {
     const milestone = gameState.onboarding.active;
+    const guide = getPhoneGuide(gameState);
+    if (guide) {
+      if (!guide.canContinue || phone.selectedConversationId !== guide.conversationId) { openPhoneAttention(); return; }
+      phone.minimize();
+    }
     if (
       ![
         "STAFF",
@@ -431,9 +467,7 @@ function App() {
         ...playerIds.filter((id) => !retained.includes(id)),
       ].slice(0, 11);
     });
-    setFocusedConversationId('conversation-team-group');
-    setFocusedMessageId(message.id);
-    setActiveScreen('inbox');
+    phone.open('conversation-team-group', message.id);
     return [];
   }
 
@@ -449,14 +483,12 @@ function App() {
     next = completeOnboardingMilestone(next, "FRIENDLY_CALL_UP");
     setGameState(next);
     setLineupIds((current) => [...current.filter((id) => playerIds.includes(id)), ...playerIds.filter((id) => !current.includes(id))].slice(0, 11));
-    setFocusedConversationId('conversation-team-group');
-    setFocusedMessageId(message.id);
-    setActiveScreen('inbox');
+    phone.open('conversation-team-group', message.id);
     return [];
   }
 
   function finishMatch() {
-    if (!gameState.activeMatch) return;
+    if (!gameState.activeMatch || gameState.activeMatch.phase !== 'FINISHED') return;
     const playedMatchday = gameState.temporal.calendar.find(
       (match) => match.id === gameState.activeMatch?.matchId,
     )?.matchday;
@@ -473,7 +505,9 @@ function App() {
     };
     setGameState(completedGame);
     if (playedMatchday) setSelectedLeagueMatchday(playedMatchday);
-    continueGameFrom(completedGame, completed.trainingState);
+    setReportView({ matchId: completed.matchState.matchId, afterMatch: true });
+    setResultsCompetition(completed.matchState.competitionType === 'FRIENDLY' ? 'friendly' : 'league');
+    setActiveScreen('post-match');
   }
 
   function openTrainingEvent(
@@ -536,10 +570,6 @@ function App() {
           players,
         )
       : [];
-    if (reports[0]) {
-      setFocusedConversationId(`conversation-${reports[0].conversation.participantId}`);
-      setFocusedMessageId(reports[0].messages.at(-1)?.id);
-    }
     const planningQuestion = reports[0]?.messages.find((message) => message.responseOptions?.some((option) => option.id === 'KEEP_SECOND_SESSION'));
     const nextState: typeof currentGame = {
       ...currentGame,
@@ -603,7 +633,7 @@ function App() {
       secondSessionDecision
       && (secondSessionDecision.status === 'KEPT' || secondSessionDecision.status === 'REVIEWED')
       && secondSessionStillPending
-      && activeScreen !== 'club-panel',
+      && (activeScreen !== 'club-panel' || phone.isPhoneOpen),
     );
     if (isClosingSecondSessionDecision) {
       const closed = gameState.onboarding.active === 'FIRST_TRAINING_REPORT'
@@ -611,6 +641,7 @@ function App() {
         : gameState;
       setGameState(closed);
       setTrainingFocusSessionId(undefined);
+      phone.minimize();
       setActiveScreen('club-panel');
       return;
     }
@@ -648,7 +679,12 @@ function App() {
     if (gameState.onboarding.active === 'CLUB_PANEL_INTRO' || gameState.onboarding.active === 'STAFF_HIGHLIGHT' || gameState.onboarding.active === 'MESSAGES_HIGHLIGHT' || gameState.onboarding.active === 'TEAM_HIGHLIGHT' || gameState.onboarding.active === 'TACTICS_HIGHLIGHT' || gameState.onboarding.active === 'TRAINING_HIGHLIGHT' || gameState.onboarding.active === 'STAFF_TUTORIAL') return;
     const pending = getNextPendingGameEvent(gameState);
     if (pending.kind === "ONBOARDING") {
-      const requiredScreen = ({ TEAM_TUTORIAL: 'squad', TACTICS_TUTORIAL: 'tactics', TRAINING_TUTORIAL: 'training', STAFF: 'staff', TACTICS: 'tactics', SQUAD: 'squad', DRESSING_ROOM: 'club-panel', NEXT_MATCH: 'club-panel', LEAGUE: 'club-panel', INBOX: 'inbox', MANOLO_MESSAGE: 'inbox', FIRST_TRAINING_REPORT: 'inbox' } as const)[gameState.onboarding.active as 'TEAM_TUTORIAL' | 'TACTICS_TUTORIAL' | 'TRAINING_TUTORIAL' | 'STAFF' | 'TACTICS' | 'SQUAD' | 'DRESSING_ROOM' | 'NEXT_MATCH' | 'LEAGUE' | 'INBOX' | 'MANOLO_MESSAGE' | 'FIRST_TRAINING_REPORT'];
+      if (getPhoneGuide(gameState)) {
+        if (phone.isPhoneOpen) continueOnboardingScreen();
+        else openPhoneAttention();
+        return;
+      }
+      const requiredScreen = ({ TEAM_TUTORIAL: 'squad', TACTICS_TUTORIAL: 'tactics', TRAINING_TUTORIAL: 'training', STAFF: 'staff', TACTICS: 'tactics', SQUAD: 'squad', DRESSING_ROOM: 'club-panel', NEXT_MATCH: 'club-panel', LEAGUE: 'club-panel' } as const)[gameState.onboarding.active as 'TEAM_TUTORIAL' | 'TACTICS_TUTORIAL' | 'TRAINING_TUTORIAL' | 'STAFF' | 'TACTICS' | 'SQUAD' | 'DRESSING_ROOM' | 'NEXT_MATCH' | 'LEAGUE'];
       if (requiredScreen && activeScreen === requiredScreen) {
         if ((gameState.onboarding.active === 'TACTICS' || gameState.onboarding.active === 'TACTICS_TUTORIAL') && lineupIds.length !== 11) return;
         continueOnboardingScreen();
@@ -744,17 +780,19 @@ function App() {
   ) {
     const scenarioGameState = hydrateGameState({ ...state.gameState, training: state.trainingState });
     scenarioGameState.consequences.feedbackQueue = [];
+    if (state.focusedConversationId) scenarioGameState.selectedConversationId = state.focusedConversationId;
     setGameState(scenarioGameState);
     setTacticalPlan(state.tacticalPlan);
     setLineupIds(state.lineupIds);
     setProfilePlayerId(null);
-    setActiveScreen(state.activeScreen);
+    setReportView(null);
+    setResultsCompetition('league');
+    setScreen(state.activeScreen === 'inbox' ? 'club-panel' : state.activeScreen);
     const devTrainingSession = state.activeScreen === 'training-event' ? scenarioGameState.training.sessions.find((session) => session.id === scenarioGameState.temporal.activeCheckpoint?.relatedId && session.result) : undefined;
     const devTalk = Object.values(scenarioGameState.preMatchPreparations).find((preparation) => preparation.talk && state.activeNarrativeId === "prematch-talk-" + preparation.matchId)?.talk;
     setActiveNarrative(devTalk ? createPrematchTalkScene(devTalk.context) : state.activeNarrativeId ? narrativeScenes[state.activeNarrativeId] ?? null : state.activeDialogue === 'SECOND_COACH_INTRO' ? createSecondCoachIntroductionScene(scenarioGameState) : state.activeDialogue === 'MEET_SQUAD' ? createMeetSquadNarrativeScene(scenarioGameState) : state.activeDialogue === 'FIRST_TRAINING_TALK' ? initialTeamTalkScene : devTrainingSession ? createTrainingPresentationScene(scenarioGameState, devTrainingSession, players, scenarioGameState.staff.members) : !scenarioGameState.completedScenes.includes('new-game-introduction') ? createNewGameIntroductionScene(scenarioGameState) : null);
     setNarrativeRuntime(null);
-    setFocusedConversationId(state.focusedConversationId);
-    setFocusedMessageId(state.focusedMessageId);
+    phone.reset(state.activeScreen === 'inbox', state.focusedMessageId);
     setSelectedLeagueMatchday(1);
     setTrainingFocusSessionId(undefined);
     setSecondTrainingConsequence(undefined);
@@ -785,7 +823,7 @@ function App() {
   function resetDevOnboarding(seed: number, overrides: InitialGameOverrides) {
     if (!import.meta.env.DEV) return;
     const fresh = createNewGameState(seed, overrides);
-    setGameState(fresh);
+    setGameState(hydrateGameState(fresh));
     setTacticalPlan(fresh.tacticalPlan);
     setLineupIds(fresh.lineupIds);
     setActiveNarrative(createNewGameIntroductionScene(fresh));
@@ -794,8 +832,7 @@ function App() {
     setTrainingFocusSessionId(undefined);
     setSecondTrainingConsequence(undefined);
     setTrainingValidationAttempt(0);
-    setFocusedConversationId(undefined);
-    setFocusedMessageId(undefined);
+    phone.reset();
     setPreMatchErrors([]);
     setSelectedLeagueMatchday(leagueSeason.currentMatchday);
     setDevScenarioId(null);
@@ -840,9 +877,7 @@ function App() {
           if (!isDevNavigation && !canNavigateDuringTutorial(gameState.onboarding, screen)) return;
           setProfilePlayerId(null);
           if (!isDevNavigation && screen === 'training' && gameState.onboarding.active === 'INBOX') {
-            setFocusedConversationId('conversation-manolo-escudero');
-            setFocusedMessageId(gameState.conversations.find((item) => item.participantId === 'manolo-escudero')?.messages.at(-1)?.id);
-            setActiveScreen('inbox');
+            openPhoneAttention();
             return;
           }
           if (screen === "staff" || screen === "tactics" || screen === "squad") openOnboardingSection(screen);
@@ -854,6 +889,10 @@ function App() {
         matchday={isPreseason(gameState) ? 0 : getCurrentMatchday(gameState)}
         onContinue={() => { setProfilePlayerId(null); continueGame(); }}
         continueLabel={nextPendingEvent.label}
+        phone={<ClubPhone key={devScenarioRevision} phone={phone} conversations={gameState.conversations} calls={gameState.calls ?? []}
+          currentDateTime={gameState.temporal.currentDateTime} staffMembers={gameState.staff.members} players={players}
+          coachName={gameState.coachName} guide={getPhoneGuide(gameState)} onOpen={openClubPhone}
+          onContinue={continueOnboardingScreen} suspended={Boolean(activeNarrative)} />}
       >
         <Activity mode={profilePlayer ? 'hidden' : 'visible'}>
         {activeScreen === "club-panel" && (
@@ -877,8 +916,7 @@ function App() {
             onOpenTraining={() => {
               if (isDevNavigation) { setActiveScreen('training'); return; }
               if (gameState.onboarding.active === 'INBOX' || gameState.onboarding.active === 'MANOLO_MESSAGE') {
-                setFocusedConversationId('conversation-manolo-escudero');
-                setActiveScreen('inbox');
+                openPhoneAttention();
               } else if (gameState.onboarding.active === 'TRAINING_HIGHLIGHT') {
                 const progressed = completeOnboardingMilestone(gameState, 'TRAINING_HIGHLIGHT');
                 setGameState(progressed);
@@ -888,16 +926,7 @@ function App() {
             onOpenLeague={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'standings')) ? setActiveScreen("standings") : undefined}
             onOpenNextMatch={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'next-match')) ? setActiveScreen("next-match") : undefined}
             onOpenDressingRoom={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'dressing-room')) ? setActiveScreen("dressing-room") : undefined}
-            onOpenInbox={() => {
-              if (isDevNavigation) { setActiveScreen('inbox'); return; }
-              if (gameState.onboarding.active === 'MESSAGES_HIGHLIGHT') {
-                const progressed = completeOnboardingMilestone(gameState, 'MESSAGES_HIGHLIGHT');
-                setGameState(progressed);
-                setFocusedConversationId('conversation-manolo-escudero');
-                setFocusedMessageId(progressed.conversations.find((item) => item.participantId === 'manolo-escudero')?.messages.find((message) => !message.read)?.id);
-                setActiveScreen('inbox');
-              } else if (canNavigateDuringTutorial(gameState.onboarding, 'inbox')) setActiveScreen("inbox");
-            }}
+            onOpenInbox={openClubPhone}
           />
         )}
         {activeScreen === "next-match" && (
@@ -913,6 +942,7 @@ function App() {
             onBack={() => setActiveScreen("club-panel")}
             onOpenTactics={() => setActiveScreen("tactics")}
             onPlay={openPreMatch}
+            onOpenReport={openMatchReport}
           />
         )}
         {activeScreen === "friendly-call-up" && nextScheduledMatch?.competitionType === "FRIENDLY" && (
@@ -939,41 +969,6 @@ function App() {
               playerFees={gameState.clubFinances.playerFees}
               playerCompensations={gameState.clubFinances.playerCompensations}
               onBack={() => { if (isDevNavigation || gameState.onboarding.active !== 'DRESSING_ROOM') setActiveScreen("club-panel") }}
-            />
-          </>
-        )}
-        {activeScreen === "inbox" && (
-          <>
-            <OnboardingPrompt
-              visible={
-                gameState.onboarding.active === "INBOX" ||
-                gameState.onboarding.active === "MANOLO_MESSAGE" ||
-                gameState.onboarding.active === "FIRST_TRAINING_REPORT" ||
-                gameState.onboarding.active === "TEAM_CHAT"
-              }
-              text={
-                gameState.onboarding.active === "TEAM_CHAT"
-                  ? "La convocatoria ya está en el historial del grupo. Desde aquí seguirán llegando las comunicaciones del equipo."
-                  : gameState.onboarding.active === "FIRST_TRAINING_REPORT"
-                  ? "El entrenamiento ya ha terminado. Aquí encontrarás la interpretación del Staff y cualquier seguimiento posterior."
-                  : "Manolo pide revisar la plantilla, preparar una táctica y dejar listas las dos sesiones. Vale, vamos a ello."
-              }
-              onContinue={continueOnboardingScreen}
-            />
-            <InboxScreen
-              conversations={gameState.conversations}
-              selectedConversationId={gameState.selectedConversationId}
-              coachName={gameState.coachName}
-              currentDateTime={gameState.temporal.currentDateTime}
-              focusedConversationId={focusedConversationId}
-              focusedMessageId={focusedMessageId}
-              players={players}
-              staffMembers={gameState.staff.members}
-              coachNameForParticipants={gameState.coachName}
-              onConversationsChange={(conversations) => setGameState((current) => ({ ...current, conversations }))}
-              onResponseSelected={(messageId, optionId) => setGameState((current) => current.secondSessionPlanningDecision?.messageId === messageId ? { ...current, secondSessionPlanningDecision: { ...current.secondSessionPlanningDecision, status: optionId === 'REVIEW_SECOND_SESSION' ? 'REVIEW_REQUIRED' : 'KEPT' } } : current)}
-              onConversationSelect={(selectedConversationId) => { setFocusedConversationId(undefined); setFocusedMessageId(undefined); setGameState((current) => ({ ...current, selectedConversationId })) }}
-              onBack={() => { if (isDevNavigation || (gameState.onboarding.active !== 'MANOLO_MESSAGE' && gameState.onboarding.active !== 'INBOX')) setActiveScreen("club-panel") }}
             />
           </>
         )}
@@ -1073,6 +1068,7 @@ function App() {
             <TrainingScreen
               tacticalPlan={tacticalPlan}
               trainingState={trainingState}
+              nextMatch={nextScheduledMatch}
               staffMembers={gameState.staff.members}
               activeSessionId={trainingFocusSessionId}
               injuredPlayerIds={gameState.injuredPlayerIds}
@@ -1117,6 +1113,9 @@ function App() {
         )}
         {activeScreen === "league-results" && (
           <ResultsScreen
+            onOpenMatch={openMatchReport}
+            competition={resultsCompetition}
+            onCompetitionChange={setResultsCompetition}
             liveMatches={gameState.temporal.calendar}
             currentMatchday={getCurrentMatchday(gameState)}
             onBack={() => setActiveScreen("club-panel")}
@@ -1148,6 +1147,14 @@ function App() {
             onOpenScorers={() => setActiveScreen("league-scorers")}
             selectedMatchday={selectedLeagueMatchday}
             onMatchdayChange={setSelectedLeagueMatchday}
+          />
+        )}
+        {activeScreen === 'post-match' && reportMatch && (
+          <MatchReportScreen
+            match={reportMatch}
+            report={getMatchReport(reportMatch, gameState.matchReports, gameState.goalEvents, players, rivalPlayers)}
+            onBack={() => setActiveScreen('league-results')}
+            onContinue={reportView?.afterMatch ? () => continueGameFrom(gameState, trainingState) : undefined}
           />
         )}
         {activeScreen === "match" &&

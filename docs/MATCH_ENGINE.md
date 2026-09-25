@@ -65,6 +65,14 @@ Solo un segundo entrenador disponible puede producir observaciones. Detección, 
 
 Al confirmar el final se transforma el partido programado en disputado, se incorporan una sola vez sus eventos de gol y se actualizan estadísticas de jugadores, condición, cansancio, felicidad, autoridad, cohesión y lesiones simples. Clasificación, Resultados y Goleadores siguen derivando de partidos y eventos vivos. Después se prepara la semana siguiente y se libera el checkpoint de previa.
 
+Se conserva además un acta serializable en `GameState.matchReports`, con el once
+inicial, participantes, goles, tarjetas, sustituciones y estadísticas reales.
+`initialLineup` mantiene el planteamiento de salida independiente de los cambios.
+El resumen final permite abrir el acta; desde ella, «Continuar» usa el avance
+temporal común. Resultados y Próximo partido permiten volver a consultarla sin
+repetir efectos. Los resultados sin archivo muestran solo los datos registrados.
+Detalles y límites en [COMPETITION_SYSTEM.md](COMPETITION_SYSTEM.md).
+
 ## Fuera de v1
 
 Quedan fuera clima, árbitros y campos avanzados, charla compleja, instrucciones y marcajes individuales, asistencias, xG visible, diagnósticos médicos, prórroga, penaltis e IA rival sofisticada.

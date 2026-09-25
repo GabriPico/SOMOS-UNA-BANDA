@@ -1,4 +1,5 @@
 export type ScreenId =
+  // 'inbox' is a legacy navigation command intercepted by App, never a page.
   | 'main-menu' | 'club-panel' | 'staff' | 'squad' | 'tactics' | 'training' | 'training-event'
   | 'match' | 'next-match' | 'post-match' | 'standings' | 'league-results' | 'league-scorers' | 'league-sanctions' | 'dressing-room' | 'inbox'
   | 'friendly-call-up'

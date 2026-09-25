@@ -60,6 +60,32 @@ const canonicalParticipantId = (id: string | number | undefined, name: string) =
   return raw
 }
 export const conversationIdForParticipant = (participantId: string) => `conversation-${participantId}`
+
+export type NewClubMessage = {
+  id: string
+  conversationId: string
+  /** Required only when creating a new conversation. */
+  participant?: Omit<MessageConversation, 'id' | 'messages'>
+  sender: { type: MessageSenderType; id?: string | number; name: string }
+  body: string
+  timestamp: string
+  responseOptions?: MessageResponseOption[]
+  relatedEventId?: string
+}
+
+/** Shared entry point for game systems; stable event IDs make delivery idempotent. */
+export function addMessage(conversations: MessageConversation[], input: NewClubMessage): MessageConversation[] {
+  const participant = conversations.find(item => item.id === input.conversationId) ?? input.participant
+  if (!participant || conversationIdForParticipant(participant.participantId) !== input.conversationId) {
+    throw new Error(`Unknown or mismatched conversation: ${input.conversationId}`)
+  }
+  return appendConversationMessages(conversations, participant, [{
+    id: input.id, senderType: input.sender.type, senderId: input.sender.id,
+    senderName: input.sender.name, text: input.body, timestamp: input.timestamp,
+    read: input.sender.type === 'COACH', responseOptions: input.responseOptions,
+    relatedEventId: input.relatedEventId,
+  }])
+}
 const compareMessages = (a: ConversationMessage, b: ConversationMessage) => a.timestamp.localeCompare(b.timestamp) || (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id)
 const participantTypeFromLegacy = (type: LegacyInboxMessage['senderType']): ConversationParticipantType => type === 'president' ? 'PRESIDENT' : type === 'staff' ? 'STAFF' : type === 'player' ? 'PLAYER' : 'CLUB'
 

@@ -1,5 +1,11 @@
 ﻿# Sistema visual del juego
 
+Actualización de Mensajes (2026-09-25): las descripciones históricas de oficina y
+móvil en mano quedan sustituidas por el teléfono global de
+[MESSAGING_SYSTEM.md](MESSAGING_SYSTEM.md). La barra navy inferior derecha despliega
+un dispositivo 2D oscuro, con verde secundario, chats y llamadas. Sus estilos
+están aislados en `ClubPhone.css`; no cambia la apariencia de las demás pantallas.
+
 ## Alcance e identidad
 
 La identidad de club municipal se aplica a **Tácticas, Equipo / Plantilla, perfil completo de jugador, Mensajes y Estado del vestuario**, incluida
@@ -103,7 +109,7 @@ otras zonas aún no están activados ni diseñados en esta iteración.
 
 - Se mantienen título, contador, buscador, ambos filtros, diez columnas,
   selección y nombres enlazados. La cabecera y los filtros son más bajos; las
-  veinte filas iniciales miden entre 26 y 32 px según la altura disponible.
+  filas tienen una altura base de 34 px y texto de 13 px, con estados de 12 px.
   La tabla conserva cabecera fija y scroll local para ventanas más pequeñas o
   plantillas más largas, sin cortar datos para simular que caben.
 - El listado usa `club-sheet--stacked` y la cinta compartida. Las líneas impresas
@@ -122,10 +128,10 @@ otras zonas aún no están activados ni diseñados en esta iteración.
   sin filtros ni recortes. La sustitución futura de la silueta por una caricatura
   sigue el mapping por ID de `docs/PLAYER_PORTRAITS.md`; no requiere otra ficha.
 - La escena de ventana, campo, foto antigua y trofeo ocupa el fondo continuo del
-  contenido, detrás de los documentos. Se une por arriba al yeso y queda anclada
-  al borde inferior. Ya no existe un recorte aislado en la cabecera ni el componente
+  contenido, detrás de los documentos. Se ancla arriba y se une por abajo al yeso
+  mediante un degradado suave. Ya no existe un recorte aislado en la cabecera ni el componente
   `ClubRoomContext`. Se reutiliza el PNG existente sin nuevos textos ambientales.
-- En pantallas estrechas se conserva la ficha encima de la tabla y el scroll
+- En pantallas estrechas se apilan primero la tabla y después la ficha, con scroll
   horizontal local de sus columnas. La pinza permanece anclada al documento;
   los adornos no reciben eventos ni alteran el orden de foco.
 - El perfil ampliado conserva volver, identidad, posiciones, contexto táctico,
@@ -204,7 +210,7 @@ instalan bibliotecas ni se realizan descargas de fuentes.
 ## Plantilla y ficha
 
 Equipo tiene una única vista con tabla e inspector permanente, aproximadamente
-61/39 en escritorio. Seleccionar una fila cambia el inspector sin abrir modal;
+71/29 en escritorio ancho. Seleccionar una fila cambia el inspector sin abrir modal;
 una búsqueda vacía conserva la selección. Se filtran todas las posiciones
 naturales y la búsqueda ignora tildes. El orden se puede cambiar por posición,
 nombre, edad, partidos, minutos y goles.
@@ -212,8 +218,9 @@ nombre, edad, partidos, minutos y goles.
 La tabla incluye dorsal, retrato/nombre, posiciones, edad, PJ(TIT), minutos,
 goles, felicidad, estado y observaciones. La tabla puede desplazarse de forma
 independiente. La ficha mantiene su columna; en pantallas bajas admite scroll
-interno para conservar acceso a todos sus bloques. Por debajo de 1050 px se
-apilan ficha y tabla, conservando una sola instancia de cada componente.
+interno para conservar acceso a todos sus bloques. Hasta 1100 px de ancho o con
+menos de 650 px de alto se apilan tabla y ficha, conservando una sola instancia
+de cada componente y desplazamiento natural de página.
 
 La ficha común `PlayerDetail` se usa integrada en Equipo, como resumen de Tácticas
 y en el perfil dedicado. Otros accesos conservan el diálogo. Solo la variante modal bloquea el scroll, captura Escape y
@@ -393,25 +400,27 @@ El reloj utiliza la hora de la partida; los demás indicadores son decorativos.
 Estado del vestuario comparte el shell de materiales de Equipo y Tácticas. El
 fondo `club-dressing-room.png` es exclusivamente ambiental, con bancos, azulejos,
 ventanas altas, una bota, cantimploras y cinta; nunca contiene información jugable.
-Los indicadores y avisos utilizan papel opaco, tinta oscura y colores semánticos.
+Los indicadores y avisos utilizan papel translúcido, tinta oscura y colores semánticos.
 
 La tabla completa se sustituye por hasta seis jugadores a seguir: situación,
 influencia y prioridad. Conserva PlayerTable, PlayerIdentity, StatusBadge y la
 ficha modal de PlayerDetail; «Ver plantilla» utiliza la navegación a Equipo.
 Los indicadores siguen usando CompactIndicator y los avisos, AlertItem.
 
-El grid principal sitúa seguimiento a la izquierda, problemas y jerarquía arriba
-a la derecha, voces y compromisos debajo, e historial al pie. PlayerSection y
+El grid principal sitúa seguimiento, problemas y jerarquía en la primera fila,
+e historial, voces y compromisos en la segunda. PlayerSection y
 SectionHeader conservan el papel crema. DressingRoomProblems muestra tres
 incidencias y permite ampliar la lista; ChangeHistory tiene una variante compacta
-de hasta cuatro entradas. Sus otras variantes mantienen el comportamiento previo.
+con las tres primeras entradas en esta pantalla. Sus otras variantes mantienen el comportamiento previo.
 
-Las alturas naturales, gaps de 8–12 px y paddings compactos permiten mostrar todos
-los paneles a zoom 100 % en 1920×1080 y en un área útil de 1920×920, incluyendo
-el shell y la barra DEV. No se usa escala ni recorte del shell. A 1400 px o menos
-el grid pasa a dos columnas; a 600 px, a una. En ventanas menores se permite el
-scroll natural, con desplazamiento horizontal local para la tabla de seguimiento.
-Las incidencias y compromisos adicionales siguen accesibles al ampliar sus listas.
+Las filas flexibles, gaps de 12–22 px y desplazamiento interior permiten mostrar
+todos los bloques a zoom 100 % en 1920×1080, 1920×920 y 1366×768, incluyendo el shell
+y la barra DEV. Hasta 1280 px de ancho, o con menos de 650 px de alto, se usan dos
+columnas y desplazamiento natural de página; hasta 600 px, una columna. El seguimiento
+conserva las seis entradas derivadas, con aproximadamente cuatro o cinco visibles
+en 1080p y scroll enfocable para el resto. Voces, historial, jerarquía y compromisos
+reutilizan las regiones desplazables de PlayerSection. Problemas y compromisos
+adicionales siguen accesibles al ampliar sus listas.
 
 Comprobado en Chrome headless con perfil temporal aislado: dimensiones, fichas,
 acceso a Equipo, expansión de problemas y una promesa real del escenario existente.
@@ -432,3 +441,60 @@ y dimensiones. El padding vertical anterior evita aumentar la altura; el margen
 horizontal es de 14 px en escritorio y conserva el anterior hasta 800 px de ancho.
 Los márgenes del soporte compensan su padding para mantener la posición de los
 controles y del contenido inferior. Los subtítulos se limitan a dos líneas.
+
+### Escenarios visibles a zoom 100 % · 2026-09-23
+
+- `clubScenes.css`, importado al final, comparte papel `rgba(248,245,237,.88)`,
+  blur de 2 px, bordes discretos y sombra mínima, solo en el contenido de las
+  pantallas fotográficas. No cambia cabecera, sidebar ni Tácticas.
+- Vestuario usa `background-position: 58% 42%` y `cover`, con velo claro del 8 %
+  arriba al 2 % abajo. Una franja libre separa título e indicadores; en escritorio
+  ancho los indicadores ocupan el 54 % izquierdo y dejan la pizarra despejada.
+  El conjunto se limita a 1480 px, dejando banco y botellas visibles a la derecha.
+- Plantilla y perfil usan `38% 0%`: se preserva el ancho del panorama original
+  (`100% auto`) para ver ventana y exterior completos, sin deformar ni ampliar
+  la fotografía hasta perder sus extremos. El degradado inferior prolonga el
+  yeso del escenario en el resto del área. En móvil, la imagen mide 320 px de alto.
+- Plantilla reserva `clamp(110px,23dvh,250px)` sobre su encabezado y perfil
+  `clamp(96px,20dvh,216px)`. Tabla y ficha usan la altura restante mediante flex/grid,
+  `min-height: 0` y scroll interior; la ficha conserva altura de contenido.
+- Son translúcidos la tabla, el marco y el papel de la ficha lateral, los
+  indicadores, avisos y seis bloques del vestuario, y la lista de conversaciones.
+  Los encabezados comunes conservan su crema al 92 %. El teléfono sigue opaco.
+- Mensajes conserva su foco `100% 100%` (equivalente al anterior `right bottom`),
+  mesa y portátil. Se corrige únicamente su altura para no descontar dos veces
+  la barra DEV. Tácticas ya tiene su pizarra visible y conserva su composición.
+- Regla permanente: ningún escenario lleva texto decorativo inventado, tampoco
+  en prendas, taquillas, bolsas o pizarras. La imagen existente del vestuario no
+  incluye camisetas, bolsa ni taquillas; el intento de generar una copia con estos
+  objetos no produjo archivo por límite de uso de imagegen. Se conserva el original.
+- Verificación en Chrome headless aislado a escala 1: 1920×1080, 1920×920,
+  1366×768, 1101×700, 1024×768 y 390×844. Se comprueban filtros, orden, búsqueda,
+  selección, todos los jugadores, perfil y retorno, problemas ampliables y una
+  promesa real. Comparación de geometría y estilos calculados confirma cabecera
+  y sidebar idénticos en Equipo, Vestuario, Mensajes y Tácticas.
+
+### Entrenamientos · campo nocturno ilustrado (2026-09-24)
+
+- Escenario 2D sin texto, restringido al área de contenido. Conserva el shell
+  navy original; el título blanco flota directamente sobre el cielo oscuro.
+- Tarjetas navy al 66–72 %, bordes azules finos y blur de 1–1.5 px. Seis indicadores
+  en una fila, táctica y microciclo arriba; resultados y seguimiento a la izquierda.
+  Anchos máximos 1160/930 px reservan el bar, gradas, banquillo y material a la derecha.
+- Editor e informes desplegables evitan ocupar el campo permanentemente. La lista
+  de seguimiento tiene desplazamiento propio; en móvil se apilan los bloques.
+  No se aplica escala ni zoom CSS, ni se modifica la navegación global.
+
+### Competición · referencia federativa (2026-09-24)
+
+- Clasificación, Resultados, Goleadores, Próximo partido y acta usan el ámbito
+  competition-screen: gris claro, tarjetas blancas, rojo #e90020 y navy #172243.
+  competition.css comparte cabecera, navegación, fechas, tablas y fichas; no
+  modifica el shell, Tácticas ni los escenarios de otras pantallas.
+- Los emblemas SVG son monogramas estilizados del juego. El enfrentamiento usa
+  club-training-night-illustrated.png con un velo verde, sin generar texto ambiental.
+- En móvil se apilan los dos equipos del acta y las tarjetas de scouting; tablas
+  y selector de jornada tienen desplazamiento local. Se mantienen foco visible,
+  nombres accesibles, estados vacíos y contraste de botones rojos.
+- Pantallas comprobadas a 1920×1080, 1366×768, 1024×768 y 390×844. Funcionamiento
+  y límites del archivo documentados en COMPETITION_SYSTEM.md.

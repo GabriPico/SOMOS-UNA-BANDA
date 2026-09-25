@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { PlayerDetail } from "../components/PlayerDetail";
-import { players } from "../data/mockData";
+import { ManagementIcon, type ManagementIconName } from "../components/ManagementIcon";
+import { getApproximateStatusLevel, getManagementStatusTone } from "../presentation/managementPresentation";
+import { leagueTeams, players } from "../data/mockData";
+import { getOpponentId, getTeamName } from "../domain/nextMatch";
 import type {
+  LeagueMatch,
   Player,
   TacticalPlan,
   TrainingBlock,
@@ -33,6 +37,7 @@ import { ContextualTour } from "../components/ContextualTour";
 type Props = {
   tacticalPlan: TacticalPlan;
   trainingState: TrainingGameState;
+  nextMatch?: LeagueMatch;
   activeSessionId?: string;
   injuredPlayerIds?: number[];
   staffMembers: StaffPerson[];
@@ -72,16 +77,13 @@ function TrainingSummary({
   plan: TacticalPlan;
   validationError?: boolean;
 }) {
-  const values = [
-    [
-      "Familiaridad táctica",
-      getFamiliarityLabel(calculateOverallFamiliarity(state.familiarity, plan)),
-    ],
-    ["Balón parado", getFamiliarityLabel(state.familiarity.setPieces.current)],
-    ["Condición física", getConditionLabel(getTeamFitness(state))],
-    ["Carga", getFatigueLabel(getTeamFatigue(state))],
-    ["Felicidad", getHappinessLabel(getTeamHappiness(state))],
-    ["Autoridad", getAuthorityLabel(getTeamAuthority(state))],
+  const values: [string, number, (value: number) => string, ManagementIconName][] = [
+    ["Familiaridad táctica", calculateOverallFamiliarity(state.familiarity, plan), getFamiliarityLabel, "tactics"],
+    ["Balón parado", state.familiarity.setPieces.current, getFamiliarityLabel, "ball"],
+    ["Condición física", getTeamFitness(state), getConditionLabel, "training"],
+    ["Carga", getTeamFatigue(state), getFatigueLabel, "transition"],
+    ["Felicidad", getTeamHappiness(state), getHappinessLabel, "mood"],
+    ["Autoridad", getTeamAuthority(state), getAuthorityLabel, "authority"],
   ];
   return (
     <section
@@ -89,12 +91,15 @@ function TrainingSummary({
       aria-label="Estado general del equipo"
       data-tour-target="training-physical-state"
     >
-      {values.map(([label, value]) => (
-        <div key={label}>
+      {values.map(([label, value, describe, icon]) => {
+        const description = describe(value);
+        return <div key={label} className={`training-metric is-${getManagementStatusTone(description)}`}>
+          <ManagementIcon name={icon} />
           <span>{label}</span>
-          <strong>{value}</strong>
-        </div>
-      ))}
+          <strong>{description}</strong>
+          <span className="training-meter" aria-hidden="true"><i style={{ width: `${getApproximateStatusLevel(value)}%` }} /></span>
+        </div>;
+      })}
     </section>
   );
 }
@@ -110,18 +115,20 @@ function TacticalTrainingSummary({
   return (
     <section className="training-tactics-summary">
       <div className="training-section-heading">
-        <h3>Planteamiento actual</h3>
-        <button type="button" onClick={() => setExpanded((value) => !value)}>
-          {expanded ? "Ocultar detalles" : "Ver detalles"}
-        </button>
+        <h3>Planteamiento táctico actual</h3>
       </div>
-      <p>
-        {plan.formation} · {plan.mentality} · {plan.passingStyle} · Ritmo{" "}
-        {plan.tempo.toLowerCase()} · {plan.afterRecovery}
-        <br />
-        Presión {plan.pressingHeight.toLowerCase()} · Intensidad{" "}
-        {plan.pressingIntensity.toLowerCase()} · {plan.afterLoss}
-      </p>
+      <div className="training-tactics-overview">
+        <div><strong className="training-formation">{plan.formation}</strong>
+          <ul><li>{plan.mentality} · {plan.passingStyle}</li><li>Ritmo {plan.tempo.toLowerCase()}</li><li>{plan.afterRecovery}</li><li>Presión {plan.pressingHeight.toLowerCase()}</li><li>Intensidad {plan.pressingIntensity.toLowerCase()}</li><li>{plan.afterLoss}</li></ul>
+        </div>
+        <div className="training-mini-pitch" role="img" aria-label={`Formación ${plan.formation}`}>
+          <span className="training-pitch-circle" /><span className="training-pitch-box is-top" /><span className="training-pitch-box is-bottom" />
+          {[...plan.formation.split('-').reverse().map(Number), 1].map((count, row) => <div className="training-pitch-row" key={row}>{Array.from({ length: count }, (_, index) => <ManagementIcon key={index} name="players" />)}</div>)}
+        </div>
+      </div>
+      <button className="training-text-button" type="button" aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>
+        {expanded ? "Ocultar detalles ↑" : "Ver detalles →"}
+      </button>
       {expanded && (
         <div className="tactical-details">
           <strong>Formación: {plan.formation}</strong>
@@ -199,27 +206,25 @@ function TrainingEffectsPreview({
   );
 }
 
-function CompletedSession({ session }: { session: FunctionalTrainingSession }) {
+function CompletedSession({ session, expanded, onToggle }: { session: FunctionalTrainingSession; expanded?: boolean; onToggle?: (open: boolean) => void }) {
   const result = session.result;
   return (
     <article className="training-session-card completed-session">
       <header>
         <div>
-          <span>{session.day}</span>
-          <h3>Entrenamiento realizado</h3>
+          <h3>{session.day} <span>— Entrenamiento realizado</span></h3>
         </div>
-        <span className="session-status">Realizada</span>
+        <span className="session-status">✓ Realizada</span>
       </header>
-      <p>
-        <strong>
-          Asistencia: {session.attendance} / {session.totalPlayers}
-        </strong>
-        <br />
-        Calidad: <strong>{session.qualityLabel}</strong>
-        <br />
-        Riesgo de lesión: <strong>{result?.injuryRisk}</strong>
-      </p>
-      <p>
+      <div className="training-completed-stats">
+        <span>Asistencia <strong>{session.attendance} / {session.totalPlayers}</strong></span>
+        <span>Calidad <strong>{session.qualityLabel ?? "Sin informe"}</strong></span>
+        <span>Riesgo de lesión <strong>{result?.injuryRisk ?? "Sin informe"}</strong></span>
+        {result?.effects.map((effect) => <span key={effect}>{effect}</span>)}
+      </div>
+      <details className="training-report-details" open={expanded} onToggle={event => onToggle?.(event.currentTarget.open)}>
+        <summary>Ver informe de la sesión</summary>
+        <p>
         {(FULL_SESSION_BLOCKS.includes(session.blocks[0])
           ? [session.blocks[0]]
           : session.blocks
@@ -245,8 +250,51 @@ function CompletedSession({ session }: { session: FunctionalTrainingSession }) {
           </small>
         )}
       </div>
+      </details>
     </article>
   );
+}
+
+function TrainingIntensityBars({ intensity }: { intensity: TrainingIntensity }) {
+  const level = { Baja: 1, Media: 2, Alta: 3 }[intensity];
+  return <span className="training-intensity-bars" aria-hidden="true">{[1, 2, 3].map(bar => <i key={bar} className={bar <= level ? 'is-filled' : ''} />)}</span>;
+}
+
+function TrainingCone() {
+  return <svg className="management-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true"><path d="m6 19 4-16h4l4 16M8 11h8M7 15h10M3 19h18v3H3z" /></svg>;
+}
+
+function WeeklyMicrocycle({ sessions, nextMatch, selectedSessionId, activeSessionId, onSelect }: {
+  sessions: FunctionalTrainingSession[];
+  nextMatch?: LeagueMatch;
+  selectedSessionId?: string;
+  activeSessionId?: string;
+  onSelect: (id: string) => void;
+}) {
+  return <section className="training-microcycle" aria-label="Microciclo semanal" data-tour-target="training-week">
+    <h3>Microciclo semanal</h3>
+    <div className="training-week-cards">
+      {sessions.map(session => <button type="button" key={session.id} className={`training-week-card${selectedSessionId === session.id ? ' is-selected' : ''}`} disabled={Boolean(activeSessionId && activeSessionId !== session.id && session.status !== 'completed')} aria-expanded={selectedSessionId === session.id} aria-controls={`training-session-${session.id}`} onClick={() => onSelect(session.id)}>
+        <span className="training-week-day">{session.day}<TrainingCone /></span>
+        <strong>Entrenamiento general</strong>
+        <span className="training-week-blocks">{(FULL_SESSION_BLOCKS.includes(session.blocks[0]) ? [session.blocks[0]] : session.blocks).join(' + ')}</span>
+        <span className="training-week-intensity"><TrainingIntensityBars intensity={session.intensity} />Intensidad: {session.intensity}</span>
+        <span className={`training-week-status is-${session.status === 'completed' ? 'completed' : (session.planningStatus ?? 'UNPLANNED').toLowerCase()}`}>{session.status === 'completed' ? '✓ Realizada · Ver informe' : session.planningStatus === 'PLANNED' ? '✓ Planificada · Editar →' : session.planningStatus === 'DIRTY' ? 'Cambios sin guardar →' : 'Planificar sesión →'}</span>
+      </button>)}
+      <article className="training-week-card training-match-card">
+        <span className="training-week-day">{nextMatch ? new Intl.DateTimeFormat('es', { weekday: 'long', timeZone: 'UTC' }).format(new Date(`${nextMatch.date}T12:00:00Z`)) : 'Próximo partido'}<ManagementIcon name="group" /></span>
+        <strong>{nextMatch ? nextMatch.competitionType === 'FRIENDLY' ? 'Partido amistoso' : 'Partido de Liga' : 'Sin partido programado'}</strong>
+        {nextMatch && <><span className="training-week-blocks">{getTeamName(leagueTeams, getOpponentId(nextMatch, 'fc-poblenou'))}</span><span className="training-week-intensity"><ManagementIcon name="calendar" /><time dateTime={`${nextMatch.date}T${nextMatch.time}`}>{new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${nextMatch.date}T12:00:00Z`))} · {nextMatch.time}</time></span><span className="training-week-status">Próximo en el calendario</span></>}
+      </article>
+    </div>
+  </section>;
+}
+
+function TrainingHighlights({ sessions }: { sessions: FunctionalTrainingSession[] }) {
+  const latest = sessions.filter(session => session.status === 'completed' && session.result).at(-1);
+  return <section className="training-highlights"><h3><span aria-hidden="true">★</span> Destacados {latest && <small>· {latest.day}</small>}</h3>
+    {latest?.result ? <><ul>{latest.result.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><p className="training-highlight-plan">Planteamiento entrenado: <strong>{latest.result.tacticalPlan.formation} · {latest.result.tacticalPlan.mentality}</strong></p></> : <p className="training-empty">Aquí aparecerán los destacados al completar el primer entrenamiento.</p>}
+  </section>;
 }
 
 function TrainingSessionCard({
@@ -256,6 +304,7 @@ function TrainingSessionCard({
   plan,
   validationError = false,
   requiresReview = false,
+  onClose,
 }: {
   session: FunctionalTrainingSession;
   onChange: (next: FunctionalTrainingSession) => void;
@@ -265,6 +314,7 @@ function TrainingSessionCard({
   requiresReview?: boolean;
   canExecute?: boolean;
   onExecute?: () => void;
+  onClose: () => void;
 }) {
   const [showAbsences, setShowAbsences] = useState(false);
   if (session.status === "completed")
@@ -303,7 +353,9 @@ function TrainingSessionCard({
         <span className="session-status">
           {session.planningStatus === "PLANNED" ? "✓ PLANIFICADA" : session.planningStatus === 'DIRTY' ? 'CAMBIOS SIN GUARDAR' : "POR PLANIFICAR"}
         </span>
+        <button className="training-text-button" type="button" onClick={onClose} aria-label="Cerrar planificación">Cerrar ×</button>
       </header>
+      <div className="training-editor-columns"><div>
       <fieldset>
         <legend>Intensidad</legend>
         <div className="training-segments">
@@ -394,7 +446,7 @@ function TrainingSessionCard({
           </small>
         ))}
       </div>
-      <TrainingEffectsPreview session={session} />
+      </div><TrainingEffectsPreview session={session} /></div>
       {(session.planningStatus !== "PLANNED" || requiresReview) && (
         <button
           className="primary-action"
@@ -427,7 +479,7 @@ function PlayersToWatch({
   return (
     <section className="training-squad">
       <h3>Jugadores a vigilar</h3>
-      {watch.length ? <div className="players-to-watch">{watch.map((item) => { const player = players.find((candidate) => candidate.id === item.playerId); return player ? <button type="button" key={item.playerId} onClick={() => onSelect(player)}><strong>{player.name}</strong><span>{item.reasons.map((reason) => reason.label).join(" · ")}</span></button> : null })}</div> : <p>No hay situaciones individuales especialmente preocupantes.</p>}
+      {watch.length ? <div className="players-to-watch" tabIndex={0} role="region" aria-label="Jugadores en observación">{watch.map((item) => { const player = players.find((candidate) => candidate.id === item.playerId); return player ? <button type="button" key={item.playerId} onClick={() => onSelect(player)}><strong>{player.name}</strong><span>{item.reasons.map((reason) => reason.label).join(" · ")}</span><small>En observación</small></button> : null })}</div> : <p className="training-empty">No hay situaciones individuales especialmente preocupantes.</p>}
     </section>
   );
 }
@@ -435,6 +487,7 @@ function PlayersToWatch({
 export function TrainingScreen({
   tacticalPlan,
   trainingState,
+  nextMatch,
   staffMembers,
   activeSessionId,
   injuredPlayerIds = [],
@@ -455,13 +508,17 @@ export function TrainingScreen({
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | undefined>(activeSessionId ?? reviewRequiredSessionId);
+  const visibleEditorId = tutorialActive && (tutorialStep === 1 || tutorialStep === 2) ? 'tuesday' : editingSessionId;
   const invalidSessions = trainingState.sessions.filter((session) => session.status !== 'completed' && session.planningStatus !== 'PLANNED');
   const invalidSessionCount = invalidSessions.length;
+  const firstInvalidSessionId = invalidSessions[0]?.id;
   useEffect(() => {
     if (!validationAttempt || !invalidSessionCount) return;
     setShowValidation(true);
+    setEditingSessionId(firstInvalidSessionId);
     document.querySelector('.training-sessions')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [validationAttempt, invalidSessionCount]);
+  }, [validationAttempt, invalidSessionCount, firstInvalidSessionId]);
   const updateSession = (next: FunctionalTrainingSession) => {
     onTrainingStateChange({
       ...trainingState,
@@ -498,7 +555,7 @@ export function TrainingScreen({
   ).length;
   return (
     <section className="training-screen">
-      <header className="screen-header training-header">
+      <header className="training-header">
         <button className="screen-back-button" type="button" onClick={onBack}>
           ← Panel del club
         </button>
@@ -528,22 +585,26 @@ export function TrainingScreen({
       </aside>}
       {reviewRequiredSessionId && <aside className="training-save-error" role="alert">Has dicho al segundo entrenador que revisarías la sesión del jueves. Haz los cambios que consideres y pulsa GUARDAR PLANIFICACIÓN antes de continuar.</aside>}
       <TrainingSummary state={trainingState} plan={tacticalPlan} />
-      <TacticalTrainingSummary
-        plan={tacticalPlan}
-        onOpenTactics={onOpenTactics}
-      />
-      <section className="training-sessions" aria-label="Planificación semanal" data-tour-target="training-week">
+      <div className="training-planning-row">
+        <TacticalTrainingSummary plan={tacticalPlan} onOpenTactics={onOpenTactics} />
+        <WeeklyMicrocycle sessions={trainingState.sessions} nextMatch={nextMatch} activeSessionId={activeSessionId} selectedSessionId={visibleEditorId} onSelect={id => {
+          setEditingSessionId(current => current === id ? undefined : id);
+          requestAnimationFrame(() => document.getElementById(`training-session-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+        }} />
+      </div>
+      <section className="training-sessions" aria-label="Sesiones de entrenamiento">
         {trainingState.sessions.map((session) => (
-          activeSessionId && session.id !== activeSessionId && session.status !== "completed" ? null :
-          <TrainingSessionCard
-            key={session.id}
+          <div key={session.id} id={`training-session-${session.id}`} hidden={session.status !== 'completed' && visibleEditorId !== session.id}>
+          {session.status === 'completed' ? <CompletedSession session={session} expanded={visibleEditorId === session.id} onToggle={open => setEditingSessionId(current => open ? session.id : current === session.id ? undefined : current)} /> : visibleEditorId === session.id && <TrainingSessionCard
             session={session}
             staffMembers={staffMembers}
             plan={tacticalPlan}
-            validationError={showValidation && session.status !== 'completed' && session.planningStatus !== 'PLANNED'}
+            validationError={showValidation && session.planningStatus !== 'PLANNED'}
             requiresReview={session.id === reviewRequiredSessionId}
             onChange={updateSession}
-          />
+            onClose={() => setEditingSessionId(undefined)}
+          />}
+          </div>
         ))}
       </section>
       {activeSessionId && onFinishEditing && <aside className="training-edit-finish"><p>{invalidSessions.length ? 'Guarda la planificación de la sesión antes de continuar.' : 'La planificación está guardada.'}</p><button className="primary-action" type="button" disabled={invalidSessions.length > 0} onClick={onFinishEditing}>CONTINUAR</button></aside>}
@@ -552,7 +613,10 @@ export function TrainingScreen({
           Semana procesada. Sus efectos no volverán a aplicarse.
         </p>
       )}
-      <PlayersToWatch state={trainingState} injuredPlayerIds={injuredPlayerIds} onSelect={setSelectedPlayer} />
+      <div className="training-bottom-row">
+        <PlayersToWatch state={trainingState} injuredPlayerIds={injuredPlayerIds} onSelect={setSelectedPlayer} />
+        <TrainingHighlights sessions={trainingState.sessions} />
+      </div>
       {detailPlayer && (
         <PlayerDetail
           player={detailPlayer}

@@ -1134,3 +1134,182 @@ historial y los límites individuales de efectos.
 - Comparación en ocho pantallas a 1920×980: misma altura de cabecera, mismos
   controles y mismo contenido fuera del título. Revisados Vestuario, Mensajes
   y Tácticas también a 390×844, sin desbordamiento horizontal de página.
+
+## Escenarios visibles y paneles compactos al 100 % · 2026-09-23
+
+- Se reserva escenario sobre el contenido de Plantilla y sobre el perfil completo;
+  la ventana pasa del pie al borde superior (`38% 0%`). El panorama conserva su
+  proporción y se funde por abajo con el yeso, sin recortar el exterior con `cover`.
+- Vestuario conserva el fondo existente, con foco `58% 42%`, velo claro mínimo,
+  documentos separados por 12–22 px y un máximo de 1480 px de ancho. En escritorio
+  ancho, los indicadores quedan a la izquierda de la pizarra, que permanece visible.
+  Primera fila: seguimiento, problemas y jerarquía; segunda: historial, voces y
+  compromisos. No se alteran las fuentes de datos ni la prioridad del seguimiento.
+- Decisión de composición: conservar las seis entradas derivadas del seguimiento
+  mediante scroll interno (aproximadamente cuatro/cinco visibles en 1080p), en vez
+  de eliminar al apoyo influyente o cambiar el dominio. Problemas mantiene tres
+  iniciales y ampliación; voces conserva sus tres entradas; el historial muestra
+  tres cambios y compromisos sus tres primeros, con ampliación de los restantes.
+- Papel crema al 88 %, desenfoque de 2 px y sombras mínimas en tabla, ficha lateral,
+  bloques del vestuario y lista de Mensajes. El marco de la ficha también deja pasar
+  el fondo para evitar una segunda superficie opaca. Se conserva el móvil legible.
+- El shell acota la altura de las dos pantallas prioritarias a `100dvh`; sus filas
+  descontarán cabecera, padding DEV y cualquier banner existente. Los bloques usan
+  flex/grid y desplazamiento propio, sin escala, zoom CSS ni recorte del contenido.
+  En ventanas estrechas/bajas vuelve el flujo natural. Header y sidebar no cambian.
+- Mensajes conserva foco `100% 100%` y disposición; se corrige el doble descuento
+  de la barra DEV. Tácticas no requiere ajustes: su pizarra ya aporta el escenario.
+- Se registra en AGENTS.md la prohibición permanente de texto inventado dentro de
+  escenarios. La edición del fondo para añadir camisetas, bolsa y taquillas quedó
+  pendiente por límite de uso de imagegen: no se generó ni sustituyó ningún asset.
+- Verificación: build, lint y 116 tests correctos; revisión visual en 1920×1080,
+  1920×920, 1366×768, 1101×700, 1024×768 y 390×844. Se prueban búsqueda, filtros,
+  ordenación, selección, ficha completa y vuelta, último jugador, problemas y una
+  promesa real. Comparación de estilos calculados y geometría de todos los elementos
+  de header/sidebar en las cuatro pantallas confirma que permanecen iguales.
+- No hay dependencias, modelos, estadísticas, efectos humanos, aleatoriedad ni
+  cálculos de dominio nuevos. No se preparan funciones de juego inactivas.
+
+## Mensajes: tratamiento ilustrado del escenario · 2026-09-23
+
+- Por petición expresa, se editan las imágenes originales para adoptar una
+  ilustración digital semirrealista de videojuego, con materiales simplificados,
+  texturas pintadas y sombras controladas. La imagen aportada se utiliza solo
+  como referencia artística; se conserva la composición del despacho existente.
+- El escenario ya estaba separado en dos capas. Se mantienen el fondo horizontal
+  de 1536×1024 y el primer plano transparente de 1024×1536 con móvil y mano.
+  Ambos reciben el mismo tratamiento; el teléfono no se duplica dentro del fondo.
+- Se conservan mesa, silla, portátil, taza, llaves, ventana, repisa y equipación
+  en sus posiciones, la perspectiva y los espacios libres para la UI. La pantalla
+  ilustrada del móvil queda vacía; no se generan textos, logos ni interfaz.
+- Los recursos nuevos son `club-messages-office-illustrated.png` y
+  `club-phone-hand-illustrated.png`. Se conservan los originales. Las únicas
+  modificaciones funcionales de código son sus referencias en InboxScreen:
+  se mantienen geometría, responsive, filtros, controles, chat y lógica existentes.
+- Edición mediante imagegen integrado, sin CLI, dependencias ni cambios de
+  dominio. No se modifican otras pantallas ni estilos compartidos. No se preparan
+  nuevas funciones inactivas. Prompts y recursos en `VISUAL_ASSETS.md`.
+- Verificación: build, lint, diff y los 116 tests correctos. Se comprueban las
+  dimensiones y transparencia de los PNG, su inclusión íntegra en producción
+  y que todo el código y CSS, salvo rutas y comentarios, permanece idéntico.
+  Revisados visualmente ambos recursos; no se pudo revisar la composición en
+  navegador en esta sesión porque no había ninguno conectado.
+
+## Entrenamientos: campo ilustrado y planificación compacta · 2026-09-24
+
+- Rediseño solicitado de Entrenamientos, limitado a su contenido. Header, sidebar,
+  navegación global y motor permanecen iguales. App aporta el próximo partido
+  que ya deriva del calendario.
+- Fondo aportado transformado con imagegen integrado en ilustración 2D:
+  `club-training-night-illustrated.png`. Conserva el escenario nocturno, su
+  composición y material, sin texto, carteles, logos ni personajes añadidos.
+- Seis indicadores, táctica con mini campo derivado de la formación y microciclo
+  de tres bloques. Se reutilizan cálculos y etiquetas de dominio, barras
+  aproximadas compartidas y controles y handlers existentes.
+- El tercer bloque muestra el partido real (día, rival, fecha, hora y competición).
+  No se inventa una sesión de sábado ni una intensidad de partido: el modelo
+  conserva dos entrenamientos semanales. Los ejemplos del brief son visuales,
+  nunca resultados, jugadores o hechos nuevos guardados en la partida.
+- Pulsar una sesión abre su planificación. Se conservan bloques completos,
+  intensidad, staff, ausencias, previsión, guardado, DIRTY y revisión prometida.
+  El tutorial abre el editor en sus pasos de bloques y efectos; CONTINUAR abre
+  la sesión pendiente de guardar y mantiene la validación real.
+- Solo las sesiones completadas tienen tarjetas de resultados. Estado físico,
+  carga, calidad, riesgo y asistencia proceden del resultado original; el informe
+  desplegable conserva todos los efectos, destacados e instantánea táctica.
+  Destacados resume la última sesión completada, con estado vacío antes de ella.
+- Paneles navy al 66–72 %, blur de 1–1.5 px y borde azul fino. Ancho superior máximo
+  de 1160 px, zona inferior de 930 px; reserva lateral y césped inferior visibles.
+  Jugadores a vigilar conserva la lista completa con desplazamiento y ficha.
+- Verificado en Chrome aislado a 1920×1080, 1366×768, 1024×768 y 390×844: sin
+  desbordamiento horizontal; planificación, dos informes reales, fichas, ayuda,
+  validación y cinco pasos del tutorial comprobados. Sin dependencias, cambios de
+  dominio, aleatoriedad nueva ni funcionalidades preparadas pero inactivas.
+- Comprobación final: `npm run build`, `npm run lint`, `git diff --check` y los
+  116 tests correctos. Con las dos sesiones completadas, todo el contenido cabe
+  a 1920×1080 sin desplazamiento de página. La copia del fondo está incluida en
+  producción; se conservan los cambios previos del usuario en otras pantallas.
+
+## Mensajes: mano apenas sugerida detrás del móvil · 2026-09-24
+
+- A petición del usuario, se reduce la superficie visible de la mano: la palma
+  queda oculta detrás del teléfono, con un contorno de pulgar y dos pequeñas
+  puntas de dedos. Se atenúan los detalles y el borde iluminado; la muñeca se
+  pierde en sombra, sin presentar una mano negra completa ni un guante.
+- Se edita solo el primer plano mediante imagegen integrado y se guarda como
+  `club-phone-hand-subtle.png`, conservando la versión ilustrada anterior.
+  Permanecen la manga oscura, estilo pintado, alfa y teléfono vertical vacío.
+- El recurso generado acorta ligeramente el dispositivo. Se registra su pantalla
+  contra el rectángulo HTML existente mediante el alto y desplazamiento de la
+  imagen, conservando intactos tamaño, posición y estilos internos del chat.
+- Solo cambian la referencia decorativa y su registro en InboxScreen. El despacho,
+  otras vistas, estados y lógica de mensajes no cambian. No se añaden dependencias,
+  aleatoriedad, cálculos de dominio ni funciones preparadas pero inactivas.
+- Verificación: build, lint, diff y 116 tests correctos. Recurso revisado
+  visualmente, con dimensiones y alfa comprobados e incluido íntegro en producción.
+  Se confirma por comparación que el HTML y los estilos del chat no cambian.
+  La revisión del montaje en navegador queda pendiente: no había ninguno conectado.
+
+## Competición: estilo federativo y archivo de actas · 2026-09-24
+
+- Rediseño solicitado de Clasificación, Resultados, Goleadores y Próximo partido,
+  inspirado en las capturas: cabeceras rojas, tablas blancas, navegación redondeada,
+  emblemas SVG del juego y enfrentamientos sobre el campo ilustrado existente.
+  El shell y las demás pantallas se conservan. No se añaden dependencias ni assets.
+- Se reutilizan los cálculos vivos de clasificación y goles. Resultados permite
+  consultar jornadas futuras y amistosos, con ficha pendiente o acta terminada;
+  los filtros permanecen al navegar. No se simula un resultado antes de jugar.
+- MatchTeamState conserva el once de salida y los dorsales existentes; el acta
+  guarda participantes, incidencias, marcador progresivo, cambios y estadísticas.
+  Usa los autores reales del motor, sin confundirlos con identificadores agregados
+  de goleadores. Las reentradas no convierten un titular en suplente inicial.
+- applyPostMatch archiva una sola vez en GameState.matchReports. VER ACTA confirma
+  el final y abre el documento; CONTINUAR desde él usa el checkpoint común.
+  El archivo sigue accesible desde Resultados y desde el último partido, después
+  de avanzar. El campo nuevo admite estados anteriores mediante hidratación.
+- Decisiones de alcance: emblemas estilizados, sin copiar logotipos oficiales;
+  la temporada se deriva del calendario; árbitros, dorsales y staff desconocidos
+  figuran sin datos. Los resultados antiguos y rivales resueltos en segundo plano
+  muestran marcador y goles, sin inventar alineaciones ni estadísticas.
+- En la convocatoria se corrige la presentación existente de Calidad y Forma a
+  estrellas y etiquetas compartidas. No cambian selección, ratings ni consecuencias.
+- Revisado en Chrome aislado a 1920×1080, 1366×768, 1024×768 y 390×844: sin
+  desbordamiento de página. Probados final, apertura desde arriba, continuar,
+  reapertura del acta, filtro persistente de amistosos y jornadas futuras.
+- Cobertura de dominio añadida en matchReports.test.mjs para titulares, reentradas,
+  local/visitante, serialización, identidad de goles y procesamiento único.
+  No hay nueva aleatoriedad ni efectos deportivos/humanos en React.
+- El guardado a disco sigue pendiente en el proyecto; las actas duran durante la
+  partida actual. No se dejan nuevas funciones preparadas pero inactivas.
+  Especificación en docs/COMPETITION_SYSTEM.md y docs/MATCH_ENGINE.md.
+- Verificación final: npm run build, npm run lint, git diff --check y los 121 tests correctos.
+
+## Mensajes: teléfono global desplegable · 2026-09-25
+
+- Por petición expresa se retira la pantalla independiente y la entrada del
+  sidebar. `ClubPhone` se monta una vez en `AppShell`: barra navy inferior derecha,
+  badge rojo, teléfono 2D oscuro con chats, búsqueda, No leídos y Llamadas.
+- Se reutilizan conversaciones, convocatorias, reacciones, respuestas e identidades.
+  `useClubPhone` centraliza apertura y sección en App; selección e historial siguen
+  en GameState. El contador deriva de los mensajes. Llegar minimizado no abre el
+  teléfono ni marca lectura. Navegar o minimizar conserva el fondo y su estado.
+- Los destinos antiguos `inbox` se interceptan como comandos de apertura. El
+  estado de pantalla los excluye. Panel, tutorial, CONTINUAR y convocatorias usan
+  el mismo teléfono. Las escenas narrativas presenciales no cambian.
+- `addMessage` entrega mensajes con ID estable sin duplicarlos; los generadores
+  existentes siguen usando el mismo historial. `respondFromPhone` preserva las
+  decisiones de entrenamiento y evita repetir respuestas o consecuencias.
+- Llamadas usa un modelo serializable y un historial inicial de ejemplo separado,
+  identificado en la interfaz. No se inventan mensajes reales ni consecuencias.
+  Permanecen preparados los registros futuros de llamadas y tutoriales; no se
+  activa telefonía, escritura libre ni persistencia a disco.
+- Eliminados InboxScreen y su CSS, import y selectores muertos. Los fondos y manos
+  anteriores se conservan como recursos del usuario, sin uso en el teléfono.
+  Se mantienen los cambios previos de otras pantallas. No hay nuevas dependencias.
+- Verificados chats, filtros, contador, respuestas, convocatorias, tutorial,
+  conservación del fondo y teclado en Chrome aislado. Se corrige el retorno del
+  foco al minimizar. Revisados escritorio, móvil estrecho y orientación horizontal.
+  Arquitectura y ejemplo de entrega en `docs/MESSAGING_SYSTEM.md`.
+- Verificación final: build, lint y diff check correctos; 126 tests pasan. La
+  comprobación visual cubre seis tamaños, de 320×568 a 1920×1080. Vite conserva
+  el aviso de tamaño de bundle; no se añaden errores de TypeScript ni lint.

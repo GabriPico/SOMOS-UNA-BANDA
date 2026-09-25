@@ -1,0 +1,139 @@
+.club-phone {
+  --phone-bg: #0b141b; --phone-surface: #14212b; --phone-border: #23343f;
+  --phone-muted: #a0b1be; --phone-green: #48d9a5; --phone-text: #eef3f6;
+  --ui-crest-bg: #10202c; --ui-crest-ink: #dce8f2;
+  position: fixed; right: max(18px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom)); z-index: 1050;
+  color: var(--phone-text); font: 13px/1.45 var(--ui-font, sans-serif);
+  color-scheme: dark; text-align: left;
+}
+.club-phone[hidden] { display: none; }
+.club-phone *, .club-phone *::before, .club-phone *::after { box-sizing: border-box; scrollbar-color: #3b505e var(--phone-bg); }
+.club-phone button { font: inherit; cursor: pointer; color: inherit; }
+.club-phone button:disabled { cursor: not-allowed; opacity: .5; }
+.club-phone :focus-visible { outline: 2px solid var(--phone-green); outline-offset: -3px; }
+.club-phone svg { width: 21px; height: 21px; flex-shrink: 0; }
+.club-phone-dock {
+  display: flex; align-items: center; gap: 14px; width: 202px; min-height: 46px;
+  padding: 10px 14px; border: 1px solid #3e576d; border-radius: 13px;
+  background: linear-gradient(140deg, #192b3c, #0c1722); box-shadow: 0 4px 18px #0006;
+  transition: opacity 200ms, transform 200ms, visibility 200ms;
+}
+.club-phone-dock:hover { border-color: #8aa8c3; background: #1a3043; }
+.club-phone-dock > svg { margin-left: auto; width: 17px; }
+.club-phone-envelope { display: flex; position: relative; color: #b5d8f3; }
+.club-phone-envelope > svg { width: 24px; height: 24px; }
+.club-phone-badge { display: inline-grid; flex-shrink: 0; place-items: center; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 50%; background: var(--phone-green); color: #052318; font-size: 11px; font-weight: 750; line-height: 1; }
+.club-phone-badge--red { position: absolute; top: -10px; right: -10px; background: #e74747; color: white; box-shadow: 0 0 0 2px #142331; }
+.club-phone-sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.club-phone-device {
+  position: absolute; right: 0; bottom: 0; display: flex; flex-direction: column;
+  width: min(390px, calc(100vw - 36px)); height: min(700px, calc(100dvh - 32px - var(--ui-dev-offset, 0px)));
+  min-height: 0; overflow: hidden; border: 6px solid #090e13; border-radius: 39px;
+  background: var(--phone-bg); box-shadow: 0 0 0 1px #567080, 0 0 0 3px #15202a, 0 18px 55px #0009;
+  opacity: 0; visibility: hidden; transform: translateY(20px) scale(.97); transform-origin: bottom right;
+  transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
+}
+.club-phone.is-open .club-phone-device { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+.club-phone.is-open .club-phone-dock { opacity: 0; pointer-events: none; transform: translateY(8px); }
+.club-phone-status { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 34px; padding: 8px 22px 3px; font-size: 11px; font-weight: 650; }
+.club-phone-status > span:last-child { display: flex; align-items: center; gap: 6px; font-size: 9px; }
+.club-phone-speaker { position: absolute; top: 5px; left: calc(50% - 44px); width: 88px; height: 15px; background: #030609; border-radius: 12px; }
+.club-phone-battery { display: inline-block; width: 17px; height: 8px; border: 1px solid #d0dae1; border-radius: 2px; background: linear-gradient(90deg, #d0dae1 75%, transparent 75%); }
+.club-phone-header { display: flex; flex-shrink: 0; align-items: center; gap: 9px; min-height: 68px; padding: 12px 13px; border-bottom: 1px solid var(--phone-border); }
+.club-phone-header .club-crest { width: 29px; height: 37px; }
+.club-phone-heading { flex: 1; min-width: 0; }
+.club-phone-heading h2 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.club-phone-heading p { margin: 4px 0 0; color: var(--phone-muted); font-size: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.club-phone-icon-button { display: grid; place-items: center; width: 31px; height: 34px; padding: 5px; flex-shrink: 0; border: 0; border-radius: 8px; background: transparent; }
+.club-phone-icon-button:hover { background: #233645; }
+.club-phone-search { display: flex; gap: 9px; margin: 12px 14px 0; padding: 8px 12px; border-radius: 20px; background: var(--phone-surface); color: var(--phone-muted); }
+.club-phone-search input { min-width: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--phone-text); }
+.club-phone-filters { display: flex; flex-shrink: 0; gap: 7px; padding: 13px 13px 9px; }
+.club-phone-filters button { flex: 1; padding: 8px 10px; border: 1px solid var(--phone-border); border-radius: 22px; background: var(--phone-surface); color: #c8d5df; font-size: 12px; white-space: nowrap; }
+.club-phone-filters button[aria-pressed="true"] { color: #8ef0c6; background: #104d3c; border-color: #24755b; }
+.club-phone-filters button:hover { border-color: #5a9985; }
+.club-phone-list { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 0 11px; }
+.club-phone-list-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 3px 7px; }
+.club-phone-list-caption strong { font-size: 12px; font-weight: 500; }
+.club-phone-list-caption small { font-size: 10px; color: var(--phone-muted); }
+.club-phone-row { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 77px; padding: 13px 3px; border: 0; border-bottom: 1px solid #1a2a34; border-radius: 0; background: transparent; text-align: left; }
+.club-phone-row:hover { background: #16242e; }
+.club-phone-avatar { display: inline-grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; color: #d7eafa; background: #294359; font-size: 14px; font-weight: 600; border: 1px solid #ffffff0c; }
+.club-phone-avatar--president { background: #514c43; color: #f0dec1; }
+.club-phone-avatar--staff { background: #244c48; color: #bde8db; }
+.club-phone-avatar--club { background: #45405b; color: #ddd0f0; }
+.club-phone-avatar--group svg { width: 25px; height: 25px; }
+.club-phone-header .club-phone-avatar { width: 34px; height: 34px; font-size: 11px; }
+.club-phone-row-content { flex: 1; min-width: 0; }
+.club-phone-row-title, .club-phone-row-bottom { display: flex; justify-content: space-between; align-items: center; gap: 9px; }
+.club-phone-row-title { margin-bottom: 4px; }
+.club-phone-row-title strong { font-size: 14px; font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.club-phone-row-title time { flex-shrink: 0; color: var(--phone-muted); font-size: 10px; }
+.club-phone-preview { display: block; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--phone-muted); font-size: 12px; }
+.club-phone-row.is-unread strong { font-weight: 750; }
+.club-phone-row.is-unread time { color: var(--phone-green); }
+.club-phone-pending-label { display: block; margin-top: 3px; color: #ebc982; font-size: 10px; }
+.club-phone-call-direction, .club-phone-call-icon { color: var(--phone-green); }
+.club-phone-call-direction { font-size: 16px; line-height: 1; }
+.club-phone-call-icon { display: flex; padding: 5px; }
+.club-phone-row.is-missed .club-phone-preview, .club-phone-row.is-missed .club-phone-call-direction { color: #ff7676; }
+.club-phone-call-detail { margin: 3px 0 9px 55px; padding: 10px; border-radius: 9px; background: var(--phone-surface); font-size: 12px; }
+.club-phone-call-detail p { margin: 4px 0; }
+.club-phone-call-detail small { display: block; margin-top: 9px; color: var(--phone-muted); }
+.club-phone-empty { display: grid; justify-items: center; gap: 12px; padding: 38px 24px; color: var(--phone-muted); font-size: 13px; text-align: center; }
+.club-phone-empty p { margin: 0; }
+.club-phone-tabs { display: flex; flex-shrink: 0; padding: 7px 28px 2px; border-top: 1px solid var(--phone-border); }
+.club-phone-tabs button { display: grid; justify-items: center; flex: 1; gap: 4px; padding: 7px; border: 0; border-radius: 9px; background: transparent; color: var(--phone-muted); font-size: 10px; }
+.club-phone-tabs button[aria-pressed="true"] { color: var(--phone-green); }
+.club-phone-tabs button:hover { background: var(--phone-surface); }
+.club-phone-home-indicator { flex-shrink: 0; width: 95px; height: 4px; margin: 7px auto 6px; border-radius: 3px; background: #b0bcc57a; }
+.club-phone-participants { flex-shrink: 0; max-height: 26%; overflow: auto; padding: 12px 16px; background: var(--phone-surface); font-size: 11px; }
+.club-phone-participants p { margin: 6px 0; color: var(--phone-muted); }
+.club-phone-history { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 12px; background: radial-gradient(ellipse at top left, #19352e44, transparent 75%), #0c171b; }
+.club-phone-message { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 9px; }
+.club-phone-message.is-sent { align-items: flex-end; }
+.club-phone-day { align-self: center; margin: 8px 0 16px; padding: 4px 10px; border-radius: 7px; color: #b6c4cd; background: #1b2a31; font-size: 10px; text-align: center; }
+.club-phone-bubble { max-width: 92%; padding: 10px 12px 7px; border-radius: 3px 12px 12px; background: #202f37; color: #eff3f5; box-shadow: 0 1px 2px #0003; overflow-wrap: anywhere; font-size: 12px; line-height: 1.6; }
+.club-phone-message.is-sent .club-phone-bubble { border-radius: 12px 3px 12px 12px; background: #105340; }
+.club-phone-author { display: block; margin-bottom: 4px; color: #83d7b6; font-size: 10px; font-weight: 650; }
+.club-phone-bubble p { margin: 0; white-space: pre-wrap; }
+.club-phone-bubble time { display: block; margin-top: 5px; color: #b0c3c9; font-size: 9px; text-align: right; }
+.club-phone-reactions { display: flex; gap: 5px; margin-top: 6px; }
+.club-phone-reactions span { padding: 2px 6px; border-radius: 12px; background: #071d2180; font-size: 10px; }
+.club-phone-responses { display: grid; gap: 6px; width: 94%; margin: 10px 0 4px; }
+.club-phone-responses small { color: var(--phone-muted); }
+.club-phone-responses button { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; border: 1px solid #376751; border-radius: 9px; background: #163b30; color: #d6f9e9; text-align: left; font-size: 12px; }
+.club-phone-responses button:hover { background: #205440; }
+.club-phone-callup h4 { margin: 6px 0; font-size: 14px; }
+.club-phone-callup > small { color: #90debe; }
+.club-phone-callup dl { display: flex; gap: 18px; margin: 12px 0; padding-block: 9px; border-block: 1px solid #ffffff24; }
+.club-phone-callup dt { color: #b0c3c9; font-size: 10px; }
+.club-phone-callup dd { margin: 0; font-weight: 650; }
+.club-phone-callup ul { columns: 2; padding: 0; list-style: none; font-size: 10px; }
+.club-phone-callup li { break-inside: avoid; padding: 2px 5px 2px 0; }
+.club-phone-guide { padding: 12px; border: 1px solid #344c56; border-radius: 10px; background: #16252d; color: #bbccd5; font-size: 11px; }
+.club-phone-guide strong { color: #93d1bc; }
+.club-phone-guide p { margin: 5px 0 0; }
+.club-phone-composer { flex-shrink: 0; padding: 10px 12px 2px; border-top: 1px solid var(--phone-border); background: var(--phone-bg); }
+.club-phone-composer > div { display: flex; gap: 8px; }
+.club-phone-composer input { width: 100%; min-width: 0; border: 1px solid #263c46; border-radius: 22px; padding: 9px 12px; background: var(--phone-surface); color: var(--phone-muted); font-size: 12px; opacity: 1; }
+.club-phone-composer input::placeholder { color: var(--phone-muted); }
+.club-phone-send { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--phone-green); color: #082f21 !important; }
+.club-phone-composer > p { margin: 6px 0 0; color: var(--phone-muted); text-align: center; font-size: 9px; }
+.club-phone-continue { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 8px; padding: 8px; border: 1px solid #347c5e; border-radius: 9px; background: #144d38; font-size: 11px !important; }
+.club-phone-continue:hover { background: #246649; }
+@media (max-width: 440px) {
+  .club-phone { right: max(10px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); }
+  .club-phone-device { width: calc(100vw - 20px); height: min(700px, calc(100dvh - 20px - var(--ui-dev-offset, 0px))); border-width: 5px; border-radius: 30px; }
+  .club-phone-header { padding-inline: 9px; gap: 6px; }
+  .club-phone-heading h2 { font-size: 14px; }
+}
+@media (max-height: 480px) {
+  .club-phone-status { height: 24px; padding-top: 4px; }
+  .club-phone-header { min-height: 48px; padding-block: 6px; }
+  .club-phone-filters { padding-block: 6px; }
+  .club-phone-tabs { padding-block: 0; }
+  .club-phone-home-indicator { margin-block: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .club-phone-device, .club-phone-dock { transition: none; } }

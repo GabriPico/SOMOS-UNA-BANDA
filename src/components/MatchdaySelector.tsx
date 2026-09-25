@@ -5,9 +5,10 @@ type MatchdaySelectorProps = {
   selectedMatchday: number
   totalMatchdays: number
   onSelect: (matchday: number) => void
+  allowFuture?: boolean
 }
 
-export function MatchdaySelector({ currentMatchday, selectedMatchday, totalMatchdays, onSelect }: MatchdaySelectorProps) {
+export function MatchdaySelector({ currentMatchday, selectedMatchday, totalMatchdays, onSelect, allowFuture = false }: MatchdaySelectorProps) {
   return (
     <nav className="matchday-selector" aria-label="Seleccionar jornada">
       <span>Jornada</span>
@@ -16,7 +17,8 @@ export function MatchdaySelector({ currentMatchday, selectedMatchday, totalMatch
           className={matchday === selectedMatchday ? 'is-active' : undefined}
           type="button"
           key={matchday}
-          disabled={matchday > currentMatchday}
+          disabled={!allowFuture && matchday > Math.max(1, currentMatchday)}
+          aria-label={`Jornada ${matchday}`}
           aria-current={matchday === selectedMatchday ? 'true' : undefined}
           onClick={() => onSelect(matchday)}
         >

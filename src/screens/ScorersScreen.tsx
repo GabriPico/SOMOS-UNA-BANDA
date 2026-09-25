@@ -4,29 +4,30 @@ import { leagueSeason, leagueTeams, players, rivalPlayers } from '../data/mockDa
 import type { GoalEvent, LeagueMatch } from '../domain/models'
 import { calculateTopScorers } from '../domain/leagueScorers'
 import './ScorersScreen.css'
+import { CompetitionHeader } from '../components/CompetitionHeader'
+import { TeamBadge } from '../components/TeamBadge'
 
 type ScorersScreenProps = { matches: LeagueMatch[]; goalEvents: GoalEvent[]; currentMatchday: number; onBack: () => void; onOpenResults: () => void; onOpenStandings: () => void; onOpenSanctions: () => void; selectedMatchday: number; onMatchdayChange: (matchday: number) => void }
 
-export function ScorersScreen({ matches, goalEvents, currentMatchday, onBack, onOpenResults, onOpenStandings, onOpenSanctions, selectedMatchday, onMatchdayChange }: ScorersScreenProps) {
+export function ScorersScreen({ matches, goalEvents, currentMatchday, onBack, onOpenResults, onOpenStandings, onOpenSanctions, selectedMatchday: requestedMatchday, onMatchdayChange }: ScorersScreenProps) {
+  const selectedMatchday = Math.min(requestedMatchday, Math.max(1, currentMatchday))
   const teamNames = new Map(leagueTeams.map((team) => [team.id, team.name]))
   const scorers = calculateTopScorers(goalEvents, matches, players, rivalPlayers, selectedMatchday)
   return (
-    <section className="scorers-screen">
-      <header className="screen-header">
-        <button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>
-        <h2>La liga</h2>
-      </header>
+    <section className="scorers-screen competition-screen">
+      <CompetitionHeader matches={matches} onBack={onBack} />
       <LeagueTabs activeTab="scorers" onSelect={(tab) => { if (tab === 'results') onOpenResults(); if (tab === 'standings') onOpenStandings(); if (tab === 'sanctions') onOpenSanctions() }} />
       <MatchdaySelector currentMatchday={currentMatchday} selectedMatchday={selectedMatchday} totalMatchdays={leagueSeason.totalMatchdays} onSelect={onMatchdayChange} />
+      <div className="competition-section-heading"><h3>Ranking de goleadores</h3><p>Goles de liga · Hasta la jornada {selectedMatchday}</p></div>
       <div className="scorers-table-wrapper">
         <table className="scorers-table" aria-label={`Goleadores hasta la jornada ${selectedMatchday}`}>
-          <thead><tr><th scope="col">POS</th><th scope="col">Jugador</th><th scope="col">Equipo</th><th scope="col">Goles</th></tr></thead>
+          <thead><tr><th scope="col">Posición</th><th scope="col">Jugador</th><th scope="col">Equipo</th><th scope="col">Goles (P)</th></tr></thead>
           <tbody>{scorers.map((scorer) => (
             <tr className={scorer.teamId === 'fc-poblenou' ? 'is-user-team' : undefined} key={scorer.playerId}>
-              <td>{scorer.position}</td><th scope="row">{scorer.playerName}</th><td>{teamNames.get(scorer.teamId)}</td>
-              <td className="scorer-goals">{scorer.goals}{scorer.penaltyGoals > 0 ? ` (${scorer.penaltyGoals})` : ''}</td>
+              <td>{scorer.position}</td><th scope="row">{scorer.playerName}</th><td><span className="competition-team-cell"><TeamBadge teamId={scorer.teamId} name={teamNames.get(scorer.teamId) ?? scorer.teamId} />{teamNames.get(scorer.teamId)}</span></td>
+              <td className="scorer-goals">{scorer.goals} <small>({scorer.penaltyGoals})</small></td>
             </tr>
-          ))}</tbody>
+          ))}{!scorers.length && <tr><td colSpan={4}><p className="competition-empty">Todavía no hay goleadores. El ranking se actualizará cuando se marquen los primeros goles de liga.</p></td></tr>}</tbody>
         </table>
       </div>
       <p className="penalty-note">Entre paréntesis, goles de penalti.</p>

@@ -60,8 +60,11 @@ posterior solo puede alcanzarse mediante una nueva pulsación explícita de
 
 En el seguimiento entre sesiones, el `CONTINUAR` global solo puede consumir el
 checkpoint de la segunda sesión si se pulsa desde el Panel. Si la decisión de
-mantener o revisar acaba de cerrarse desde Mensajes o Entrenamiento, esa primera
-pulsación se limita a volver al Panel.
+mantener o revisar acaba de cerrarse desde el teléfono abierto o Entrenamiento,
+esa primera pulsación minimiza el teléfono y vuelve al Panel sin avanzar el tiempo.
+Mensajes es ahora un teléfono global: los informes llegan al historial existente,
+incrementan el contador y pueden consultarse sin abandonar Entrenamiento ni otra
+pantalla. Véase [MESSAGING_SYSTEM.md](MESSAGING_SYSTEM.md).
 
 Cada sesión distingue la planificación (`TrainingSessionPlan` y previsiones), el
 resultado persistente (`SessionResult`) y sus eventos tipados. Antes del checkpoint
@@ -177,3 +180,19 @@ onboarding. Completar o saltar el tour no selecciona consignas, no ejecuta una
 sesión y no avanza el calendario: solo deja visible el objetivo contextual de
 preparar el primer entrenamiento. La ayuda general posterior es consultable sin
 volver a iniciar automáticamente el tour.
+
+## Vista de planificación
+
+La vista del campo nocturno usa tarjetas compactas y transparentes. Los dos
+entrenamientos del microciclo abren los mismos controles de planificación;
+el tercer bloque informa del próximo partido real del calendario, sin crear
+otra sesión. El tutorial abre el editor cuando señala bloques y efectos, y la
+validación de CONTINUAR muestra la sesión pendiente de guardar.
+
+Las tarjetas de entrenamientos realizados solo aparecen tras completarlos.
+Muestran asistencia, calidad, riesgo y las etiquetas de estado físico y carga
+conservadas en el resultado, sin sustituirlas por el estado actual de la plantilla.
+Sus informes desplegables conservan todos los efectos y la instantánea táctica.
+Destacados resume la última sesión completada. Jugadores a vigilar mantiene la
+lista completa y el acceso a PlayerDetail. No se modifica la resolución ni el
+avance temporal.

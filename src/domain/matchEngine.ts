@@ -71,6 +71,7 @@ export function createMatchState(input: CreateMatchInput): MatchState {
   const starters = input.lineupIds.slice(0, 11)
   const clubPlayerStates = Object.fromEntries(input.clubPlayers.map((player) => { const slot = starters.indexOf(player.id); const position = slot >= 0 ? slots[slot] : player.primaryPosition; return [player.id, clubMatchPlayer(player, input.training.players[player.id], position, slot >= 0)] }))
   for (const player of Object.values(clubPlayerStates)) {
+    player.shirtNumber = input.clubPlayers.find(source => source.id === player.id)?.shirtNumber
     const emotions = input.prematchEmotions?.[player.id]
     if (!emotions) continue
     player.prematchEmotions = { ...emotions }
@@ -85,6 +86,8 @@ export function createMatchState(input: CreateMatchInput): MatchState {
   const rivalPlan = opponentPlan(input.opponentFormation)
   const rivalFamiliarity = { formation: 62, attack: 61, transitionAttack: 58, defense: 61, transitionDefense: 58, setPieces: 55, formations: Object.fromEntries(Object.keys(FORMATION_SLOTS).map((key) => [key, key === input.opponentFormation ? 62 : 38])), instructions: {} }
   const rivalTeam: MatchTeamState = { teamId: opponentId, name: clubIsHome ? input.awayName : input.homeName, lineup: { formation: input.opponentFormation, starters: opponent.slice(0,11).map((p) => p.id), bench: opponent.slice(11).map(p => p.id), slots: FORMATION_SLOTS[input.opponentFormation] }, tactics: rivalPlan, players: Object.fromEntries(opponent.map((p) => [p.id, p])), familiarity: rivalFamiliarity, cohesion: 61, routeSuccess: {}, routeAttempts: {} }
+  clubTeam.initialLineup = structuredClone(clubTeam.lineup)
+  rivalTeam.initialLineup = structuredClone(rivalTeam.lineup)
   return { matchId: input.match.id, competitionType: input.match.competitionType ?? 'LEAGUE', seed: input.seed, sequence: 0, minute: 0, clockSeconds: 0, phase: 'PRE_MATCH', home: clubIsHome ? clubTeam : rivalTeam, away: clubIsHome ? rivalTeam : clubTeam, score: { home: 0, away: 0 }, statistics: { home: blankStats(), away: blankStats() }, events: [], goalEvents: [], substitutions: [], observations: [], interventionRequested: false, substitutionInterruptions: { home: 0, away: 0 }, committed: false, recentControl: [] }
 }
 

@@ -7,7 +7,9 @@ import type { PhysiotherapyContact, PlayerPhysiotherapyPlan } from './medicalSer
 import type { StaffSearchRequest } from './staff'
 import type { GoalEvent, LeagueMatch } from './models'
 import type { MatchState } from './matchTypes'
+import type { MatchReport } from './matchReport'
 import type { MessageConversation } from './messages'
+import type { ClubCall } from './clubPhone'
 import type { InboxMessage } from './inbox'
 import type { TrainingGameState } from './trainingTypes'
 import type { MatchSquadSelection, PlayerMatchSelectionRecord } from './squadSelection'
@@ -71,6 +73,7 @@ export type GameState = {
   seasonObjective: SeasonObjective
   expectations: ClubExpectationsState
   conversations: MessageConversation[]
+  calls?: ClubCall[]
   selectedConversationId?: string
   secondSessionPlanningDecision?: SecondSessionPlanningDecision
   /** @deprecated Solo se conserva para cargar estados antiguos; la UI usa conversations. */
@@ -91,6 +94,7 @@ export type GameState = {
   favors: FavorState[]
   goalEvents: GoalEvent[]
   activeMatch?: MatchState
+  matchReports?: Record<string, MatchReport>
   playerSeasonStats: Record<number, PlayerSeasonStats>
   manager: { generalAuthority: number }
   team: { cohesion: number; recentResultsMood: number }

@@ -12,10 +12,11 @@ type AppShellProps = {
   dateLabel: string; matchday: number; onContinue: () => void; continueLabel: string
   nextMatch?: LeagueMatch; teams?: LeagueTeam[]
   contentView?: 'player-profile'
+  phone?: ReactNode
 }
 
-export function AppShell({ activeScreen, navItems, onNavigate, children, dateLabel, matchday, onContinue, continueLabel, nextMatch, teams = [], contentView }: AppShellProps) {
-  const usesClubMaterials = activeScreen === 'tactics' || activeScreen === 'squad' || activeScreen === 'inbox' || activeScreen === 'dressing-room' || contentView === 'player-profile'
+export function AppShell({ activeScreen, navItems, onNavigate, children, dateLabel, matchday, onContinue, continueLabel, nextMatch, teams = [], contentView, phone }: AppShellProps) {
+  const usesClubMaterials = activeScreen === 'tactics' || activeScreen === 'squad' || activeScreen === 'dressing-room' || contentView === 'player-profile'
   const opponent = nextMatch ? getTeamName(teams, getOpponentId(nextMatch, 'fc-poblenou')) : undefined
   return <div className={`app-shell management-theme${usesClubMaterials ? ' club-material-theme' : ''}`}>
     <header className="topbar">
@@ -26,5 +27,6 @@ export function AppShell({ activeScreen, navItems, onNavigate, children, dateLab
     </header>
     <aside className="sidebar"><MainNav activeScreen={activeScreen} items={navItems} onNavigate={onNavigate} /></aside>
     <main className={`content content--${contentView ?? activeScreen}`}>{children}</main>
+    {phone}
   </div>
 }

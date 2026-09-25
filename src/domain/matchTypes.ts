@@ -10,7 +10,7 @@ export type MatchMood = 'NEUTRAL' | 'CONFIDENT' | 'FRUSTRATED' | 'NERVOUS' | 'DI
 export type MatchPlayerStats = { duelsWon: number; duelsLost: number; aerialDuelsWon: number; recoveries: number; losses: number; progressions: number; chancesCreated: number; shots: number; saves: number; errors: number; tacticalActions: number }
 
 export type MatchPlayer = {
-  id: number; canonicalScorerId?: number; teamId: string; name: string; position: PlayerPosition; naturalPositions: PlayerPosition[]; attributes: PlayerAttributes; baseMatchAttributes: PlayerAttributes
+  id: number; canonicalScorerId?: number; shirtNumber?: number; teamId: string; name: string; position: PlayerPosition; naturalPositions: PlayerPosition[]; attributes: PlayerAttributes; baseMatchAttributes: PlayerAttributes
   personality: string; happiness: number; authority: number; condition: number; fatigue: number
   minutesPlayed: number; yellowCards: number; redCard: boolean; injured: boolean; onPitch: boolean
   performance: number; actions: number
@@ -21,6 +21,7 @@ export type MatchPlayer = {
 }
 export type MatchLineup = { formation: Formation; starters: number[]; bench: number[]; slots: PlayerPosition[] }
 export type MatchTeamState = {
+  initialLineup?: MatchLineup
   teamId: string; name: string; lineup: MatchLineup; tactics: TacticalPlan; players: Record<number, MatchPlayer>
   familiarity: { formation: number; attack: number; transitionAttack: number; defense: number; transitionDefense: number; setPieces: number; formations: Record<string, number>; instructions: Record<string, Record<string, number>> }
   cohesion: number; routeSuccess: Partial<Record<AttackRoute, number>>; routeAttempts: Partial<Record<AttackRoute, number>>

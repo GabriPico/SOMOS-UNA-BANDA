@@ -1,5 +1,6 @@
 import type { GameState } from './gameState'
 import { clampHumanState, createInitialConsequenceState } from './consequences'
+import { createExampleClubCalls } from '../data/clubCalls'
 
 type LegacyGameState = GameState & {
   manager?: GameState['manager']
@@ -10,6 +11,8 @@ type LegacyGameState = GameState & {
 
 export function hydrateGameState(input: LegacyGameState): GameState {
   const game = structuredClone(input)
+  game.matchReports ??= {}
+  game.calls ??= createExampleClubCalls(game)
   game.manager = { generalAuthority: clampHumanState(game.manager?.generalAuthority ?? 60) }
   game.team = {
     cohesion: clampHumanState(game.team?.cohesion ?? game.dressingRoomCohesion ?? 58),
