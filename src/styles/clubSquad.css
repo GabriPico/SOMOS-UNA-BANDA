@@ -59,7 +59,7 @@
   font-family: var(--club-font-heading);
   font-weight: 600;
 }
-.club-material-theme .team-screen .team-table { min-width: 760px; }
+.club-material-theme .team-screen .team-table { min-width: 0; }
 .club-material-theme .team-screen .team-table td { height: 34px; padding: 3px 5px; font-size: 13px; }
 .club-material-theme .team-table .player-portrait { width: 21px; height: 26px; }
 .club-material-theme .team-table .player-identity { flex-wrap: nowrap; gap: 3px; }
@@ -90,7 +90,7 @@
 .club-material-theme .team-table .squad-number { color: var(--club-ink-muted); }
 .club-material-theme .team-table-note { flex-shrink: 0; padding: 6px 3px 1px; font-size: 10px; }
 
-.club-material-theme .team-screen { padding-top: clamp(110px, 23dvh, 250px); }
+.club-material-theme .team-filter-bar { margin-top: clamp(45px, 10dvh, 120px); }
 .club-material-theme .team-workspace .club-player-file-mount--inline { position: relative; top: auto; min-height: 0; height: fit-content; max-height: 100%; padding: 12px 5px 5px; display: flex; flex-direction: column; }
 
 @media (min-width: 1101px) and (min-height: 650px) {

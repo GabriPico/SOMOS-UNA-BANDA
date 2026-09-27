@@ -266,13 +266,13 @@ test('el historial conserva todas las entradas y solo muestra fechas cuando se p
   assert.match(dated, /<small>Fecha disponible<\/small>/)
 })
 
-test('la identidad fija conserva CONTINUAR y navegación sin selector de modo', () => {
-  const html = render(AppShell, { activeScreen: 'squad', navItems: [{ id: 'squad', label: 'Equipo' }, { id: 'dressing-room', label: 'Estado del vestuario' }], onNavigate() {}, onContinue() {}, dateLabel: '25 agosto', matchday: 0, continueLabel: 'Siguiente actividad' })
+test('la identidad fija conserva CONTINUAR y retorno al Panel sin barra lateral ni selector de modo', () => {
+  const html = render(AppShell, { activeScreen: 'squad', onNavigate() {}, onContinue() {}, dateLabel: '25 agosto', matchday: 0, continueLabel: 'Siguiente actividad' })
   assert.match(html, /app-shell management-theme/)
   assert.doesNotMatch(html, /theme-toggle|Activar modo claro|Activar modo oscuro/)
   assert.match(html, /CONTINUAR/)
-  assert.match(html, /aria-current="page"/)
-  assert.match(html, /Estado del vestuario/)
+  assert.match(html, /aria-label="Volver al Panel del club"/)
+  assert.doesNotMatch(html, /class="sidebar"|class="main-nav"/)
 })
 
 test('la tabla filtra también por posiciones secundarias y nombres con tildes sin mutar la plantilla', () => {

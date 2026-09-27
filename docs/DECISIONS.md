@@ -1,5 +1,19 @@
 # Registro de decisiones
 
+## Rediseño global y localizaciones sincronizadas · 26 de septiembre de 2026
+
+El rediseño global autorizado unifica títulos, tipografía Bahnschrift, papel crema
+y navy en todas las áreas principales. Panel es un hub de siete miniaturas con
+datos derivados; Staff reúne cuerpo técnico, presidente, presupuesto y personal.
+No se inventa una capacidad fija de staff. La iluminación depende exclusivamente
+de la hora civil de la partida: día 07:00–19:29; noche 19:30–06:59. Cinco parejas
+conservan composición; Tácticas conserva la pizarra y adopta los tokens nocturnos.
+El teléfono global se conserva. Se añaden dos escenarios DEV reproducibles para
+comprobar ambos momentos. Detalle de archivos, assets y pruebas en
+[GLOBAL_UI_REDESIGN.md](GLOBAL_UI_REDESIGN.md). Quedan sustituidas las decisiones
+visuales anteriores que mantenían pantallas azules o una página de Mensajes.
+
+
 ## Cierre emocional de la charla previa · 9 de septiembre de 2026
 
 Esta revisión sustituye el recorrido por temas y el diálogo literal del entrenador
@@ -1313,3 +1327,137 @@ historial y los límites individuales de efectos.
 - Verificación final: build, lint y diff check correctos; 126 tests pasan. La
   comprobación visual cubre seis tamaños, de 320×568 a 1920×1080. Vite conserva
   el aviso de tamaño de bundle; no se añaden errores de TypeScript ni lint.
+
+## Panel: habitación interactiva sin sidebar · 2026-09-26
+
+- Rediseño solicitado exclusivamente para la navegación del Panel, siguiendo la
+  composición de la referencia: camisetas, pizarra, material, puerta, dos papeles
+  en corcho y portátil con post-it. Se conservan rutas y acciones de App.
+- Se elimina el sidebar del shell. El escudo de la cabecera permite regresar al
+  Panel con las restricciones existentes del tutorial. Las otras pantallas no
+  cambian su lógica ni sus componentes internos.
+- ClubPanelScreen compone InteractiveClubScene y SceneHotspot. Botones nativos
+  recortados por polígonos porcentuales, brillo local y contornos SVG. Sin bordes
+  de tarjetas, selección inicial ni glow permanente. Hover y foco duran 180 ms;
+  teclado y movimiento reducido conservan acceso a los siete destinos.
+- El escenario se genera con imagegen integrado, sin textos ni estados horneados.
+  Escritura, emblemas, partido y cinco posiciones reales se representan mediante
+  capas de interfaz. Dos fuentes manuscritas OFL locales, con variantes de talla,
+  rotulador, papel y post-it. No se añade ninguna dependencia.
+- Proporción nativa 1733:907, encaje completo bajo la cabecera y coordenadas
+  normalizadas. Puede haber franjas para conservar el encuadre. Por debajo de
+  700 px se permite desplazamiento horizontal local del escenario legible.
+- Decisión de alcance: único fondo del Panel con la luz de la referencia; no se
+  crean variantes adicionales. No cambia la hora de partida ni la iluminación
+  existente de las otras pantallas.
+- Se retiran los accesos duplicados a Mensajes y CONTINUAR. ClubPhone permanece
+  global y único; el tutorial señala su dock. Se ajustan únicamente los textos,
+  selectores y capas del recorrido a los objetos nuevos.
+- Chrome aislado: cuatro resoluciones solicitadas, 28 navegaciones por clic,
+  hover, Tab, Enter/Espacio, retorno por escudo, teléfono y contador vivos; paso
+  real de Staff a Mensajes del tutorial. Cero errores de consola. Build, lint,
+  diff check y 129 tests correctos; permanece el aviso existente del bundle.
+- Se preservan cambios previos del usuario. Sin nuevos cálculos de dominio,
+  aleatoriedad, persistencia ni funciones preparadas pero inactivas. Sin commit
+  ni push. Inventario y detalles en docs/CLUB_PANEL_HUB.md.
+
+## Panel: cobertura, grabado y hover del material · 2026-09-27
+
+- Corrección incremental solicitada sobre la habitación existente. El plano
+  común de imagen y hotspots usa cover bajo la cabecera: llena ancho y alto,
+  con recorte centrado razonable, sin franjas oscuras laterales ni deformación.
+- EQUIPO deja de usar una fuente manuscrita. CarvedTeamLabel dibuja cortes SVG
+  desiguales en mayúsculas con surcos, arañazos y bordes de madera. La rugosidad
+  tiene semilla fija; el hover ilumina aristas cálidas junto con las camisetas.
+- Entrenamientos ilumina papel, celo y material con contornos separados y una
+  máscara del mismo fondo. Se ocultan los trazos detrás de la silla y del
+  soporte frontal; desaparece el contorno rectangular general.
+- Se conservan el bitmap, la cabecera, VESTUARIO, las siete acciones de
+  navegación y el teléfono global. Sin dependencias ni cambios de dominio.
+  No queda funcionalidad nueva preparada pero inactiva. Detalles e inventario
+  en docs/CLUB_PANEL_HUB.md. Sin commit ni push.
+- Verificación: cobertura completa sin desbordamiento en 1920×1080, 1600×900,
+  1440×900 y 1366×768; siete rutas por tamaño, hovers, Tab, Enter/Espacio,
+  teléfono y tutorial real. Cero errores de consola. Build, lint, diff check y
+  129 tests correctos; permanece el aviso existente de tamaño de bundle.
+
+## Panel: escena completa y cavidades en la madera · 2026-09-27
+
+- Segunda corrección solicitada del Panel existente. Se sustituye el encaje
+  cover del plano funcional por un ajuste proporcional que conserva toda la
+  imagen dentro del ancho y alto disponibles. No se recortan el cartel de
+  VESTUARIO ni los demás objetos. El espacio sobrante muestra una prolongación
+  suavizada del mismo escenario, sin franjas oscuras ni controles duplicados.
+- EQUIPO utiliza cavidades cerradas de anchura desigual, esquinas de herramienta
+  y desconchados. Se registra la textura del tablón dentro de cada surco y se
+  añaden paredes sombreadas y biseles cálidos para mostrar profundidad. El hover
+  ilumina la veta y el relieve sin azul ni efecto neón en las letras.
+- Se mantienen imagen original, geometría de hotspots, rutas, cabecera,
+  VESTUARIO, hover de Entrenamientos y widget global de Mensajes. No se añaden
+  dependencias, cálculos de dominio ni funciones preparadas pero inactivas.
+  Inventario en docs/CLUB_PANEL_HUB.md. Sin commit ni push.
+- Verificado en Chrome aislado: escena completa, siete hotspots, grabado,
+  VESTUARIO y dock de Mensajes dentro del área visible en 1920×1080, 1600×900,
+  1440×900 y 1366×768. La imagen ocupa el 92–100 % del ancho con DEV activo;
+  hover, clic, teclado, teléfono y tutorial funcionan sin errores de consola.
+  Build, lint, diff check y 129 tests correctos. Permanece el aviso de bundle.
+
+## Panel: nueva ilustración ancha y EQUIPO rayado en el material · 2026-09-27
+
+- El usuario autoriza sustituir la escena base. Se genera y activa
+  club-panel-room-wide.png (1774×887, 2:1), con los mismos siete objetos y espacio
+  ambiental en sus bordes. Se conserva el archivo anterior sin utilizarlo.
+- EQUIPO está arañado físicamente en el tablón del bitmap por petición expresa:
+  trazos finos irregulares y pequeños surcos claros, dentro de la madera. Se
+  elimina CarvedTeamLabel y sus letras, sombras y biseles superpuestos. Es la
+  única inscripción integrada en el fondo; todos los otros títulos, emblemas y
+  datos permanecen en la interfaz. No se inventa escritura decorativa.
+- Se elimina club-scene-surround y el blur lateral. El nuevo plano 2:1 ocupa
+  todo el ancho y alto disponible; su margen ambiental permite ajustar las
+  cuatro resoluciones sin recortar la composición funcional ni VESTUARIO.
+- Hotspots registrados sobre la nueva ilustración, con las mismas acciones y
+  orden de teclado. Equipo ilumina el tablón original y las camisetas; los
+  contornos de Entrenamientos siguen el papel, celo, conos, petos, ropa, bolsas,
+  balones y soportes, sin marco rectangular general. Datos del corcho dentro
+  de sus papeles. Cabecera y teléfono global conservados.
+- Sin dependencias, cambios de dominio, aleatoriedad ni funcionalidad nueva
+  preparada pero inactiva. Inventario y prompts en CLUB_PANEL_WIDE_ASSET.md.
+  Sin commit ni push.
+- Comprobado con Vite y Chrome aislado en 1920×1080, 1600×900, 1440×900 y
+  1366×768: plano cubriendo todo el contenido, siete hotspots y rótulos dentro
+  del área visible, datos completos en los papeles, sin capas laterales ni
+  letras superpuestas. Hover, 28 clics, Tab, Enter/Espacio, teléfono y tutorial
+  correctos; cero errores de consola. Build, lint, diff check y 129 tests pasan.
+  Se conserva el aviso existente de tamaño del bundle.
+
+## Panel: última referencia principal y HUD de videojuego · 2026-09-27
+
+- La nueva imagen del usuario sustituye las referencias anteriores. Se activa
+  club-panel-reference.png (1619×971); los dos fondos previos se conservan sin
+  uso. La habitación reproduce ventana, camisetas, pizarra, estantería, puerta,
+  dos corchos y portátil. Se completa el teclado en el primer plano.
+- El usuario pide títulos físicos integrados: los siete nombres permanecen en
+  sus superficies del bitmap. Esto es una excepción explícita a la regla de
+  fondos sin escritura. No se inventan textos decorativos. EQUIPO tiene letras
+  manuales de anchos y alturas distintos, con arañazos finos interrumpidos dentro
+  de la madera, sin relieve hacia fuera ni tipografía superpuesta. El hover
+  ilumina la textura original. No se hornean datos reales, UI ni selecciones.
+- La cabecera cambia solo en el Panel: HUD navy translúcido, escudo, calendario,
+  papel del rival y CONTINUAR. Reutiliza las mismas acciones y datos. La imagen
+  única continúa detrás del HUD. Su escala y origen se limitan por la geometría
+  de los siete objetos, manteniendo completo VESTUARIO y el portátil sin bandas,
+  blur ni duplicación de fondo en las cuatro resoluciones solicitadas.
+- Los botones nativos reutilizan las siete acciones y orden de teclado. El
+  brillo es sutil; Entrenamientos usa máscara y contornos de objetos separados.
+  Los datos actuales del corcho se sitúan bajo sus títulos manuscritos y la letra
+  de clasificación se aumenta. Teléfono global, tutorial y dominio conservados.
+- En ventanas estrechas se recorre la habitación con desplazamiento horizontal
+  local para conservar tamaños legibles. En paisaje muy bajo se permite scroll
+  vertical local. No desborda la página ni se añade otra navegación.
+- Inventario y prompts exactos de imagegen integrado en CLUB_PANEL_REFERENCE.md.
+  Sin dependencias, aleatoriedad nueva, funciones inactivas, commit ni push.
+- Verificado en Vite y Chrome aislado: 1920×1080, 1600×900, 1440×900, 1366×768,
+  siete hovers y clics por tamaño, objetos completos bajo la cabecera, foco,
+  Tab, Enter/Espacio, teléfono con contador real, tutorial de Staff/Mensajes y
+  ventanas 390×844 y 780×390. Cero errores de consola. Build, lint, diff check
+  y 129 tests correctos; se conserva el aviso anterior de tamaño del bundle.

@@ -9,12 +9,8 @@ button, input, select, textarea { color: inherit; }
 * { scrollbar-color: var(--ui-border) var(--ui-bg-secondary); scrollbar-width: thin; }
 .management-theme :is(.primary-action, .staff-primary-button, .panel-tutorial-continue) { background: var(--ui-accent); border: 1px solid var(--ui-accent-hover); color: var(--ui-on-accent); border-radius: var(--ui-radius); }
 .management-theme :is(.primary-action, .staff-primary-button):hover { background: var(--ui-accent-hover); }
-.management-theme :is(.player-screen, .staff-screen, .training-screen, .tactics-screen, .next-match-screen, .standings-screen, .results-screen, .scorers-screen, .sanctions-screen, .pre-match-screen, .friendly-call-up-screen) { border-color: var(--ui-border); border-radius: var(--ui-radius); background: var(--ui-surface); color: var(--ui-text); }
+.management-theme :is(.player-screen, .tactics-screen, .pre-match-screen, .friendly-call-up-screen) { border-color: var(--ui-border); border-radius: var(--ui-radius); background: var(--ui-surface); color: var(--ui-text); }
 .management-theme .club-panel-screen { background: transparent; border: 0; padding: 0; gap: 16px; }
-.management-theme .dashboard-card { border: 1px solid var(--ui-border); border-radius: var(--ui-radius); background: linear-gradient(135deg, var(--ui-surface-elevated), var(--ui-surface)); box-shadow: var(--ui-shadow); padding: 22px; min-height: 190px; }
-.management-theme .dashboard-card h2 { color: var(--ui-text-secondary); font-size: 13px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 20px; }
-.management-theme .dashboard-card:hover { border-color: var(--ui-interactive); }
-.management-theme .card-main-value { font-size: 24px; font-weight: 650; }
 .management-theme .panel-objective { border-radius: var(--ui-radius); }
 .management-theme .player-portrait { background: transparent; }
 .management-theme .player-portrait--small { width: 28px; height: 32px; }

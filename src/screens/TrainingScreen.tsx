@@ -1,3 +1,5 @@
+import { MiniTacticalBoard } from '../components/MiniTacticalBoard'
+import { PageTitle } from '../components/ClubUi'
 import { useEffect, useState } from "react";
 import { PlayerDetail } from "../components/PlayerDetail";
 import { ManagementIcon, type ManagementIconName } from "../components/ManagementIcon";
@@ -121,10 +123,7 @@ function TacticalTrainingSummary({
         <div><strong className="training-formation">{plan.formation}</strong>
           <ul><li>{plan.mentality} · {plan.passingStyle}</li><li>Ritmo {plan.tempo.toLowerCase()}</li><li>{plan.afterRecovery}</li><li>Presión {plan.pressingHeight.toLowerCase()}</li><li>Intensidad {plan.pressingIntensity.toLowerCase()}</li><li>{plan.afterLoss}</li></ul>
         </div>
-        <div className="training-mini-pitch" role="img" aria-label={`Formación ${plan.formation}`}>
-          <span className="training-pitch-circle" /><span className="training-pitch-box is-top" /><span className="training-pitch-box is-bottom" />
-          {[...plan.formation.split('-').reverse().map(Number), 1].map((count, row) => <div className="training-pitch-row" key={row}>{Array.from({ length: count }, (_, index) => <ManagementIcon key={index} name="players" />)}</div>)}
-        </div>
+        <MiniTacticalBoard formation={plan.formation} />
       </div>
       <button className="training-text-button" type="button" aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>
         {expanded ? "Ocultar detalles ↑" : "Ver detalles →"}
@@ -555,16 +554,7 @@ export function TrainingScreen({
   ).length;
   return (
     <section className="training-screen">
-      <header className="training-header">
-        <button className="screen-back-button" type="button" onClick={onBack}>
-          ← Panel del club
-        </button>
-        <div>
-          <h2>Planificación de entrenamiento</h2>
-          <span>Semana {trainingState.week}</span>
-        </div>
-        {tutorialCompleted && <button className="training-help-button" type="button" onClick={() => setShowHelp((value) => !value)}>AYUDA</button>}
-      </header>
+      <PageTitle title="Planificación de entrenamiento" subtitle={"Semana " + trainingState.week + " · Preparamos la semana para seguir mejorando, partido a partido."} actions={<><button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>{tutorialCompleted && <button className="training-help-button" type="button" onClick={() => setShowHelp(value => !value)}>AYUDA</button>}</>} />
       {guided && tutorialCompleted && (
         <aside className="onboarding-prompt">
           <span>{plannedCount === 2 ? "ENTRENAMIENTO PREPARADO" : "PRIMER ENTRENAMIENTO"}</span>

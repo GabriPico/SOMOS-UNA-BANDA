@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MatchFixtureHeader } from "../components/MatchFixtureHeader";
+import { PageTitle } from '../components/ClubUi';
 import { StarRating } from "../components/StarRating";
 import { getFormLabel } from "../domain/playerPresentation";
 import { latestClubMatch } from "../domain/competitionPresentation";
@@ -68,9 +69,7 @@ export function NextMatchScreen({
   if (!nextMatch)
     return (
       <section className="next-match-screen competition-screen">
-        <button className="screen-back-button" type="button" onClick={onBack}>
-          ← Panel del club
-        </button>
+        <PageTitle title="Próximo partido" subtitle="Calendario del club" actions={<button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>} />
         <div className="next-match-block">
           <p>No hay ningún próximo partido programado.</p>
           {lastMatch && <button className="competition-primary" type="button" onClick={() => onOpenReport(lastMatch.id)}>Ver acta del último partido →</button>}
@@ -104,16 +103,11 @@ export function NextMatchScreen({
 
   return (
     <section className="next-match-screen competition-screen">
-      <div className="competition-toolbar">
-        <button className="screen-back-button" type="button" onClick={onBack}>
-          ← Panel del club
-        </button>
-        {lastMatch && <button className="competition-back" type="button" onClick={() => onOpenReport(lastMatch.id)}>Acta del último partido →</button>}
-      </div>
         <MatchFixtureHeader
           match={nextMatch}
           teams={leagueTeams}
           title="Próximo partido"
+          actions={<><button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>{lastMatch && <button className="competition-back" type="button" onClick={() => onOpenReport(lastMatch.id)}>Acta del último partido →</button>}</>}
         />
         <section className="opponent-status">
           <h3>{opponentName}</h3>

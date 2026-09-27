@@ -1,3 +1,4 @@
+import { PageTitle } from '../components/ClubUi'
 import { useEffect, useRef, type ComponentProps } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
 import { ClubPlayerFile } from '../components/ClubPlayerFile'
@@ -12,7 +13,7 @@ export function PlayerProfileScreen({ origin, onBack, ...detail }: Props) {
   const backButton = useRef<HTMLButtonElement>(null)
   useEffect(() => { window.scrollTo(0, 0); backButton.current?.focus({ preventScroll: true }) }, [])
   return <section className="player-profile-screen" aria-label={`Perfil de ${detail.player.name}`}>
-    <header className="player-profile-navigation"><div><button type="button" ref={backButton} onClick={onBack}>← Volver a {origin === 'tactics' ? 'Tácticas' : 'Equipo'}</button><span>Perfil de jugador</span></div></header>
+    <PageTitle title="Perfil de jugador" subtitle={detail.player.name} actions={<button type="button" ref={backButton} onClick={onBack}>← Volver a {origin === "tactics" ? "Tácticas" : "Equipo"}</button>} />
     <ClubPlayerFile {...detail} variant="page" />
   </section>
 }

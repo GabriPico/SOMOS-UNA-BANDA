@@ -1,5 +1,20 @@
 ﻿# Sistema visual del juego
 
+## Estado vigente · 26/09/2026
+
+Las áreas principales comparten PageTitle, tipografía Bahnschrift, papel crema,
+estructura navy y acentos apagados. Panel es un hub de siete accesos; Staff y
+Entrenamientos adoptan esa identidad conservando sus operaciones. Las escenas
+usan cinco parejas día/noche, elegidas por la hora de la partida (07:00/19:30).
+No se usan transparencias ni desenfoques para esconder sus fondos. El teléfono
+conserva sus estilos y navegación global. La especificación vigente, archivos y
+pruebas se detallan en [GLOBAL_UI_REDESIGN.md](GLOBAL_UI_REDESIGN.md).
+
+Las secciones siguientes conservan el histórico. Las referencias a pantallas
+pendientes de migrar, títulos antiguos, superficies translúcidas y fondos de hora
+fija quedan sustituidas por esta revisión.
+
+
 Actualización de Mensajes (2026-09-25): las descripciones históricas de oficina y
 móvil en mano quedan sustituidas por el teléfono global de
 [MESSAGING_SYSTEM.md](MESSAGING_SYSTEM.md). La barra navy inferior derecha despliega
@@ -498,3 +513,38 @@ controles y del contenido inferior. Los subtítulos se limitan a dos líneas.
   nombres accesibles, estados vacíos y contraste de botones rojos.
 - Pantallas comprobadas a 1920×1080, 1366×768, 1024×768 y 390×844. Funcionamiento
   y límites del archivo documentados en COMPETITION_SYSTEM.md.
+
+### Panel · habitación interactiva (2026-09-26)
+
+- Sustituye el Panel de tarjetas por objetos integrados en una habitación modesta
+  de club amateur. Sin sidebar. El escudo permite volver al Panel. Por petición
+  del usuario, solo la cabecera del Panel pasa a un HUD navy translúcido sobre
+  la propia habitación; fecha, rival, competición y CONTINUAR conservan su lógica.
+- Fondo activo club-panel-reference.png (1619×971), basado en la última referencia
+  principal del usuario, sin datos, UI ni hover horneados. Por petición explícita,
+  los siete títulos físicos están en las superficies del bitmap. Fecha, equipos,
+  emblemas y clasificación siguen siendo interfaz con datos reales. Se conserva
+  la luz cálida de la referencia; no se modifica el reloj de partida.
+- SceneHotspot comparte acciones, teclado, aria-label y recorte poligonal. Brillo
+  local y contornos de 180 ms al pasar el cursor; línea discontinua en foco. Las
+  camisetas tienen contornos individuales, sin brillo inicial.
+- Caveat local con OFL para los datos manuscritos del corcho. Kalam queda
+  conservada como asset anterior. EQUIPO
+  tiene letras desiguales y arañazos finos interrumpidos dentro de la madera de
+  la ilustración, sin componente de texto ni relieve superpuesto. El hover
+  ilumina la textura del propio tablón y las camisetas. Tácticas usa
+  rotulador; Entrenamientos está en la hoja torcida con celo del fondo;
+  VESTUARIO permanece sobre la puerta. Los papeles del corcho y el post-it del
+  portátil conservan sus propios tamaños e inclinaciones.
+- Escena proporcional que llena el ancho y continúa detrás del HUD. Su origen se
+  limita por los extremos de los objetos: los siete hotspots, VESTUARIO y el
+  portátil completo quedan bajo la cabecera y dentro del área visible en las
+  cuatro resoluciones. Solo se recortan detalles periféricos. Sin bandas, blur
+  ni fondo duplicado. En ventanas estrechas se recorre el plano horizontalmente;
+  en paisaje muy bajo, verticalmente. Botones, SVG y escritura comparten escala
+  y porcentajes. El hover de Entrenamientos sigue el
+  material y el papel mediante contornos y máscaras, respetando los objetos
+  situados delante, sin un marco rectangular. El tutorial
+  reutiliza los objetivos existentes, con objeto y diálogo en capas separadas.
+- No hay hotspot de Mensajes ni controles flotantes de navegación. Se reutiliza
+  ClubPhone global. Inventario, verificación y prompts en CLUB_PANEL_REFERENCE.md.

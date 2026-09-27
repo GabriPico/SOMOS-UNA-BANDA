@@ -1,8 +1,9 @@
-﻿.app-shell { min-height: 100svh; display: grid; grid-template-columns: var(--ui-sidebar-width) minmax(0, 1fr); grid-template-rows: var(--ui-header-height) minmax(0, 1fr); background: radial-gradient(ellipse at 75% 0%, var(--ui-surface-elevated), transparent 65%), var(--ui-bg); color: var(--ui-text); }
+﻿.app-shell { --ui-sidebar-width: 0px; min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--ui-header-height) minmax(0, 1fr); background: var(--ui-bg); color: var(--ui-text); }
 .topbar { grid-column: 1 / -1; position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 22px; min-width: 0; padding: 12px 20px; background: color-mix(in srgb, var(--ui-bg-secondary) 94%, transparent); backdrop-filter: none; border-bottom: 1px solid var(--ui-border); }
 .club-brand { display: flex; align-items: center; gap: 38px; flex: 1; min-width: 0; }
 .club-crest { width: 48px; height: 60px; flex-shrink: 0; }
 .club-brand h1 { margin: 0; font-size: clamp(24px, 2.5vw, 44px); font-weight: 750; letter-spacing: -.025em; text-transform: uppercase; white-space: nowrap; }
+.club-home-button { display: flex; padding: 0; border: 0; background: transparent; cursor: pointer; }
 .header-calendar { display: grid; gap: 5px; text-align: right; text-transform: uppercase; }
 .header-calendar strong { font-size: 14px; font-weight: 500; }
 .header-calendar span { color: var(--ui-text-secondary); font-size: 11px; letter-spacing: .05em; }

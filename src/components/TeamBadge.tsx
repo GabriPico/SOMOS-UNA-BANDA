@@ -8,6 +8,6 @@ export function TeamBadge({ teamId, name, large = false }: { teamId: string; nam
     <path d="M5 5Q28 0 51 5V32Q51 48 28 60Q5 48 5 32Z" fill={primary} stroke={secondary} strokeWidth="2.5" />
     <path d="M13 27v13l7 7V27m8 0v27l8-6V27m8 0v12" fill={secondary} opacity=".85" />
     <path d="M7 24h42" stroke={secondary} />
-    <text x="28" y="19" fill={secondary} textAnchor="middle" fontSize="11" fontFamily="Arial, sans-serif" fontWeight="800">{initials}</text>
+    <text x="28" y="19" fill={secondary} textAnchor="middle" fontSize="11" fontFamily="var(--club-font)" fontWeight="800">{initials}</text>
   </svg>
 }

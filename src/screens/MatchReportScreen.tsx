@@ -37,8 +37,7 @@ export function MatchReportScreen({ match, report, onBack, onContinue }: Props) 
   useEffect(() => { window.scrollTo(0, 0) }, [match.id])
   const played = match.status === 'played'
   return <section className="competition-screen match-report-screen">
-    <div className="competition-toolbar"><button type="button" className="competition-back" onClick={onBack}>← Volver a resultados</button>{onContinue && <button type="button" className="competition-primary" onClick={onContinue}>Continuar →</button>}</div>
-    <MatchFixtureHeader match={match} teams={leagueTeams} title={played ? 'Acta del partido' : 'Ficha del partido'} />
+    <MatchFixtureHeader match={match} teams={leagueTeams} title={played ? 'Acta del partido' : 'Ficha del partido'} actions={<><button type="button" className="competition-back" onClick={onBack}>← Volver a resultados</button>{onContinue && <button type="button" className="competition-primary" onClick={onContinue}>Continuar →</button>}</>} />
     <p className="competition-breadcrumb">COMPETICIÓN <span>/</span> {match.competitionType === 'FRIENDLY' ? 'AMISTOSOS' : `4a CATALANA / JORNADA ${match.matchday}`} <span>/</span> {played ? 'ACTA' : 'PREVIA'}</p>
     {!played ? <p className="competition-empty competition-panel">El partido está pendiente. El acta estará disponible cuando finalice.</p> : <>
       {!report.complete && <p className="competition-notice">Este resultado conserva el marcador y los goles. No se registró un acta detallada del encuentro.</p>}

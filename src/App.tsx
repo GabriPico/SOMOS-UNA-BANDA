@@ -1,3 +1,4 @@
+import { getEnvironmentMode } from './presentation/environment';
 import { Activity, lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { AppShell } from "./components/AppShell";
 import type { ScreenId, TacticalPlan } from "./domain/models";
@@ -92,17 +93,6 @@ import { createLockerRoomJokerNarrativeScene, createManoloConversationScene, cre
 const DevMenu = import.meta.env.DEV
   ? lazy(() => import("./dev/DevMenu"))
   : null;
-
-const navItems: { id: ScreenId; label: string }[] = [
-  { id: "club-panel", label: "Panel" },
-  { id: "squad", label: "Equipo" },
-  { id: "tactics", label: "Tácticas" },
-  { id: "training", label: "Entrenamientos" },
-  { id: "dressing-room", label: "Estado del vestuario" },
-  { id: "next-match", label: "Próximo partido" },
-  { id: "standings", label: "Clasificación" },
-  { id: "staff", label: "Staff" },
-];
 
 function OnboardingPrompt({
   visible,
@@ -221,7 +211,6 @@ function App() {
   const selectablePlayerIds = gameState.squadSelections[nextScheduledMatch?.id ?? ""]?.announced
     ? gameState.squadSelections[nextScheduledMatch?.id ?? ""]?.playerIds
     : undefined;
-  const visibleNavItems = navItems;
   const profilePlayer = players.find(player => player.id === profilePlayerId);
   const profileContext = profilePlayer ? {
     injured: gameState.injuredPlayerIds.includes(profilePlayer.id),
@@ -239,10 +228,6 @@ function App() {
     ) &&
     (!selectablePlayerIds ||
       lineupIds.every((id) => selectablePlayerIds.includes(id)));
-  const nextCheckpoint =
-    nextPendingEvent.kind === "TEMPORAL"
-      ? nextPendingEvent.checkpoint
-      : undefined;
   const consumeFeedback = useCallback((ids: string[]) => setGameState((current) => consumeConsequenceFeedback(current, ids)), []);
   const dismissFeedback = useCallback((id: string) => setGameState((current) => dismissConsequenceFeedback(current, id)), []);
 
@@ -868,11 +853,11 @@ function App() {
 
   return (
     <>
-      <ConsequenceFeedback key={devScenarioRevision} queue={gameState.consequences.feedbackQueue} onConsume={consumeFeedback} onDismiss={dismissFeedback} />
-      <DevErrorBoundary key={devScenarioRevision} enabled={import.meta.env.DEV} scenarioLabel={devScenarioId ?? activeScreen} onResetScenario={resetActiveDevScenario} onReturnToDev={returnToDevPanel}><AppShell
+      <ConsequenceFeedback key={"feedback:" + devScenarioRevision} queue={gameState.consequences.feedbackQueue} onConsume={consumeFeedback} onDismiss={dismissFeedback} />
+      <DevErrorBoundary key={"boundary:" + devScenarioRevision} enabled={import.meta.env.DEV} scenarioLabel={devScenarioId ?? activeScreen} onResetScenario={resetActiveDevScenario} onReturnToDev={returnToDevPanel}><AppShell
         activeScreen={activeScreen}
+        environmentMode={getEnvironmentMode(gameState.temporal.currentDateTime)}
         contentView={profilePlayer ? 'player-profile' : undefined}
-        navItems={visibleNavItems}
         onNavigate={(screen) => {
           if (!isDevNavigation && !canNavigateDuringTutorial(gameState.onboarding, screen)) return;
           setProfilePlayerId(null);
@@ -897,17 +882,8 @@ function App() {
         <Activity mode={profilePlayer ? 'hidden' : 'visible'}>
         {activeScreen === "club-panel" && (
           <ClubPanelScreen
-            tacticalPlan={tacticalPlan}
-            trainingState={trainingState}
-            conversations={gameState.conversations}
-            secondSessionNeedsReview={gameState.secondSessionPlanningDecision?.status === 'REVIEW_REQUIRED'}
-            expectations={gameState.expectations}
-            matches={gameState.temporal.calendar}
+            gameState={gameState}
             currentMatchday={getCurrentMatchday(gameState)}
-            nextCheckpoint={nextCheckpoint}
-            squadSelections={gameState.squadSelections}
-            continueLabel={nextPendingEvent.label}
-            onboarding={gameState.onboarding}
             onTourComplete={() => setGameState((current) => completeOnboardingMilestone(current, current.onboarding.active === 'CLUB_PANEL_INTRO' ? 'CLUB_PANEL_INTRO' : 'CLUB_PANEL_TOUR'))}
             onContinue={continueGame}
             onOpenStaff={() => openOnboardingSection("staff")}
@@ -926,7 +902,6 @@ function App() {
             onOpenLeague={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'standings')) ? setActiveScreen("standings") : undefined}
             onOpenNextMatch={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'next-match')) ? setActiveScreen("next-match") : undefined}
             onOpenDressingRoom={() => (isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'dressing-room')) ? setActiveScreen("dressing-room") : undefined}
-            onOpenInbox={openClubPhone}
           />
         )}
         {activeScreen === "next-match" && (
@@ -1000,6 +975,8 @@ function App() {
               onContinue={continueOnboardingScreen}
             />
             <StaffScreen
+              president={gameState.president}
+              presidentRelationship={gameState.presidentRelationship}
               staffState={gameState.staff}
               sportsBudget={gameState.sportsBudget}
               playerCompensations={Object.values(

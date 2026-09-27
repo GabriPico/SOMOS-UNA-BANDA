@@ -3,7 +3,7 @@
   background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-card);
   box-shadow: var(--shadow-small); color: var(--text-primary); backdrop-filter: none;
 }
-.club-card { padding: 16px; min-width: 0; }
+.club-card { padding: var(--card-padding, 16px); min-width: 0; }
 .club-card h3 { margin: 0 0 12px; font-size: 14px; text-transform: uppercase; font-weight: 650; }
 .club-interactive-card { cursor: pointer; text-align: left; transition: border-color 140ms, transform 140ms, box-shadow 140ms; }
 .club-interactive-card:hover { border-color: var(--club-blue); box-shadow: 0 3px 6px #1b303024; transform: translateY(-2px); }

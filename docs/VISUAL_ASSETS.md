@@ -1,5 +1,19 @@
 # Recursos ambientales del club
 
+## Localizaciones sincronizadas · 26/09/2026
+
+Registro activo: `src/data/clubEnvironments.ts`; render común: `ClubEnvironment`.
+Se conservan las imágenes anteriores y se añaden `club-office-night.png`,
+`squad-night.png`, `training-day.png`, `locker-room-night.png`, `staff-day.png` y
+`staff-night.png` en `public/assets/materials/`. Las cinco parejas y sus respaldos
+existen. Los nombres históricos de los assets se mantienen para no duplicarlos.
+
+El nuevo staff es una oficina/almacén modesto. Las variantes se generaron con
+imagegen integrado, conservando cámara y composición y cambiando iluminación y
+exterior, sin texto ambiental legible. Prompts y uso en
+[GLOBAL_UI_REDESIGN.md](GLOBAL_UI_REDESIGN.md).
+
+
 ## Campo de Entrenamientos ilustrado · 2026-09-24
 
 - Recurso activo: `public/assets/materials/club-training-night-illustrated.png`,
@@ -193,4 +207,56 @@ Change ONLY the visible hand/wrist:
 - The sleeve can still be recognized; the hand itself should be perceived only after the illuminated phone, quietly supported from behind. Keep the full screen uncovered and empty.
 
 Retain the same semi-realistic hand-painted videogame illustration style, no photorealism, no anime, no exaggerated cel shading. All pixels outside the revised phone/hand/sleeve silhouette must be genuinely transparent alpha. Preserve the phone exactly. No added props, text, logos, messages, interface, watermarks or background. Output ONE transparent portrait PNG, 1024x1536.
+```
+
+## Panel: nueva referencia principal activa · 2026-09-27
+
+- Recurso activo: public/assets/materials/club-panel-reference.png, PNG de
+  1619×971 px y 2 097 763 bytes. Generado mediante imagegen integrado a partir
+  de la última imagen del usuario; composición cálida y modesta equivalente.
+- Se retiran HUD y teléfono de la referencia; se vacían los datos del corcho.
+  Los siete títulos físicos pedidos quedan en sus superficies. EQUIPO se afina
+  como letras manuales desiguales, con arañazos e incisiones interrumpidas,
+  sin tipografía ni bisel superpuestos. Se completa el teclado del portátil.
+- Ningún dato de juego, escudo ni estado de hover está horneado. La interfaz
+  reutiliza partido, fecha y clasificación reales. HUD y teléfono son componentes.
+- Los fondos club-panel-room.png y club-panel-room-wide.png quedan conservados
+  e inactivos. El encuadre usa límites funcionales, sin blur ni bandas laterales.
+- Inventario, decisiones y tres prompts exactos en CLUB_PANEL_REFERENCE.md.
+
+## Panel: composición ancha anterior · 2026-09-27
+
+- Recurso anterior: public/assets/materials/club-panel-room-wide.png, PNG de
+  1774×887 px, 2:1 y 2 184 620 bytes, generado mediante imagegen integrado.
+- Sustituye el fondo del Panel manteniendo el mismo concepto y las siete rutas.
+  La composición reserva márgenes ambientales alrededor de los elementos
+  funcionales, de modo que el ajuste a pantalla llena no corta los hotspots.
+  No utiliza bandas, blur ni transparencias laterales.
+- EQUIPO es una marca física rayada en la madera por petición expresa del
+  usuario, sin texto SVG ni relieve superpuesto. Es la única inscripción del
+  bitmap. El resto de superficies permanece vacío para la interfaz y los datos
+  actuales de la partida. Sin UI ni estados de hover horneados.
+- Se conserva club-panel-room.png como recurso anterior, sin uso en el Panel.
+  Prompts exactos y archivos modificados en CLUB_PANEL_WIDE_ASSET.md.
+
+## Panel: habitación interactiva anterior · 2026-09-26
+
+- Recurso nuevo: public/assets/materials/club-panel-room.png, PNG de 1733×907 px,
+  2.03 MB. Generado mediante imagegen integrado a partir de la referencia del
+  usuario y copiado íntegro al proyecto. No se sustituye ningún fondo anterior.
+- Ilustración de club amateur con superficies vacías para los rótulos HTML/SVG:
+  perchero, pizarra, hoja con celo, cartel de puerta, dos papeles con chinchetas y
+  post-it en portátil genérico. Sin UI, cursor, escritura legible ni hover fijo.
+- La escena usa las dos fuentes libres locales public/assets/fonts/Caveat.ttf
+  y Kalam-Regular.ttf, descargadas del repositorio oficial google/fonts. Cada
+  familia conserva su licencia OFL en el mismo directorio. No son dependencias
+  npm ni requieren peticiones externas al ejecutar el juego.
+- El fondo mantiene la iluminación cálida de la referencia. Toda la información
+  dinámica procede de la interfaz, incluido el emblema superpuesto al banderín.
+  Registro y comportamiento en docs/CLUB_PANEL_HUB.md.
+
+### Prompt final (herramienta integrada)
+
+```text
+Use case: precise-object-edit. Asset: landscape background illustration for a 2D amateur Catalan football club game. Edit the user reference image into the CLEAN ROOM BACKGROUND ONLY, preserving its exact room composition, camera angle, proportions, detailed painted videogame illustration style, warm light, worn modest white plaster / blue lower walls, shelf of hanging royal blue shirts on the left, tactical board middle-left, steel training rack center, open blue door center-right, two corkboards right, old generic laptop bottom-left and cluttered wooden desk foreground. REMOVE the entire top UI header and lower right message widget, so the output depicts only the room wall-to-wall, no UI anywhere. Remove cursor. REMOVE ALL BLUE HOVER GLOW from shirts and wood; all objects are neutral normal state. Remove ALL legible writing, logos, crests and numbers from ALL objects, especially EQUIPO wood, tactical board title, shelf paper, door sign, laptop post-it, shirt numbers, banners and next match / standings papers. Keep the physical blank surfaces for HTML overlay: wood above shirts, tactical-board upper title blank (keep pitch drawing and magnets), blank crooked paper taped to training shelf, blank aged rectangular sign above open door, blank yellow crooked sticky note on laptop, two large blank papers pinned on right corkboards. Keep tactical pitch drawing and magnets without lettering. Background photo frame may have tiny indistinguishable people but no text. Two corkboard papers must have no crests or table contents or headings; the app will render LIVE CONTENT over these papers. No text, no lettering, no numbers, no watermark, no buttons, no UI, no glowing selection. DO NOT MOVE OBJECTS. Precisely preserve relationship of room objects from reference, excluding top UI strip. Landscape aspect ratio approximately 1.94:1 (reference room below header). High resolution.
 ```

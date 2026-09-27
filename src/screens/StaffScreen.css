@@ -1,5 +1,35 @@
-.staff-screen { background: var(--ui-surface); border: 1px solid var(--ui-border); padding: 20px; }.staff-screen h2, .staff-screen h3 { margin-top: 0; }.staff-intro { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 18px; }.staff-intro p, .staff-budget > p, .club-personnel > p { color: var(--ui-text-secondary); margin-bottom: 0; }.staff-primary-button { background: var(--ui-bg-secondary); border-color: var(--ui-border); color: var(--ui-text); }.staff-secondary-button { background: var(--ui-surface); border-color: var(--ui-border); }
-.staff-table-wrapper { overflow-x: auto; }.staff-table { border-collapse: collapse; min-width: 720px; width: 100%; }.staff-table th, .staff-table td { border-bottom: 1px solid var(--ui-border); padding: 10px 12px; text-align: left; white-space: nowrap; }.staff-table th { background: var(--ui-surface-elevated); font-weight: 600; }.staff-table tbody tr { cursor: pointer; }.staff-table tbody tr:hover, .staff-table tbody tr:focus { background: var(--ui-surface-elevated); outline: none; }.staff-table td button { padding: 0; border: 0; background: transparent; color: var(--ui-text); font: inherit; font-weight: 600; text-decoration: underline; }
-.staff-budget, .club-personnel { margin-top: 26px; border-top: 1px solid var(--ui-border); padding-top: 20px; }.staff-budget dl { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 0; }.staff-budget dl div { background: var(--ui-surface-elevated); border: 1px solid var(--ui-border); padding: 12px; }.staff-budget dt { color: var(--ui-text-secondary); font-size: .82rem; }.staff-budget dd { margin: 5px 0 0; font-weight: 700; }.staff-search-status { color: var(--ui-warning); display: block; margin-top: 8px; }
-.club-personnel > button { display: grid; grid-template-columns: 180px 180px 1fr; gap: 14px; align-items: center; width: 100%; border: 1px solid var(--ui-border); background: var(--ui-surface); padding: 14px; text-align: left; }.club-personnel small { color: var(--ui-text-secondary); line-height: 1.4; }
-@media (max-width: 700px) { .staff-intro { align-items: stretch; flex-direction: column; }.staff-budget dl { grid-template-columns: repeat(2, 1fr); }.club-personnel > button { grid-template-columns: 1fr; gap: 4px; } }
+.staff-screen { width: min(100%, 1030px); padding-bottom: 100px; }
+.staff-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 290px; align-items: start; gap: 22px; padding-top: clamp(12px, 3dvh, 30px); }
+.staff-roster { padding: 18px; }
+.staff-intro { margin: 0 0 15px; color: var(--text-secondary); font-size: 13px; }
+.staff-table-wrapper { overflow-x: auto; }
+.staff-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.staff-table th, .staff-table td { text-align: left; padding: 11px 8px; border-bottom: 1px solid var(--border); }
+.staff-table th { background: var(--paper-muted); font-size: 11px; font-weight: 650; }
+.staff-table tbody tr { cursor: pointer; }
+.staff-table tbody tr:hover, .staff-table tbody tr:focus-within { background: var(--paper-muted); }
+.staff-table td button { padding: 0; border: 0; background: none; color: var(--club-blue); font: inherit; font-weight: 650; text-align: left; text-decoration: underline; cursor: pointer; }
+.staff-search-status { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 15px; font-size: 12px; color: var(--text-secondary); }
+.staff-search-status button { font-size: 11px; white-space: nowrap; }
+.staff-finances { display: grid; grid-column: 2; grid-row: 1 / 3; gap: 18px; }
+.staff-person-heading { display: flex; gap: 14px; align-items: center; }
+.staff-person-heading h3 { margin-bottom: 4px; text-transform: none; font-size: 19px; }
+.staff-person-heading span { font-size: 12px; color: var(--text-secondary); }
+.staff-avatar { width: 52px; height: 60px; background: var(--paper-muted); border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--club-blue); font-size: 25px !important; font-weight: 700; }
+.staff-president > p, .staff-budget > p, .club-personnel > p { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0; }
+.staff-relationship { display: grid; gap: 12px; margin: 14px 0 0; }
+.staff-relationship > div { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 12px; }
+.staff-relationship dd { margin: 0; text-align: right; font-weight: 650; }
+.staff-relationship meter { grid-column: 1 / -1; width: 100%; }
+.staff-budget dl { margin: 0; }
+.staff-budget dl > div { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 7px 0; font-size: 13px; }
+.staff-budget dd { margin: 0; font-weight: 650; }
+.staff-budget dl > div:last-child { color: var(--positive); font-weight: 700; }
+.club-personnel { grid-column: 1; }
+.staff-personnel-button { width: 100%; display: flex; align-items: center; gap: 14px; text-align: left; background: none; border: 0; padding: 0; color: var(--text-primary); cursor: pointer; }
+.staff-personnel-button > span:nth-child(2) { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.staff-personnel-button strong { font-size: 16px; }
+.staff-personnel-button small { color: var(--text-secondary); }
+@media (max-width: 1400px) { .staff-screen { max-width: 1010px; } .staff-workspace { gap: 16px; padding-top: 8px; } .staff-finances { gap: 16px; } }
+@media (max-width: 1000px) { .staff-workspace { grid-template-columns: 1fr; } .staff-finances { grid-column: 1; grid-row: auto; grid-template-columns: 1fr 1fr; } .staff-search-status { flex-wrap: wrap; } .club-personnel { width: 100%; } }
+@media (max-width: 650px) { .staff-finances { grid-template-columns: 1fr; } .staff-table { min-width: 580px; } }

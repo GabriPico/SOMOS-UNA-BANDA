@@ -1,3 +1,4 @@
+import { PageTitle } from '../components/ClubUi'
 import { useState } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
 import { ManagementIcon } from '../components/ManagementIcon'
@@ -23,10 +24,10 @@ type Props = {
   lineupIds: number[]; onLineupChange: (ids: number[]) => void; trainingState: TrainingGameState
   staffMembers?: StaffPerson[]; seed?: number; preseason?: boolean; selectablePlayerIds?: number[]
   injuredPlayerIds?: number[]; onOpenPlayer?: (id: number) => void
-  eligibility?: Record<number, PlayerEligibility>; seasonLabel?: string
+  eligibility?: Record<number, PlayerEligibility>; seasonLabel?: string; showTitle?: boolean
 }
 
-export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange, lineupIds, onLineupChange, trainingState, staffMembers = [], seed = 0, preseason = false, selectablePlayerIds, injuredPlayerIds = [], eligibility, onOpenPlayer }: Props) {
+export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange, lineupIds, onLineupChange, trainingState, staffMembers = [], seed = 0, preseason = false, selectablePlayerIds, injuredPlayerIds = [], eligibility, onOpenPlayer, showTitle = true }: Props) {
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null)
   const [proposal, setProposal] = useState<AssistantLineupProposal | null>(null)
   const [lineupError, setLineupError] = useState<string>()
@@ -80,10 +81,7 @@ export function TacticsScreen({ onBack, tacticalPlan, onTacticalPlanChange, line
   }
 
   return <section className="tactics-screen tactics-screen--visual">
-    <header className="tactics-header screen-header">
-      <div><h2>Tácticas</h2><TacticalSummary plan={tacticalPlan}  /></div>
-      <button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>
-    </header>
+    {showTitle && <PageTitle className="tactics-header" title="Tácticas" subtitle={<TacticalSummary plan={tacticalPlan} />} actions={<button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>} />}
     {proposal && <section className="assistant-lineup-preview" aria-label="Propuesta del segundo"><div><h3>{proposal.assistantName} propone {proposal.plan.formation}</h3>{proposal.reasons.map(reason => <p key={reason}>{reason}</p>)}<p>{proposal.lineupIds.map(id => players.find(player => player.id === id)?.name.split(' ')[0]).join(' · ')}</p></div><div className="assistant-proposal-actions">
       <button type="button" onClick={() => setProposal(null)}>CANCELAR</button><button className="primary-action" type="button" onClick={() => { onTacticalPlanChange(proposal.plan); onLineupChange(proposal.lineupIds); setSelectedPlayerId(null); setLineupError(undefined); setProposal(null) }}>APLICAR</button></div></section>}
     <TacticalDrag onMove={movePlayer} feedback={dropFeedback} getPlayer={source => { const player = sourcePlayer(source); return player ? view(player) : undefined }}>

@@ -17,7 +17,7 @@ export function ResultsScreen({ liveMatches, currentMatchday, onBack, onOpenStan
 
   return (
     <section className="results-screen competition-screen">
-      <CompetitionHeader matches={liveMatches} onBack={onBack} />
+      <CompetitionHeader title="Resultados" matches={liveMatches} onBack={onBack} />
 
       <LeagueTabs activeTab="results" onSelect={(tab) => { if (tab === 'standings') onOpenStandings(); if (tab === 'sanctions') onOpenSanctions(); if (tab === 'scorers') onOpenScorers() }} />
       <div className="competition-toolbar"><div className="results-filter" aria-label="Competición de los resultados"><button type="button" aria-pressed={competition === 'league'} onClick={() => setCompetition('league')}>Liga</button><button type="button" aria-pressed={competition === 'friendly'} onClick={() => setCompetition('friendly')}>Amistosos</button></div><span>Consulta el calendario y las actas de cada partido.</span></div>

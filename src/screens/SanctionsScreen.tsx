@@ -1,3 +1,4 @@
+import { PageTitle } from '../components/ClubUi'
 import { LeagueTabs } from '../components/LeagueTabs'
 import { MatchdaySelector } from '../components/MatchdaySelector'
 import { leagueSanctions, leagueSeason, leagueTeams, players, rivalPlayers } from '../data/mockData'
@@ -14,11 +15,8 @@ export function SanctionsScreen({ onBack, onOpenResults, onOpenStandings, onOpen
   const sanctions = getSanctionsForMatchday(leagueSanctions, selectedMatchday)
 
   return (
-    <section className="sanctions-screen">
-      <header className="screen-header">
-        <button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>
-        <h2>La liga</h2>
-      </header>
+    <section className="competition-screen sanctions-screen">
+      <PageTitle title="Sanciones" subtitle="El tablón de nuestra liga." actions={<button className="screen-back-button" type="button" onClick={onBack}>← Panel del club</button>} />
       <LeagueTabs activeTab="sanctions" onSelect={(tab) => { if (tab === 'results') onOpenResults(); if (tab === 'standings') onOpenStandings(); if (tab === 'scorers') onOpenScorers() }} />
       <MatchdaySelector currentMatchday={leagueSeason.currentMatchday} selectedMatchday={selectedMatchday} totalMatchdays={leagueSeason.totalMatchdays} onSelect={onMatchdayChange} />
 

@@ -10,3 +10,6 @@
 .page-title-subtitle .tactical-summary { display: flex; flex-wrap: wrap; gap: 6px; background: none; padding: 0; color: inherit; font: inherit; }
 @media (max-height: 850px) { .app-shell .content .page-title { margin-bottom: 12px; } .app-shell .content .page-title h2 { font-size: 22px; padding-block: 5px; } }
 @media (max-width: 600px) { .app-shell .content .page-title h2 { font-size: 21px; } .page-title-actions { margin-left: 0; } }
+
+.app-shell .content .page-title > .page-title-copy { display: block; }
+.app-shell .content :is(.club-panel-screen, .training-screen, .dressing-room-dashboard, .team-screen) > .page-title { margin-bottom: 0; }

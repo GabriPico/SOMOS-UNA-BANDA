@@ -1,6 +1,6 @@
 /* Scene, gentle contrast veil, then readable paper. Scoped to content only. */
 .club-material-theme :is(.content--squad, .content--dressing-room, .content--player-profile) {
-  --club-scene-paper: rgba(248, 245, 237, .88);
+  --club-scene-paper: var(--paper);
   --club-scene-rule: rgba(81, 100, 108, .3);
   --club-scene-gap: clamp(12px, 1.2vw, 22px);
 }
@@ -13,34 +13,34 @@
   background: var(--club-scene-paper);
   border-color: var(--club-scene-rule);
   box-shadow: 0 2px 4px #30291f14;
-  backdrop-filter: blur(2px);
+  backdrop-filter: none;
 }
 
 .club-material-theme .dressing-room-dashboard .player-section-title {
-  background: rgba(237, 234, 224, .48);
+  background: var(--paper-muted);
 }
 
 /* The outer navy mount must also transmit light; otherwise the paper inside
    would only reveal another opaque layer. Full profiles keep their own frame. */
 .club-material-theme .team-workspace .club-player-file-mount {
-  background: rgba(39, 65, 80, .18);
+  background: var(--club-navy);
   border-color: rgba(39, 65, 80, .7);
   box-shadow: 0 2px 4px #30291f14;
-  backdrop-filter: blur(2px);
+  backdrop-filter: none;
 }
 .club-material-theme .team-workspace .club-player-file {
   background: var(--club-scene-paper);
   box-shadow: none;
 }
 .club-material-theme .team-workspace .club-player-file .player-detail-header {
-  background: rgba(237, 234, 224, .5);
+  background: var(--paper-muted);
 }
 
 /* Let the actual grid height, including any onboarding banner, bound the
    content. Header and navigation keep their original dimensions and styling. */
 @media (min-width: 1101px) and (min-height: 650px) {
   .club-material-theme.app-shell:has(> :is(.content--squad, .content--dressing-room)) {
-    height: 100dvh;
+    height: calc(100dvh - var(--ui-dev-offset, 0px));
     min-height: 0;
   }
   .club-material-theme :is(.content--squad, .content--dressing-room) {

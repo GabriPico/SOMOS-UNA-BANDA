@@ -1,4 +1,5 @@
-﻿import { useState } from 'react'
+import { PageTitle } from '../components/ClubUi'
+import { useState } from 'react'
 import { ClubPlayerFile } from '../components/ClubPlayerFile'
 import { PlayerTable } from '../components/PlayerUi'
 import { PlayerRow } from '../components/PlayerRow'
@@ -23,13 +24,14 @@ export function TeamScreen({ playerSeasonStats, trainingState, injuredPlayerIds,
   const selectedPlayer = players.find(player => player.id === selectedId) ?? players[0]
   const statusFor = (player: typeof players[number]) => getPlayerStatus(player, trainingState.players[player.id], { injured: injuredPlayerIds.includes(player.id), eligibility: eligibility?.[player.id], observations: getTrainingObservations(trainingState, player.id) })
   return <section className="team-screen">
-    <header className="team-header"><div><h2>Plantilla</h2><p>{players.length} jugadores{visiblePlayers.length !== players.length && ` · ${visiblePlayers.length} visibles`}</p></div>
+    <PageTitle title="Plantilla" subtitle={<>{players.length} jugadores{visiblePlayers.length !== players.length && (" · " + visiblePlayers.length + " visibles")}</>} />
+    <div className="team-filter-bar">
       <div className="team-filters">
         <select aria-label="Filtrar por posición" value={position} onChange={event => setPosition(event.target.value)}><option value="">Todas las posiciones</option>{Object.entries(POSITION_LABELS).map(([id, label]) => <option key={id} value={id}>{id} · {label}</option>)}</select>
         <select aria-label="Ordenar plantilla" value={sort} onChange={event => setSort(event.target.value as SquadSort)}><option value="position">Orden: Posición</option><option value="name">Orden: Nombre</option><option value="age">Orden: Edad</option><option value="appearances">Orden: Partidos</option><option value="minutes">Orden: Minutos</option><option value="goals">Orden: Goles</option></select>
         <label className="team-search"><ManagementIcon name="search" /><input type="search" aria-label="Buscar jugador" placeholder="Buscar jugador…" value={search} onChange={event => setSearch(event.target.value)} /></label>
       </div>
-    </header>
+    </div>
     <div className="team-workspace">
       <div className="team-roster club-sheet club-sheet--stacked club-sheet--taped"><PlayerTable className="team-table" label="Tabla de jugadores del equipo">
         <colgroup>{['number', 'name', 'positions', 'age', 'played', 'minutes', 'goals', 'happiness', 'status', 'notes'].map(name => <col key={name} className={`column-${name}`} />)}</colgroup>

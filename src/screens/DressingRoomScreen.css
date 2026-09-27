@@ -1,7 +1,5 @@
 ﻿/* The existing amateur dressing room is decoration only, with no lettering. */
-.club-material-theme .content--dressing-room {
-  background: linear-gradient(rgba(248, 245, 237, .08), rgba(248, 245, 237, .02)), url('/assets/materials/club-dressing-room.png') 58% 42% / cover no-repeat;
-}
+
 .club-material-theme .content.content--dressing-room::before { content: none; }
 .dressing-room-screen { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .club-material-theme .dressing-room-dashboard {
@@ -10,14 +8,14 @@
   gap: var(--club-scene-gap);
   min-width: 0;
   width: 100%;
-  max-width: 1480px;
+  max-width: 1280px;
   min-height: 0;
   background: transparent;
 }
 .dressing-room-dashboard .management-screen-header { align-items: center; gap: 12px; }
 .dressing-room-dashboard .management-screen-header > div { min-width: 0; }
 .dressing-room-dashboard .management-back-button { white-space: nowrap; }
-.dressing-room-summary { display: grid; gap: var(--club-scene-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(70px, 15dvh, 165px); }
+.dressing-room-summary { display: grid; gap: var(--club-scene-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(60px, 11dvh, 125px); }
 @media (min-width: 1501px) {
   .dressing-room-summary { width: 54%; }
   .dressing-room-dashboard .player-compact-indicator-heading { flex-wrap: wrap; gap: 2px 8px; }

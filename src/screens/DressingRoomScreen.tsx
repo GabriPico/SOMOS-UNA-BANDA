@@ -1,3 +1,4 @@
+import { PageTitle } from '../components/ClubUi'
 import { useState } from 'react'
 import { PlayerDetail } from '../components/PlayerDetail'
 import { DressingRoomProblems } from '../components/DressingRoomProblems'
@@ -40,10 +41,7 @@ export function DressingRoomScreen({ cohesion, morale, trainingState, playerFees
 
   return <section className="dressing-room-screen">
     <div className="management-theme dressing-room-dashboard">
-      <header className="management-screen-header">
-        <div><h2>Estado del vestuario</h2><p className="management-screen-description">{getDressingRoomSummary(cohesion, morale, authority, unhappyPlayers)}</p></div>
-        <button className="management-back-button" type="button" onClick={onBack}>Panel del club →</button>
-      </header>
+      <PageTitle title="Estado del vestuario" subtitle={getDressingRoomSummary(cohesion, morale, authority, unhappyPlayers)} actions={<button className="management-back-button" type="button" onClick={onBack}>← Panel del club</button>} />
 
       <section className="dressing-room-summary" aria-label="Resumen del vestuario">
         <CompactIndicator label="Cohesión" value={getCohesionLabel(cohesion)} level={cohesion} description={getCohesionDescription(cohesion)} icon="group" />

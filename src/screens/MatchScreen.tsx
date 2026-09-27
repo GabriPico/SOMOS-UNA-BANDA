@@ -1,3 +1,4 @@
+import { PageTitle } from '../components/ClubUi'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TacticalPlan } from '../domain/models'
 import { TacticalBoard, TacticalInstructions, TacticalSquadList, TacticalSummary, type TacticalPlayerView, type TacticalSelection } from '../components/TacticalWorkspace'
@@ -113,6 +114,7 @@ export function MatchScreen({ match, assistant, onChange, onFinish }: Props) {
   const rivalChanges=match.substitutions.filter(change=>change.teamId===rival.teamId)
 
   return <section className={`match-screen${playing ? ' is-playing' : ' is-paused'}`}>
+    <PageTitle title="Día de partido" subtitle={match.home.name + " · " + match.away.name} />
     <header className="match-scoreboard">
       <span>{match.home.name}</span><strong>{match.score.home} - {match.score.away}</strong><span>{match.away.name}</span>
       <div className="match-clock"><b>{match.phase === 'FINISHED' ? 'FINAL' : clock(visualSeconds)}</b><small>{playing ? 'En juego' : match.phase === 'HALF_TIME' ? 'Descanso' : match.phase === 'FINISHED' ? 'Partido terminado' : 'Pausado'}</small></div>

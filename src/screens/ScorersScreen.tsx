@@ -15,7 +15,7 @@ export function ScorersScreen({ matches, goalEvents, currentMatchday, onBack, on
   const scorers = calculateTopScorers(goalEvents, matches, players, rivalPlayers, selectedMatchday)
   return (
     <section className="scorers-screen competition-screen">
-      <CompetitionHeader matches={matches} onBack={onBack} />
+      <CompetitionHeader title="Goleadores" matches={matches} onBack={onBack} />
       <LeagueTabs activeTab="scorers" onSelect={(tab) => { if (tab === 'results') onOpenResults(); if (tab === 'standings') onOpenStandings(); if (tab === 'sanctions') onOpenSanctions() }} />
       <MatchdaySelector currentMatchday={currentMatchday} selectedMatchday={selectedMatchday} totalMatchdays={leagueSeason.totalMatchdays} onSelect={onMatchdayChange} />
       <div className="competition-section-heading"><h3>Ranking de goleadores</h3><p>Goles de liga · Hasta la jornada {selectedMatchday}</p></div>
