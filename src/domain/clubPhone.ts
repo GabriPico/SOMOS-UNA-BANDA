@@ -1,7 +1,7 @@
 import type { GameState } from './gameState'
 import { chooseMessageResponse, getNextPendingResponse, getUnreadCount, messageNeedsResponse } from './messages'
 
-export type PhoneSection = 'ALL' | 'UNREAD' | 'CALLS'
+export type PhoneSection = 'ALL' | 'UNREAD' | 'CALLS' | 'FCF'
 export type ClubCall = {
   id: string
   participantId: string

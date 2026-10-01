@@ -1,66 +1,128 @@
-/* A compact administrative roster, using the same materials as Tácticas. */
+/* A historical wall above the existing roster and player document. */
+.club-material-theme .content.content--squad {
+  padding: clamp(14px, 1.25vw, 24px);
+  padding-bottom: 66px;
+}
+
+/* Bind the scene to the actual content row, including any DEV offset. On
+   desktop a 2:1 illustration needs only a small peripheral crop. */
+.club-material-theme .content--squad > .club-environment {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.club-material-theme .content--squad > .club-environment img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center top;
+}
 .club-material-theme .team-screen {
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: minmax(140px, 38%) auto minmax(0, 1fr);
+  gap: 10px;
   padding: 0;
   background: none;
   border: 0;
   border-radius: 0;
 }
 
-.club-material-theme .team-header h2 {
-  font-size: 23px;
-  color: var(--club-paint-dark);
-  font-family: var(--club-font-heading);
-  font-weight: 700;
-  letter-spacing: .025em;
-  text-shadow: 0 1px var(--club-paper);
+.app-shell .content .team-wall-title {
+  align-self: start;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 8px 0 0;
 }
-
-.club-material-theme .team-header p { color: var(--club-ink-muted); font-size: 10px; }
-.club-material-theme .team-header > div:first-child { display: flex; align-items: baseline; gap: 10px; padding: 4px 8px; background: var(--club-paper); border: 1px solid var(--club-paper-rule); }
+.app-shell .content .team-wall-title .page-title-actions { margin-left: 4px; }
+.app-shell .content .team-wall-title .team-back-button {
+  padding: 6px 11px;
+  border: 1px solid var(--club-paper-edge);
+  background: var(--club-paper);
+  color: var(--club-paint-dark);
+  box-shadow: 1px 2px 3px #30291f30;
+  font-size: 12px;
+}
+.app-shell .content .team-wall-title .team-back-button:hover { background: var(--club-paper-aged); }
+.app-shell .content .page-title.team-wall-title h2 {
+  position: relative;
+  padding: 7px 20px 4px;
+  border: 1px solid var(--club-paper-edge);
+  border-radius: 1px 3px 2px 1px;
+  background: var(--club-texture-grain), var(--club-paper);
+  color: var(--club-paint-dark);
+  font: 600 clamp(32px, 2.8vw, 46px)/1.15 'Club Caveat', 'Segoe Print', cursive;
+  letter-spacing: .025em;
+  transform: rotate(-1.6deg);
+  box-shadow: 1px 2px 3px #30291f38;
+}
+.team-wall-title h2::before,
+.team-wall-title h2::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--club-paint-dark);
+  box-shadow: 1px 1px 1px #30291f60;
+  pointer-events: none;
+}
+.team-wall-title h2::before { left: 5px; }
+.team-wall-title h2::after { right: 5px; }
+.app-shell .content .page-title.team-wall-title .page-title-subtitle {
+  margin-top: 9px;
+  padding: 3px 12px;
+  border: 1px solid var(--club-paper-edge);
+  background: var(--club-texture-grain), var(--club-paper);
+  color: var(--club-ink);
+  font: 400 clamp(15px, 1.2vw, 19px)/1.4 'Club Kalam', 'Segoe Print', cursive;
+  transform: rotate(.8deg);
+  box-shadow: 1px 2px 3px #30291f30;
+}
 .club-material-theme .team-filters { gap: 8px; }
-.club-material-theme .team-filters :is(select, .team-search) { height: 31px; padding-block: 4px; font-size: 12px; }
-.club-material-theme .team-search input { font-size: 12px; }
+.club-material-theme .team-filters :is(select, .team-search) { height: 40px; padding-block: 6px; font-size: 14px; }
+.club-material-theme .team-search input { font-size: 14px; }
 
 .club-material-theme .team-filters :is(select, .team-search) {
   background: var(--club-texture-grain), var(--club-paper);
-  border-color: var(--club-paper-rule);
-  box-shadow: inset 0 1px 2px #3d382119, 0 1px #f4efdf80;
+  border-color: color-mix(in srgb, var(--club-paint-dark) 60%, var(--club-paper-rule));
+  box-shadow: 0 2px 3px #30291f30;
 }
 
 .club-material-theme .team-filters select:hover,
 .club-material-theme .team-search:focus-within { border-color: var(--club-paint); }
 .club-material-theme .team-search input::placeholder { color: var(--club-ink-muted); }
 
-.club-material-theme .team-header { position: relative; margin: 0; gap: 12px; flex-shrink: 0; }
-.club-material-theme .team-workspace { min-height: 0; gap: var(--club-scene-gap); grid-template-columns: minmax(0, 1fr) minmax(360px, 29%); }
+.club-material-theme .team-workspace { min-height: 0; gap: var(--club-scene-gap); grid-template-columns: minmax(0, 7fr) minmax(320px, 3fr); align-items: stretch; }
 
 /* The roster is one ruled administrative sheet, with its original local scroll. */
-.club-material-theme .team-roster { padding: 8px 5px 5px; min-height: 0; display: flex; flex-direction: column; }
+.club-material-theme .team-roster { padding: 0; min-height: 0; display: flex; flex-direction: column; border: 1px solid var(--club-scene-rule); }
 
 .club-material-theme .team-screen .player-table-wrapper {
   min-height: 0;
   max-height: none;
   overscroll-behavior: contain;
   border: 0;
-  border-top: 1px solid var(--club-paint);
   border-bottom: 1px solid var(--club-paper-rule);
   border-radius: 0;
 }
 
 .club-material-theme .team-table th {
-  padding: 7px 5px;
-  font-size: 10px;
+  padding: 12px 5px;
+  font-size: 11px;
   letter-spacing: 0;
   color: var(--club-paint-dark);
   font-family: var(--club-font-heading);
   font-weight: 600;
 }
 .club-material-theme .team-screen .team-table { min-width: 0; }
-.club-material-theme .team-screen .team-table td { height: 34px; padding: 3px 5px; font-size: 13px; }
+.club-material-theme .team-screen .team-table td { height: 40px; padding: 4px 5px; font-size: 14px; }
 .club-material-theme .team-table .player-portrait { width: 21px; height: 26px; }
 .club-material-theme .team-table .player-identity { flex-wrap: nowrap; gap: 3px; }
 .club-material-theme .team-table .player-identity-button { flex: 1; min-width: 0; gap: 4px; }
@@ -88,28 +150,90 @@
 .club-material-theme .team-screen .team-table tr.is-selected .is-warning { --tone: var(--club-warning); }
 .club-material-theme .team-screen .team-table tr.is-selected .is-negative { --tone: var(--club-danger); }
 .club-material-theme .team-table .squad-number { color: var(--club-ink-muted); }
-.club-material-theme .team-table-note { flex-shrink: 0; padding: 6px 3px 1px; font-size: 10px; }
+.club-material-theme .team-table-note { flex-shrink: 0; padding: 8px 12px; font-size: 11px; }
 
-.club-material-theme .team-filter-bar { margin-top: clamp(45px, 10dvh, 120px); }
-.club-material-theme .team-workspace .club-player-file-mount--inline { position: relative; top: auto; min-height: 0; height: fit-content; max-height: 100%; padding: 12px 5px 5px; display: flex; flex-direction: column; }
+.club-material-theme .team-filter-bar { margin: 0; min-width: 0; }
+.club-material-theme .team-workspace .club-player-file-mount--inline {
+  position: relative;
+  top: auto;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  padding: 10px 5px 5px;
+  display: flex;
+  flex-direction: column;
+  border: 5px solid var(--club-paint-dark);
+  border-radius: 3px;
+}
+.club-material-theme .team-workspace .club-player-file-mount--inline::before { top: -15px; width: 78px; height: 30px; left: calc(50% - 39px); }
+.club-material-theme .team-workspace .club-player-file {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--club-texture-grain), var(--club-scene-paper);
+}
+.club-material-theme .team-workspace .club-player-file .player-detail-header {
+  background: transparent;
+  padding: 15px 12px 12px;
+  border-bottom: 1px solid var(--club-paper-rule);
+}
 
 @media (min-width: 1101px) and (min-height: 650px) {
+  .club-material-theme.app-shell:has(> .content.content--squad) { height: 100dvh; }
   .club-material-theme .team-screen { flex: 1; }
-  .club-material-theme .team-workspace { flex: 1; grid-template-rows: minmax(0, 1fr); }
+  .club-material-theme .team-workspace { grid-template-rows: minmax(0, 1fr); }
   .club-material-theme .team-roster { max-height: 100%; }
   .club-material-theme .team-screen .player-table-wrapper { flex: 1 1 auto; }
 }
 
 @media (max-width: 1400px) {
-  .club-material-theme .team-workspace { grid-template-columns: minmax(0, 1fr) minmax(340px, 32%); }
-  .club-material-theme .team-header { flex-wrap: wrap; }
+  .club-material-theme .team-screen .team-table td { height: 36px; font-size: 13px; }
+  .club-material-theme .team-table th { font-size: 10px; padding: 10px 4px; }
+  .club-material-theme .team-filters :is(select, .team-search) { height: 36px; font-size: 13px; }
+  .club-material-theme .team-search input { font-size: 13px; }
+}
+
+@media (min-width: 1101px) and (max-height: 720px) {
+  .club-material-theme .team-screen { grid-template-rows: minmax(130px, 34%) auto minmax(0, 1fr); }
 }
 
 @media (max-width: 1100px), (max-height: 649px) {
+  .club-material-theme .team-screen { grid-template-rows: clamp(145px, 23vw, 235px) auto auto; }
   .club-material-theme .team-workspace { grid-template-columns: minmax(0, 1fr); }
   .club-material-theme .team-roster { order: 0; }
-  .club-material-theme .team-workspace .club-player-file-mount { max-height: none; }
+  .club-material-theme .team-workspace .club-player-file-mount { height: auto; max-height: none; }
   .club-material-theme .team-workspace .club-player-file { max-height: none; }
   .club-material-theme .team-screen .player-table-wrapper { max-height: 540px; }
+  .club-material-theme .team-screen .team-table { min-width: 760px; }
   .club-material-theme .team-table th { letter-spacing: 0; }
+  /* Keep the whole wall gallery visible at narrow ratios. The same image
+     fills the remaining viewport softly behind the natural page flow. */
+  .club-material-theme .content--squad > .club-environment { position: fixed; inset: calc(var(--ui-header-height) + var(--ui-dev-offset, 0px)) 0 0; }
+  .club-material-theme .content--squad > .club-environment::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: var(--club-environment-image) center / cover;
+    filter: blur(14px) brightness(.65);
+  }
+  .club-material-theme .content--squad > .club-environment img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    mask-image: linear-gradient(#000 75%, transparent);
+  }
+}
+
+@media (max-width: 600px) {
+  .club-material-theme .team-screen { grid-template-rows: 155px auto auto; }
+  .club-material-theme .team-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .club-material-theme .team-filters select { width: 100%; max-width: none; padding-left: 8px; font-size: 12px; }
+  .club-material-theme .team-search { grid-column: 1 / -1; }
+  .club-material-theme .team-search input { width: 100%; }
+  .club-material-theme .team-workspace .club-player-file .player-detail-header { grid-template-columns: 60px minmax(0, 1fr) 62px; gap: 8px; }
+  .club-material-theme .team-workspace .club-player-file .player-portrait--large { width: 60px; height: 72px; }
+  .club-material-theme .team-workspace .club-player-file .player-detail-identity h3 { font-size: 20px; }
 }

@@ -1,10 +1,8 @@
-import type { LeagueMatch } from '../domain/models'
-import { competitionSeason } from '../domain/competitionPresentation'
-import { PageTitle } from './ClubUi'
-import '../styles/competition.css'
-export function CompetitionHeader({ matches, onBack, title = 'Clasificación' }: { matches: LeagueMatch[]; onBack: () => void; title?: string }) {
-  return <div className="competition-heading">
-    <PageTitle title={title} subtitle="El tablón de nuestra liga." actions={<button type="button" className="screen-back-button" onClick={onBack}>← Panel del club</button>} />
-    <dl className="competition-context"><div><dt>Temporada</dt><dd>{competitionSeason(matches)}</dd></div><div><dt>Modalidad</dt><dd>Fútbol 11</dd></div><div><dt>Competición</dt><dd>4a Catalana</dd></div><div><dt>Liga</dt><dd>12 equipos · 22 jornadas</dd></div></dl>
-  </div>
+import type { CompetitionPortalData } from '../domain/competitionPortal'
+
+export function CompetitionHeader({ data, onBack, compact }: { data: CompetitionPortalData; onBack?: () => void; compact: boolean }) {
+  return <>
+    <header className="federation-header"><div className="federation-brand"><span className="federation-seal" aria-hidden="true">F</span><div><strong>FEDERACIÓ CATALANA</strong><span>DE FUTBOL · PORTAL DE COMPETICIÓN</span></div></div>{onBack && <button type="button" className="federation-back" onClick={onBack}>← Panel del club</button>}</header>
+    <dl className="federation-context"><div><dt>Temporada</dt><dd>{data.season}</dd></div>{!compact && <div><dt>Modalidad</dt><dd>{data.metadata.modality}</dd></div>}<div><dt>Competición</dt><dd>{data.metadata.name}</dd></div>{data.metadata.group ? <div><dt>Grupo</dt><dd>{data.metadata.group}</dd></div> : !compact && <div><dt>Liga</dt><dd>{data.clubs.length} equipos · {data.matchdays.length} jornadas</dd></div>}</dl>
+  </>
 }

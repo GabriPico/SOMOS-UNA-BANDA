@@ -5,9 +5,9 @@ type EnvironmentAsset = { day: string; night: string; fallback: string }
 /** Replace individual variants here; the UI never constructs asset filenames. */
 export const CLUB_ENVIRONMENTS: Record<ClubLocation, EnvironmentAsset> = {
   'club-office': { day: '/assets/materials/club-messages-office-illustrated.png', night: '/assets/materials/club-office-night.png', fallback: '/assets/materials/club-messages-office-illustrated.png' },
-  squad: { day: '/assets/materials/club-office-context.png', night: '/assets/materials/squad-night.png', fallback: '/assets/materials/club-office-context.png' },
+  squad: { day: '/assets/materials/club-squad-history-field.png', night: '/assets/materials/club-squad-history-field-night.png', fallback: '/assets/materials/club-squad-history-field.png' },
   training: { day: '/assets/materials/training-day.png', night: '/assets/materials/club-training-night-illustrated.png', fallback: '/assets/materials/club-training-night-illustrated.png' },
-  'locker-room': { day: '/assets/materials/club-dressing-room.png', night: '/assets/materials/locker-room-night.png', fallback: '/assets/materials/club-dressing-room.png' },
+  'locker-room': { day: '/assets/materials/club-dressing-room-illustrated.png', night: '/assets/materials/club-dressing-room-illustrated-night.png', fallback: '/assets/materials/club-dressing-room-illustrated.png' },
   staff: { day: '/assets/materials/staff-day.png', night: '/assets/materials/staff-night.png', fallback: '/assets/materials/club-messages-office-illustrated.png' },
 }
 export function getClubLocation(screen: ScreenId | 'player-profile'): ClubLocation {

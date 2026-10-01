@@ -20,21 +20,29 @@ const POINTS: Record<Formation, Point[]> = {
   '5-4-1': [{x:50,y:91},{x:88,y:72},{x:69,y:78},{x:50,y:81},{x:12,y:72},{x:31,y:78},{x:39,y:49},{x:84,y:43},{x:61,y:49},{x:16,y:43},{x:50,y:16}],
 }
 
+// Card centres are measured inside the board's vertical pitch. Outer lanes
+// retain room for the complete magnetic card at narrow widths.
+const BOARD_POINTS: Record<Formation, Point[]> = {
+  '4-4-2': [{x:50,y:89},{x:84,y:71},{x:61,y:71},{x:39,y:71},{x:16,y:71},{x:61,y:47},{x:39,y:47},{x:84,y:47},{x:39,y:17},{x:16,y:47},{x:61,y:17}],
+  '4-3-3': [{x:50,y:89},{x:84,y:71},{x:61,y:71},{x:39,y:71},{x:16,y:71},{x:50,y:51},{x:29,y:46},{x:82,y:18},{x:71,y:46},{x:18,y:18},{x:50,y:16}],
+  '4-2-3-1': [{x:50,y:89},{x:84,y:73},{x:61,y:73},{x:39,y:73},{x:16,y:73},{x:63,y:56},{x:37,y:56},{x:82,y:36},{x:50,y:36},{x:18,y:36},{x:50,y:15}],
+  '3-5-2': [{x:50,y:89},{x:90,y:48},{x:70,y:72},{x:50,y:74},{x:30,y:72},{x:70,y:49},{x:50,y:51},{x:30,y:49},{x:62,y:17},{x:10,y:48},{x:38,y:17}],
+  '5-4-1': [{x:50,y:89},{x:88,y:72},{x:69,y:72},{x:50,y:73},{x:12,y:72},{x:31,y:72},{x:39,y:48},{x:84,y:44},{x:61,y:48},{x:16,y:44},{x:50,y:17}],
+}
+
 export type TacticalPlayerView = TacticalCardPlayer & { id: number; name: string; shirtNumber?: number; positions: string; rating?: number; secondary?: string; status?: string; fatigueLabel?: string; conditionLabel?: string; conditionAlert?: string; unavailable?: boolean; matchPerformance?: { score: string; label: string }; condition?: { level: number; label: string }; mood?: { icon: string; label: string }; incident?: string; cardIndicators?: TacticalCardIndicators; generalRating?: number }
 export type TacticalSelection = { group: 'field'; slot: number } | { group: 'reserve'; playerId: number } | null
 
-export function TacticalBoard({ formation, players, selection, onSelect, onMove, variant = 'standard', onDeselect, onOpenPlayer }: { formation: Formation; players: (TacticalPlayerView | undefined)[]; selection: TacticalSelection; onSelect?: (slot: number) => void; onMove?: (source: Exclude<TacticalSelection, null>, target: Exclude<TacticalSelection, null>) => void; variant?: 'standard' | 'cards'; onDeselect?: () => void; onOpenPlayer?: (id: number) => void }) {
+export function TacticalBoard({ formation, players, selection, onSelect, onMove, variant = 'standard', onDeselect, onOpenPlayer, highlightSlots }: { formation: Formation; players: (TacticalPlayerView | undefined)[]; selection: TacticalSelection; onSelect?: (slot: number) => void; onMove?: (source: Exclude<TacticalSelection, null>, target: Exclude<TacticalSelection, null>) => void; variant?: 'standard' | 'cards'; onDeselect?: () => void; onOpenPlayer?: (id: number) => void; highlightSlots?: number[] }) {
   if (variant === 'cards') return <div className="tactical-pitch tactical-pitch--cards club-chalkboard" onClick={event => { if (!(event.target as HTMLElement).closest('[data-lineup-source]')) onDeselect?.() }} aria-label={`Once en formación ${formation}`}>
     <div className="tactical-halfway" /><div className="tactical-circle" /><div className="tactical-box top" /><div className="tactical-box bottom" /><div className="tactical-goal top" /><div className="tactical-goal bottom" />
     {FORMATION_SLOTS[formation].map((position, slot) => {
       const player = players[slot]
-      // Separate the double pivot from centre-backs at laptop heights.
-      const point = formation === '4-2-3-1' && (slot === 5 || slot === 6)
-        ? { x: slot === 5 ? 66 : 34, y: 52 } : POINTS[formation][slot]
-      const style = { left: `${point.x}%`, top: `${slot > 0 && point.y >= 70 ? point.y - 8 : point.y}%` }
-      return player ? <TacticalPlayerCard key={player.id} player={player} position={position} source={{ group: 'field', slot }} style={style}
+      const point = BOARD_POINTS[formation][slot]
+      const style = { left: `${point.x}%`, top: `${point.y}%` }
+      return player ? <TacticalPlayerCard key={player.id} player={player} position={position} source={{ group: 'field', slot }} style={style} proposalAffected={highlightSlots?.includes(slot)}
         selected={selection?.group === 'field' && selection.slot === slot} onSelect={onSelect ? () => onSelect(slot) : undefined} onOpenPlayer={onOpenPlayer} />
-        : <button type="button" key={`empty-${slot}`} className="tactical-empty-slot" data-lineup-source={JSON.stringify({ group: 'field', slot })} style={style} onClick={() => onSelect?.(slot)} aria-label={`Seleccionar puesto vacío ${position}`}>{position}<small>Sin jugador</small></button>
+        : <button type="button" key={`empty-${slot}`} className={`tactical-empty-slot${highlightSlots?.includes(slot) ? ' is-proposal-affected' : ''}`} data-lineup-source={JSON.stringify({ group: 'field', slot })} style={style} onClick={() => onSelect?.(slot)} aria-label={`Seleccionar puesto vacío ${position}`}>{position}<small>Sin jugador</small></button>
     })}
   </div>
   return <div className="tactical-pitch" aria-label={`Once en formación ${formation}`}><div className="tactical-halfway"/><div className="tactical-circle"/><div className="tactical-box top"/><div className="tactical-box bottom"/>{players.map((player, slot) => {
@@ -85,7 +93,7 @@ export function TacticalInstructions({ plan, onChange, grouped = false, familiar
   const [openGroup, setOpenGroup] = useState<string | null>(null)
   const groupId = useId()
   const control = (field: typeof fields[number]) => <label key={field.key}>{field.label}<select data-instruction={field.key} value={String(plan[field.key])} onChange={event => onChange({ ...plan, [field.key]: event.target.value })}>{field.options.map(option => <option key={option}>{option}</option>)}</select></label>
-  if (grouped) return <aside className="tactical-instructions-panel club-sheet club-sheet--cork club-sheet--taped" aria-label="Instrucciones tácticas"><h3>Configuración táctica</h3><div className="tactical-instruction-groups">{instructionGroups.map((group, index) => <section className={`tactical-instruction-card${index === 0 ? ' tactical-general-settings' : ''}`} key={group.title}>
+  if (grouped) return <aside className="tactical-instructions-panel" aria-label="Instrucciones tácticas"><h3>Configuración táctica</h3><div className="tactical-instruction-groups">{instructionGroups.map((group, index) => <section className={`tactical-instruction-card${index === 0 ? ' tactical-general-settings' : ''}`} key={group.title}>
     <h4><ManagementIcon name={group.icon} />{group.title}</h4>
     {index > 0 && <dl className="tactical-instruction-summary" hidden={openGroup === group.title}>{group.keys.map(key => <div key={key}><dt>{fields.find(field => field.key === key)!.label}</dt><dd>{String(plan[key])}</dd></div>)}</dl>}
     <div className="tactical-instruction-controls" id={`${groupId}-${index}`} hidden={index > 0 && openGroup !== group.title}>{group.keys.map(key => control(fields.find(field => field.key === key)!))}</div>

@@ -8,6 +8,9 @@
   color-scheme: dark; text-align: left;
 }
 .club-phone[hidden] { display: none; }
+.club-phone-apps { display: flex; flex-shrink: 0; gap: 8px; padding: 8px 13px; border-bottom: 1px solid var(--phone-border); }
+.club-phone-apps button { flex: 1; padding: 7px 12px; background: var(--phone-surface); border: 1px solid var(--phone-border); border-radius: 18px; font-size: 11px; }
+.club-phone-apps button[aria-pressed="true"] { border-color: #5c849b; background: #244456; }
 .club-phone *, .club-phone *::before, .club-phone *::after { box-sizing: border-box; scrollbar-color: #3b505e var(--phone-bg); }
 .club-phone button { font: inherit; cursor: pointer; color: inherit; }
 .club-phone button:disabled { cursor: not-allowed; opacity: .5; }

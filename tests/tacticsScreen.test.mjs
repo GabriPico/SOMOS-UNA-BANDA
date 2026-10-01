@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { createServer } from 'vite'
 
-let vite, players, game, presentation, workspace, card, screen, lineup, plan, StarRating, lineupOperations, PlayerDetail
+let vite, players, game, presentation, workspace, card, screen, lineup, plan, StarRating, lineupOperations, PlayerDetail, rankTacticalSubstitutes
 before(async () => {
   vite = await createServer({ server: { middlewareMode: true, hmr: false }, appType: 'custom', logLevel: 'silent' })
   ;({ players } = await vite.ssrLoadModule('/src/data/mockData.ts'))
@@ -13,6 +13,7 @@ before(async () => {
   presentation = await vite.ssrLoadModule('/src/presentation/tacticalPlayerPresentation.ts')
   workspace = await vite.ssrLoadModule('/src/components/TacticalWorkspace.tsx')
   lineupOperations = await vite.ssrLoadModule('/src/domain/tacticalLineup.ts')
+  ;({ rankTacticalSubstitutes } = await vite.ssrLoadModule('/src/domain/tacticalSubstitutions.ts'))
   ;({ PlayerDetail } = await vite.ssrLoadModule('/src/components/PlayerDetail.tsx'))
   ;({ TacticalPlayerCard: card } = await vite.ssrLoadModule('/src/components/TacticalPlayerCard.tsx'))
   ;({ StarRating } = await vite.ssrLoadModule('/src/components/StarRating.tsx'))
@@ -151,17 +152,33 @@ test('vista previa y movimiento respetan convocatoria, elegibilidad y portero si
   assert.deepEqual(lineup, before)
 })
 
-test('Tácticas mantiene once, suplentes y propuesta sin inspector permanente ni jugadores omitidos', () => {
+test('Tácticas muestra los once titulares en dos columnas del archivador sin paginarlos', () => {
   const calledUp = [...lineup, ...players.filter(player => !lineup.includes(player.id)).slice(0, 5).map(player => player.id)]
   const html = render(screen, { tacticalPlan: plan, lineupIds: lineup, trainingState: game.training, selectablePlayerIds: calledUp, staffMembers: game.staff.members, onBack() {}, onTacticalPlanChange() {}, onLineupChange() {} })
-  const visibleHtml = html.split('<details class="tactics-candidates"')[0]
-  assert.equal((visibleHtml.match(/data-player-id=/g) ?? []).length, calledUp.length + 11)
-  assert.equal((visibleHtml.match(/data-slot=/g) ?? []).length, 22)
+  assert.equal((html.match(/data-player-id=/g) ?? []).length, 11 + 11)
+  assert.equal((html.match(/data-slot=/g) ?? []).length, 11 + 11)
+  assert.equal((html.match(/class="tactics-binder-pocket"/g) ?? []).length, 11)
+  assert.match(html, /tactics-binder-pocket--spare/)
   assert.match(html, /VER PROPUESTA/)
   assert.match(html, /Suplentes/)
-  assert.doesNotMatch(html, /Resto de la plantilla|player-detail--inline|role="dialog"|tactics-selected-player|tactics-bench-section/)
-  assert.match(html, /<details class="tactics-candidates"><summary>\+ VER RESTO DE LA PLANTILLA/)
-  for (const omitted of players.filter(player => !calledUp.includes(player.id))) assert.ok(!visibleHtml.includes(`data-player-id="${omitted.id}"`))
+  assert.match(html, /Archivador de alineación/)
+  assert.doesNotMatch(html, /Página 1 de 2/)
+  assert.match(html, /No convocados/)
+  assert.doesNotMatch(html, /player-detail--inline|role="dialog"|tactics-selected-player|tactics-bench-section/)
+  for (const omitted of players.filter(player => !calledUp.includes(player.id))) assert.ok(!html.includes(`data-player-id="${omitted.id}"`))
+})
+
+test('las sugerencias priorizan adecuación y condición con motivos derivados del jugador', () => {
+  const natural = players.find(player => player.primaryPosition === 'DC')
+  const improvised = players.find(player => player.primaryPosition !== 'DC' && !player.secondaryPositions.includes('DC'))
+  const training = {
+    [natural.id]: { ...game.training.players[natural.id], fitness: 55 },
+    [improvised.id]: { ...game.training.players[improvised.id], fitness: 95 },
+  }
+  const ranked = rankTacticalSubstitutes([improvised, natural], 'DC', training)
+  assert.equal(ranked[0].player.id, natural.id)
+  assert.match(ranked[0].reason, /Posición habitual · condición/)
+  assert.deepEqual(rankTacticalSubstitutes([natural, improvised], 'DC', training).map(item => item.player.id), ranked.map(item => item.player.id))
 })
 
 test('las filas usan Calidad General y reflejan la misma selección del campo', () => {

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { Activity, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import type { ClubCall, getPhoneGuide, PhoneSection } from '../domain/clubPhone'
 import { conversationNeedsResponse, getUnreadCount, messageNeedsResponse, sortConversationsByLatest, type ConversationMessage, type MessageConversation } from '../domain/messages'
 import type { Player } from '../domain/models'
@@ -21,6 +21,8 @@ type Props = {
   onOpen: () => void
   onContinue: () => void
   suspended: boolean
+  competitionPortal: ReactNode
+  canOpenCompetition: boolean
 }
 
 function PhoneIcon({ name }: { name: 'phone' | 'video' | 'up' | 'down' | 'back' }) {
@@ -45,7 +47,7 @@ function CallUpBubble({ message }: { message: ConversationMessage }) {
   </div>
 }
 
-export function ClubPhone({ phone, conversations, calls, currentDateTime, staffMembers, players, coachName, guide, onOpen, onContinue, suspended }: Props) {
+export function ClubPhone({ phone, conversations, calls, currentDateTime, staffMembers, players, coachName, guide, onOpen, onContinue, suspended, competitionPortal, canOpenCompetition }: Props) {
   const panelId = useId()
   const headingId = useId()
   const hintId = useId()
@@ -62,6 +64,7 @@ export function ClubPhone({ phone, conversations, calls, currentDateTime, staffM
   const [showParticipants, setShowParticipants] = useState(false)
   const [selectedCallId, setSelectedCallId] = useState<string>()
   const selected = conversations.find(item => item.id === phone.selectedConversationId)
+  const isFederation = phone.activePhoneSection === 'FCF'
   const pendingMessage = selected?.messages.find(messageNeedsResponse)
   const isOpen = phone.isPhoneOpen && !suspended
   const minimizePhone = phone.minimize
@@ -115,9 +118,12 @@ export function ClubPhone({ phone, conversations, calls, currentDateTime, staffM
       <div className="club-phone-status" aria-hidden="true"><time>{phoneHour(currentDateTime)}</time><span className="club-phone-speaker" /><span>▮▮▮ <span className="club-phone-battery" /></span></div>
       <header className="club-phone-header">
         {selected ? <><button ref={backRef} type="button" className="club-phone-icon-button" onClick={() => phone.selectConversation(undefined)} aria-label="Volver a conversaciones"><PhoneIcon name="back" /></button><Avatar contact={selected} /><div className="club-phone-heading"><h2 id={headingId}>{phoneContactName(selected)}</h2><p>{phoneContactRole(selected, staffMembers)}</p></div></> : <><ClubCrest /><div className="club-phone-heading"><h2 id={headingId}>FC POBLENOU</h2><p>Teléfono del club</p></div></>}
-        {selected?.type === 'GROUP' ? <button type="button" className="club-phone-icon-button" aria-label="Ver participantes" aria-expanded={showParticipants} onClick={() => setShowParticipants(value => !value)}><ManagementIcon name="group" /></button> : !selected && <button type="button" className="club-phone-icon-button" aria-label="Buscar conversaciones o llamadas" aria-expanded={showSearch} onClick={() => { setShowSearch(value => !value); setSearch('') }}><ManagementIcon name="search" /></button>}
+        {selected?.type === 'GROUP' ? <button type="button" className="club-phone-icon-button" aria-label="Ver participantes" aria-expanded={showParticipants} onClick={() => setShowParticipants(value => !value)}><ManagementIcon name="group" /></button> : !selected && !isFederation && <button type="button" className="club-phone-icon-button" aria-label="Buscar conversaciones o llamadas" aria-expanded={showSearch} onClick={() => { setShowSearch(value => !value); setSearch('') }}><ManagementIcon name="search" /></button>}
         <button ref={closeRef} type="button" className="club-phone-icon-button" onClick={minimize} aria-label="Minimizar teléfono" title="Minimizar teléfono (Escape)"><PhoneIcon name="down" /></button>
       </header>
+      <nav className="club-phone-apps" aria-label="Aplicaciones del teléfono"><button type="button" aria-pressed={!isFederation} onClick={() => selectSection('ALL')}>Mensajes</button><button type="button" aria-pressed={isFederation} onClick={() => selectSection('FCF')} disabled={!canOpenCompetition} title={!canOpenCompetition ? 'Disponible al completar el recorrido inicial' : 'Consultar Competición dentro del teléfono'}><span aria-hidden="true">◉</span> FCF</button></nav>
+      <Activity mode={isFederation ? 'visible' : 'hidden'}>{competitionPortal}</Activity>
+      <Activity mode={isFederation ? 'hidden' : 'visible'}>
       {!selected && <>
         {showSearch && <label className="club-phone-search"><ManagementIcon name="search" /><input autoFocus value={search} onChange={event => setSearch(event.target.value)} placeholder="Buscar…" aria-label="Buscar conversaciones o llamadas" /></label>}
         <nav className="club-phone-filters" aria-label="Filtros del teléfono">{([['ALL', 'Todos'], ['UNREAD', 'No leídos'], ['CALLS', 'Llamadas']] as const).map(([section, label]) => <button type="button" key={section} aria-pressed={phone.activePhoneSection === section} onClick={() => selectSection(section)}>{label}</button>)}</nav>
@@ -162,6 +168,7 @@ export function ClubPhone({ phone, conversations, calls, currentDateTime, staffM
         </div>
         <footer className="club-phone-composer"><div><input disabled placeholder="Escribe un mensaje…" aria-label="Mensaje del entrenador" aria-describedby={hintId} /><button type="button" className="club-phone-send" disabled={!pendingMessage} onClick={goToPendingResponse} aria-label={pendingMessage ? 'Ir a la respuesta pendiente' : 'Enviar mensaje (no disponible)'}><ManagementIcon name="arrow" /></button></div><p id={hintId}>{pendingMessage ? 'Elige una de las respuestas del chat.' : 'Las respuestas se habilitan cuando el club te consulta.'}</p>{guide && selected.id === guide.conversationId && <button type="button" className="club-phone-continue" disabled={!canContinueGuide} onClick={onContinue}>CONTINUAR <ManagementIcon name="arrow" /></button>}</footer>
       </>}
+      </Activity>
       <div className="club-phone-home-indicator" aria-hidden="true" />
     </section>
   </aside>

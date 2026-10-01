@@ -2,7 +2,10 @@
 
 ## Documento de contexto para guion
 
-**Proyecto:** SOMOS UNA BANDA  
+**Proyecto:** Míster
+
+**Subtítulo:** Este año subimos
+
 **Entorno:** FC Poblenou, 4a Catalana  
 **Uso:** documento de contexto para la guionista que reescribira y mejorara los dialogos.
 
@@ -12,8 +15,8 @@ Este documento resume lo que esta decidido, lo que se ha planteado como direccio
 
 ### DEFINIDO
 
-- SOMOS UNA BANDA es un simulador minimalista de entrenador de futbol modesto.
-- La palabra "banda" nombra al grupo humano: plantilla, cuerpo tecnico, directiva y entorno del club.
+- Míster es un simulador minimalista de entrenador de futbol modesto.
+- El subtitulo, «Este año subimos», expresa la ambicion de ascender a 3a Catalana y la presion cotidiana que genera en el club.
 - La historia se cuenta desde la gestion cotidiana de un equipo amateur, no desde el glamour del futbol profesional.
 - La beta transcurre en una temporada y tiene un objetivo claro: ascender a 3a Catalana, directamente o mediante playoff.
 - El ascenso es la condicion de victoria. Las expectativas parciales del presidente no sustituyen ese objetivo.

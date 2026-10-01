@@ -6,7 +6,7 @@ import { MatchFixtureHeader } from '../components/MatchFixtureHeader'
 import { TeamBadge } from '../components/TeamBadge'
 import '../styles/competition.css'
 
-type Props = { match: LeagueMatch; report: MatchReport; onBack: () => void; onContinue?: () => void }
+type Props = { match: LeagueMatch; report: MatchReport; onBack: () => void; onContinue?: () => void; embedded?: boolean; onOpenClub?: (id: string) => void }
 const incidentLabels: Record<ReportIncident['kind'], string> = { GOAL: 'Gol', PENALTY: 'Gol de penalti', YELLOW: 'Tarjeta amarilla', RED: 'Expulsión', IN: 'Entra al campo', OUT: 'Sale del campo' }
 const incidentSymbols: Record<ReportIncident['kind'], string> = { GOAL: '⚽', PENALTY: '⚽ P', YELLOW: '▮', RED: '▮', IN: '←', OUT: '→' }
 
@@ -22,10 +22,10 @@ function PlayerList({ title, players, empty }: { title: string; players: ReportP
   </li>)}</ul> : <p className="competition-empty">{empty}</p>}</section>
 }
 
-function TeamReport({ team, report }: { team: ReportTeam; report: MatchReport }) {
+function TeamReport({ team, report, onOpenClub }: { team: ReportTeam; report: MatchReport; onOpenClub?: (id: string) => void }) {
   const name = leagueTeams.find(item => item.id === team.teamId)?.name ?? team.teamId
   const substitutions = report.substitutions.filter(sub => sub.teamId === team.teamId)
-  return <div className="report-team-column"><h3 className="report-team-title"><TeamBadge teamId={team.teamId} name={name} />{name}{team.formation && <small>{team.formation}</small>}</h3>
+  return <div className="report-team-column"><h3 className="report-team-title"><TeamBadge teamId={team.teamId} name={name} onOpen={onOpenClub} />{name}{team.formation && <small>{team.formation}</small>}</h3>
     <PlayerList title="Alineación inicial" players={team.players.filter(player => player.started)} empty="No hay datos de la alineación." />
     <PlayerList title="Suplentes" players={team.players.filter(player => !player.started)} empty={report.complete ? 'Sin suplentes.' : 'No hay datos del banquillo.'} />
     <section className="competition-panel"><h3>Equipo técnico</h3><p className={team.coach ? 'report-coach' : 'competition-empty'}>{team.coach ? <><small>Entrenador</small><strong>{team.coach}</strong></> : 'No consta en el acta.'}</p></section>
@@ -33,21 +33,21 @@ function TeamReport({ team, report }: { team: ReportTeam; report: MatchReport })
   </div>
 }
 
-export function MatchReportScreen({ match, report, onBack, onContinue }: Props) {
-  useEffect(() => { window.scrollTo(0, 0) }, [match.id])
+export function MatchReportScreen({ match, report, onBack, onContinue, embedded = false, onOpenClub }: Props) {
+  useEffect(() => { if (!embedded) window.scrollTo(0, 0) }, [match.id, embedded])
   const played = match.status === 'played'
   return <section className="competition-screen match-report-screen">
-    <MatchFixtureHeader match={match} teams={leagueTeams} title={played ? 'Acta del partido' : 'Ficha del partido'} actions={<><button type="button" className="competition-back" onClick={onBack}>← Volver a resultados</button>{onContinue && <button type="button" className="competition-primary" onClick={onContinue}>Continuar →</button>}</>} />
+    <MatchFixtureHeader match={match} teams={leagueTeams} onOpenClub={onOpenClub} title={played ? 'Acta del partido' : 'Ficha del partido'} actions={<><button type="button" className="competition-back" onClick={onBack}>{embedded ? '← Volver' : '← Volver a resultados'}</button>{onContinue && <button type="button" className="competition-primary" onClick={onContinue}>Continuar →</button>}</>} />
     <p className="competition-breadcrumb">COMPETICIÓN <span>/</span> {match.competitionType === 'FRIENDLY' ? 'AMISTOSOS' : `4a CATALANA / JORNADA ${match.matchday}`} <span>/</span> {played ? 'ACTA' : 'PREVIA'}</p>
     {!played ? <p className="competition-empty competition-panel">El partido está pendiente. El acta estará disponible cuando finalice.</p> : <>
       {!report.complete && <p className="competition-notice">Este resultado conserva el marcador y los goles. No se registró un acta detallada del encuentro.</p>}
       <section className="competition-panel"><h3>Goles <span>Minuto / Dorsal</span></h3>{report.goals.length ? <ol className="report-goals">{report.goals.map(goal => {
         const teamName = leagueTeams.find(team => team.id === goal.teamId)?.name ?? goal.teamId
-        return <li key={goal.id}><strong className="report-running-score">{goal.homeGoals} – {goal.awayGoals}</strong><TeamBadge teamId={goal.teamId} name={teamName} /><div><strong>{goal.playerName}</strong><small>{goal.isPenalty ? 'Gol de penalti' : 'Gol'} · {teamName}</small></div><time>{goal.minute}′</time><span className="report-goal-number">{goal.shirtNumber ?? '–'}</span></li>
+        return <li key={goal.id}><strong className="report-running-score">{goal.homeGoals} – {goal.awayGoals}</strong><TeamBadge teamId={goal.teamId} name={teamName} onOpen={onOpenClub} /><div><strong>{goal.playerName}</strong><small>{goal.isPenalty ? 'Gol de penalti' : 'Gol'} · {teamName}</small></div><time>{goal.minute}′</time><span className="report-goal-number">{goal.shirtNumber ?? '–'}</span></li>
       })}</ol> : <p className="competition-empty">{match.homeGoals + match.awayGoals === 0 ? 'Sin goles. El marcador no se movió.' : 'No hay autores de gol registrados.'}</p>}</section>
       {report.statistics && <section className="competition-panel"><h3>Estadísticas del partido</h3><div className="report-stats">{([['shots', 'Tiros'], ['shotsOnTarget', 'A puerta'], ['corners', 'Córners'], ['fouls', 'Faltas'], ['yellowCards', 'Amarillas'], ['redCards', 'Expulsiones']] as const).map(([key, label]) => <div key={key}><strong>{report.statistics!.home[key]}</strong><span>{label}</span><strong>{report.statistics!.away[key]}</strong></div>)}</div></section>}
       <div className="report-legend" aria-label="Leyenda del acta">{(['GOAL', 'YELLOW', 'RED', 'IN', 'OUT'] as const).map(kind => <span key={kind}><b className={`report-incident--${kind.toLowerCase()}`}>{incidentSymbols[kind]}</b>{incidentLabels[kind]}</span>)}</div>
-      <div className="report-team-grid"><TeamReport team={report.home} report={report} /><TeamReport team={report.away} report={report} /></div>
+      <div className="report-team-grid"><TeamReport team={report.home} report={report} onOpenClub={onOpenClub} /><TeamReport team={report.away} report={report} onOpenClub={onOpenClub} /></div>
       <section className="competition-panel"><h3>Árbitro</h3><p className="competition-empty">No consta una designación arbitral.</p></section>
     </>}
     {onContinue && <footer className="competition-toolbar"><span>Acta guardada en Resultados.</span><button className="competition-primary" type="button" onClick={onContinue}>Continuar →</button></footer>}

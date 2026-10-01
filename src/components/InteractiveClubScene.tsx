@@ -1,5 +1,7 @@
 import { SceneHotspot } from './SceneHotspot'
 import { TeamBadge } from './TeamBadge'
+import { ClubHandwrittenHeadings } from './ClubHandwrittenHeadings'
+import { ClubCompetitionMonitor } from './ClubCompetitionMonitor'
 import { CLUB_PANEL_SCENE, CLUB_PANEL_SCENE_RATIO, CLUB_SCENE_HOTSPOTS, type ClubSceneDestination } from '../presentation/clubSceneHotspots'
 import type { getClubPanelPresentation } from '../presentation/clubPanelPresentation'
 
@@ -20,10 +22,8 @@ export function InteractiveClubScene({ panel, actions }: Props) {
           <span className="scene-fixture-competition">{panel.match.competitionType === 'FRIENDLY' ? 'Amistoso · Pretemporada' : '4a Catalana'}</span>
         </> : <span className="scene-fixture-empty">Sin partido programado</span>}
       </span>}
-      {hotspot.id === 'league' && <span className="scene-standings-paper">
-        <span className="scene-standings-caption">4a Catalana <span>PTS</span></span>
-        <span className="scene-standings-rows">{panel.standings.map(row => <span key={row.teamId} className={row.teamId === 'fc-poblenou' ? 'is-club' : undefined}><span>{row.position}</span><span>{row.name}</span><span>{row.points}</span></span>)}</span>
-      </span>}
+      {hotspot.id === 'league' && <ClubCompetitionMonitor panel={panel} />}
     </SceneHotspot>)}
+    <ClubHandwrittenHeadings />
   </nav>
 }

@@ -10,6 +10,9 @@
 .narrative-background::before,.narrative-background::after { border:2px solid #ffffff12; content:""; height:42%; position:absolute; top:15%; width:23%; }
 .narrative-background::before { left:8%; }.narrative-background::after { right:8%; }
 .narrative-scrim { background:linear-gradient(#07100b38,#07100b70 68%,#07100ba8); inset:0; position:absolute; }
+.narrative-game-brand { color:#f7f2e5; display:grid; gap:4px; justify-items:end; pointer-events:none; position:absolute; right:clamp(20px,4vw,64px); top:clamp(20px,4vh,48px); z-index:2; }
+.narrative-game-brand img { display:block; height:auto; width:clamp(172px,28vw,300px); }
+.narrative-game-brand span { font-size:clamp(.72rem,1.3vw,1rem); font-weight:700; letter-spacing:.12em; text-shadow:0 2px 8px #000a; }
 .narrative-inline-debug { background:#111d; color:#eee; display:grid; font:10px/1.35 monospace; gap:1px; left:8px; padding:7px 9px; pointer-events:none; position:absolute; top:42px; z-index:3; }.narrative-inline-debug strong{color:#ddb85e;font-size:9px;letter-spacing:.08em}
 .narrative-characters { inset:0 4% 24%; pointer-events:none; position:absolute; }
 .narrative-character { bottom:0; opacity:.7; position:absolute; transform:translateX(-50%); transition:opacity .25s ease,transform .25s ease; }

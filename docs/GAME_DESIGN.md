@@ -2,9 +2,9 @@
 
 ## Identidad
 
-**SOMOS UNA BANDA** es un simulador minimalista de entrenador de fútbol modesto
-ambientado en la 4a Catalana. “Banda” alude al grupo humano formado por plantilla,
-cuerpo técnico, directiva y entorno del club.
+**Míster** es un simulador minimalista de entrenador de fútbol modesto
+ambientado en la 4a Catalana. Su subtítulo, **Este año subimos**, expresa el
+objetivo de ascenso que guía la temporada y las expectativas del entorno del club.
 
 El tono debe ser realista, cercano y humorístico. La interfaz es funcional y
 deliberadamente sencilla; evolucionará mediante cambios incrementales.

@@ -13,6 +13,8 @@ Implementado:
 - Plantilla mock determinista de 20 jugadores.
 - Sistema de atributos, ratings, arquetipos y rasgos.
 - Ficha reutilizable desde Equipo y Tácticas.
+- Portal Competición: seis pestañas, fichas de clubes por ID, calendario
+  desplegable, equipaciones generadas y consulta dentro del teléfono global.
 - Cinco formaciones, once, banquillo e intercambios.
 - Rating táctico y familiaridad fuera de posición.
 - Controles de instrucciones tácticas como estado local de interfaz.

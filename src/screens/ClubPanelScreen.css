@@ -1,6 +1,7 @@
 @font-face { font-family: 'Club Caveat'; src: url('/assets/fonts/Caveat.ttf') format('truetype'); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: 'Club Kalam'; src: url('/assets/fonts/Kalam-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
 
-.club-material-theme.is-club-panel { --ui-header-height: 88px; min-height: calc(100dvh - var(--ui-dev-offset, 0px)); }
+.club-material-theme.app-shell.is-club-panel { --ui-header-height: 88px; height: 100dvh; min-height: 0; grid-template-rows: auto minmax(0, 1fr); overflow: clip; }
 .club-material-theme.is-club-panel .topbar { padding: 10px clamp(24px, 4.7vw, 80px); gap: 18px; background: #0b2539de; color: #f4f1e7; border-bottom: 1px solid #c4d4da33; box-shadow: inset 0 -1px #061a2b80; }
 .club-material-theme.is-club-panel .club-brand { gap: 24px; }
 .club-material-theme.is-club-panel .club-home-button { border-right: 1px solid #bacbd455; padding-right: 24px; }
@@ -18,12 +19,22 @@
 .club-material-theme.is-club-panel .global-continue:hover { background: #35708f; }
 .club-material-theme.is-club-panel .topbar button:focus-visible { outline: 2px solid #f1d8a4; outline-offset: 4px; }
 .club-material-theme.is-club-panel .club-phone-dock { width: 220px; min-height: 52px; background: #0d2639ee; color: #f4f0e4; border-color: #5181a0; }
-/* A single image continues behind the HUD. Clamp its origin to the complete
-   functional bounds: only surplus ceiling, floor and edge scenery may be trimmed. */
-.club-material-theme .content.content--club-panel { display: grid; padding: 0; margin-top: calc(-1 * var(--ui-header-height)); height: calc(100dvh - var(--ui-dev-offset, 0px)); min-height: 0; overflow: clip; }
-.club-material-theme .club-panel-screen { position: relative; width: 100%; height: 100%; min-width: 0; gap: 0; padding: 0; overflow: clip; }
-.interactive-club-scene { --scene-width: max(100vw, calc((100dvh - var(--ui-dev-offset, 0px)) * var(--scene-ratio))); --scene-height: calc(var(--scene-width) / (var(--scene-ratio))); --scene-unit: calc(var(--scene-width) / 100); position: absolute; width: var(--scene-width); height: var(--scene-height); left: clamp(calc(2px - var(--scene-width) * var(--scene-safe-left)), calc((100% - var(--scene-width)) / 2), calc(100% - var(--scene-width) * var(--scene-safe-right) - 2px)); top: clamp(calc(var(--ui-header-height) + 2px - var(--scene-height) * var(--scene-safe-top)), calc((100% - var(--scene-height)) / 2), calc(100% - var(--scene-height) * var(--scene-safe-bottom) - 2px)); color: #1a365f; }
-.club-scene-background { display: block; width: 100%; height: 100%; user-select: none; }
+/* The grid measures the actual HUD row. The scene receives only the remaining
+   space; no negative overlap, guessed header subtraction or scroll container. */
+.club-material-theme .content.content--club-panel { display: grid; padding: 0; margin: 0; height: 100%; min-height: 0; overflow: clip; }
+.club-material-theme .club-panel-screen { position: relative; container-type: size; width: 100%; height: 100%; min-width: 0; min-height: 0; gap: 0; padding: 0; overflow: clip; background: #122b3d; }
+.interactive-club-scene {
+  /* The wide illustration provides the safe area; always cover this surface. */
+  --scene-width: max(100cqw, calc(100cqh * var(--scene-ratio)));
+  --scene-height: calc(var(--scene-width) / (var(--scene-ratio)));
+  --scene-unit: calc(var(--scene-width) / 100);
+  position: absolute; width: var(--scene-width); height: var(--scene-height);
+  left: calc((100% - var(--scene-width)) / 2);
+  top: calc((100% - var(--scene-height)) / 2);
+  color: #1a365f;
+}
+.club-scene-background { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.club-handwritten-headings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .scene-hotspot { position: absolute; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; cursor: pointer; clip-path: var(--hotspot-clip); -webkit-tap-highlight-color: transparent; }
 .scene-hotspot-art, .scene-hotspot-outline, .scene-hotspot-content { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .scene-hotspot-art { opacity: 0; filter: brightness(1.08) saturate(1.03); transition: opacity 180ms ease; }
@@ -38,21 +49,18 @@
 .scene-hotspot:focus-visible .scene-hotspot-outline { opacity: .65; }
 .scene-hotspot:focus-visible .scene-hotspot-outline :is(polygon, path) { stroke-width: 3; stroke-dasharray: 7 4; }
 .club-material-theme .scene-hotspot:focus-visible { outline: none; }
-.scene-fixture-paper, .scene-standings-paper { position: absolute; display: flex; flex-direction: column; font-family: 'Club Caveat', 'Segoe Print', cursive; color: #20385f; }
+.scene-fixture-paper { position: absolute; display: flex; flex-direction: column; font-family: 'Club Caveat', 'Segoe Print', cursive; color: #20385f; }
 .scene-fixture-paper { left: 10%; top: 29%; width: 78%; height: 58%; align-items: center; gap: calc(var(--scene-unit) * .08); }
 .scene-fixture-crests { display: flex; justify-content: center; align-items: center; gap: calc(var(--scene-unit) * .8); width: 100%; margin-top: calc(var(--scene-unit) * .1); }
 .scene-fixture-crests svg { width: calc(var(--scene-unit) * 2); height: calc(var(--scene-unit) * 2); }
 .scene-fixture-crests > span { font-size: calc(var(--scene-unit) * 1.1); }
-.scene-fixture-names { text-align: center; font-size: calc(var(--scene-unit) * .88); font-weight: 600; line-height: 1.1; }
-.scene-fixture-date, .scene-fixture-competition { font-size: calc(var(--scene-unit) * .7); line-height: 1.2; text-align: center; }
+.scene-fixture-names { align-self: flex-start; margin-left: 18%; transform: rotate(-1.1deg); text-align: left; font-size: calc(var(--scene-unit) * .78); font-weight: 400; line-height: 1.1; }
+.scene-fixture-date, .scene-fixture-competition { align-self: flex-start; font-weight: 400; line-height: 1.2; text-align: left; }
 .scene-fixture-empty { font-size: calc(var(--scene-unit) * 1.2); margin-top: calc(var(--scene-unit) * 1); }
-.scene-standings-paper { left: 10%; top: 30%; width: 78%; height: 55%; }
-.scene-standings-caption { display: flex; justify-content: space-between; font-size: calc(var(--scene-unit) * .8); line-height: 1.3; padding: calc(var(--scene-unit) * .1) calc(var(--scene-unit) * .1) calc(var(--scene-unit) * .1); }
-.scene-standings-rows { display: grid; font-size: calc(var(--scene-unit) * .85); line-height: 1.05; font-weight: 500; }
-.scene-standings-rows > span { display: grid; grid-template-columns: calc(var(--scene-unit) * .8) minmax(0, 1fr) calc(var(--scene-unit) * 1); align-items: center; gap: calc(var(--scene-unit) * .1); padding: 0; border-top: 1px solid #20385f33; }
-.scene-standings-rows > span > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.scene-standings-rows > span > span:last-child { text-align: right; }
-.scene-standings-rows .is-club { font-weight: 700; text-decoration: underline; text-underline-offset: .15em; }
+.scene-fixture-names, .scene-fixture-date, .scene-fixture-competition { font-family: 'Club Kalam', 'Segoe Print', cursive; font-weight: 400; }
+.scene-fixture-date { margin-left: 14%; transform: rotate(.6deg); font-size: calc(var(--scene-unit) * .66); }
+.scene-fixture-competition { margin-left: 11%; transform: rotate(-.7deg); font-size: calc(var(--scene-unit) * .6); }
+.scene-competition-monitor { display: block; width: 100%; height: 100%; }
 .panel-objective { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); width: min(550px, calc(100% - 40px)); background: #09253deb; color: #fff7e7; padding: 10px 16px; pointer-events: none; }
 .panel-objective > span { font-size: 10px; letter-spacing: .08em; color: #efd29b; }
 .panel-objective p { margin: 3px 0 0; font-size: 13px; }
@@ -69,7 +77,5 @@
 .club-phone:has(.club-phone-dock.onboarding-spotlight-target) { z-index: 1002; }
 @media (max-height: 850px) and (min-width: 701px) { .club-material-theme.is-club-panel { --ui-header-height: 72px; } .club-material-theme.is-club-panel .club-crest { width: 38px; height: 48px; } .club-material-theme.is-club-panel .global-continue { min-height: 46px; padding-block: 8px; } }
 @media (max-width: 1100px) { .club-material-theme.is-club-panel .topbar { padding-inline: 20px; gap: 14px; } .club-material-theme.is-club-panel .club-brand { gap: 14px; } .club-material-theme.is-club-panel .club-home-button { padding-right: 14px; } .club-material-theme.is-club-panel .club-brand h1 { font-size: 28px; } .club-material-theme.is-club-panel .header-calendar { padding-left: 32px; } .club-material-theme.is-club-panel .header-calendar strong { font-size: 12px; } .club-material-theme.is-club-panel .header-calendar > .management-icon { width: 24px; height: 24px; } .club-material-theme.is-club-panel .global-continue { min-width: 150px; font-size: 16px; } }
-@media (max-width: 700px) { .club-material-theme.is-club-panel { --ui-header-height: 102px; } .club-material-theme.is-club-panel .topbar { flex-wrap: wrap; padding: 8px 12px; gap: 6px; } .club-material-theme.is-club-panel .club-brand { gap: 10px; } .club-material-theme.is-club-panel .club-home-button { padding-right: 10px; } .club-material-theme.is-club-panel .club-crest { width: 26px; height: 36px; } .club-material-theme.is-club-panel .club-brand h1 { font-size: 20px; } .club-material-theme.is-club-panel .global-continue { min-width: 118px; min-height: 36px; padding: 7px 10px; font-size: 14px; gap: 8px; } .club-material-theme.is-club-panel .header-calendar { order: 3; display: grid; width: 100%; padding-left: 28px; gap: 2px; } .club-material-theme.is-club-panel .header-calendar strong { font-size: 11px; } .club-material-theme.is-club-panel .header-calendar span { font-size: 10px; } .club-material-theme.is-club-panel .header-calendar > .management-icon { width: 20px; height: 20px; } .club-material-theme .content.content--club-panel { overflow-x: auto; } .club-material-theme .club-panel-screen { width: max(700px, calc((100dvh - var(--ui-dev-offset, 0px)) * var(--scene-ratio))); } .interactive-club-scene { --scene-width: max(700px, calc((100dvh - var(--ui-dev-offset, 0px)) * var(--scene-ratio))); } .panel-objective { position: fixed; bottom: 75px; } }
+@media (max-width: 700px) { .club-material-theme.is-club-panel { --ui-header-height: 102px; } .club-material-theme.is-club-panel .topbar { flex-wrap: wrap; padding: 8px 12px; gap: 6px; } .club-material-theme.is-club-panel .club-brand { gap: 10px; } .club-material-theme.is-club-panel .club-home-button { padding-right: 10px; } .club-material-theme.is-club-panel .club-crest { width: 26px; height: 36px; } .club-material-theme.is-club-panel .club-brand h1 { font-size: 20px; } .club-material-theme.is-club-panel .global-continue { min-width: 118px; min-height: 36px; padding: 7px 10px; font-size: 14px; gap: 8px; } .club-material-theme.is-club-panel .header-calendar { order: 3; display: grid; width: 100%; padding-left: 28px; gap: 2px; } .club-material-theme.is-club-panel .header-calendar strong { font-size: 11px; } .club-material-theme.is-club-panel .header-calendar span { font-size: 10px; } .club-material-theme.is-club-panel .header-calendar > .management-icon { width: 20px; height: 20px; } .panel-objective { position: fixed; bottom: 75px; } }
 @media (prefers-reduced-motion: reduce) { .scene-hotspot-art, .scene-hotspot-outline { transition: none; } }
-/* Short landscape windows scroll the room vertically rather than crop its objects. */
-@media (max-height: 500px) and (min-width: 701px) { .club-material-theme .content.content--club-panel { margin-top: 0; height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px)); overflow-y: auto; } .club-material-theme .club-panel-screen { height: max(100%, calc(100vw / (var(--scene-ratio)))); } .interactive-club-scene { --scene-width: 100vw; left: 0; top: 0; } }

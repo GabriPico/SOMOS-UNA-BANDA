@@ -1,0 +1,140 @@
+/* A website within the game. These tokens deliberately do not theme the room or HUD. */
+.club-material-theme.app-shell.is-competition { background: #f5f5f6; }
+.club-material-theme.is-competition > .content { padding: 0; }
+.club-material-theme.is-competition > .content::before { content: none; }
+.federation-portal { --fed-ink: #172047; --fed-red: #ec080c; --fed-line: #e2e4e9; color: var(--fed-ink); background: #f5f5f6; font: 14px/1.45 var(--ui-font, sans-serif); min-width: 0; color-scheme: light; padding-bottom: 85px; }
+.federation-portal *, .federation-portal *::before, .federation-portal *::after { box-sizing: border-box; }
+.federation-portal button { font: inherit; color: var(--fed-ink); cursor: pointer; }
+.federation-portal :focus-visible { outline: 2px solid var(--fed-red); outline-offset: 3px; }
+.federation-header { min-height: 92px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px max(30px, calc((100% - 1440px) / 2)); border-bottom: 1px solid var(--fed-line); background: #fafafa; }
+.federation-brand { display: flex; align-items: center; gap: 12px; color: var(--fed-red); }
+.federation-brand > div { display: grid; gap: 1px; }
+.federation-brand strong { font-size: 18px; letter-spacing: .025em; }
+.federation-brand > div > span { font-size: 11px; letter-spacing: .07em; }
+.federation-seal { display: grid; place-items: center; width: 47px; height: 47px; border: 3px double var(--fed-red); border-radius: 50%; font: italic 800 30px Georgia, serif; }
+.federation-back { border: 0; background: transparent; padding: 7px 0; }
+.federation-back:hover, .federation-breadcrumb button:hover { color: var(--fed-red); }
+.federation-context { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; max-width: 1440px; margin: 25px auto 0; padding: 16px 24px; border: 1px solid #d9dce1; border-radius: 10px; }
+.federation-context div { min-width: 0; }
+.federation-context dt { font-size: 10px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; color: #69708a; margin-bottom: 5px; }
+.federation-context dd { margin: 0; font-size: 16px; }
+.federation-page { max-width: 1440px; margin: 0 auto; padding: 28px 0 0; }
+.federation-tabs { display: flex; justify-content: center; gap: 10px; overflow-x: auto; padding: 3px 3px 15px; }
+.federation-tabs button { flex-shrink: 0; padding: 13px 21px; border: 1px solid var(--fed-red); border-radius: 32px; background: #fff; font-size: 15px; text-transform: uppercase; font-weight: 650; transition: background 160ms, color 160ms; white-space: nowrap; }
+.federation-tabs button:hover { background: #fff0f0; }
+.federation-tabs button[aria-current="page"] { background: var(--fed-red); color: #fff; }
+.federation-tab-content { animation: federation-enter 160ms ease; }
+@keyframes federation-enter { from { opacity: .5; } to { opacity: 1; } }
+.federation-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; }
+.federation-portal h2 { font-size: 18px; text-transform: uppercase; margin: 0; }
+.federation-section-heading p { margin: 0; color: #72788b; font-size: 12px; }
+.federation-table-wrap { border: 1px solid var(--fed-line); border-radius: 9px; overflow: auto; background: #fff; }
+.federation-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
+.federation-table th, .federation-table td { padding: 20px 14px; border-bottom: 1px solid #eef0f3; }
+.federation-table thead { background: #ebebed; }
+.federation-table thead th { text-transform: uppercase; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.federation-table tbody th { text-align: left; font-weight: 600; }
+.federation-table tbody tr:last-child > * { border-bottom: 0; }
+.federation-table tbody tr:hover { background: #f9fafc; }
+.federation-table .is-user-club { background: #f0f4f8; }
+.federation-table .federation-empty { text-align: center; font-weight: 400; padding: 32px; }
+.federation-team-cell { display: flex; align-items: center; gap: 12px; }
+.federation-club-link { display: inline-flex; align-items: center; gap: 12px; max-width: 100%; padding: 0; background: none; border: 0; text-align: left; font-weight: 600 !important; }
+.federation-club-link span { overflow-wrap: anywhere; }
+.federation-club-link .competition-badge { display: block; width: 32px; height: 39px; flex-shrink: 0; filter: drop-shadow(0 1px 1px #17204722); transition: transform 180ms, filter 180ms; }
+.federation-club-link .competition-badge--large { width: 60px; height: 74px; }
+.federation-club-link:is(:hover, :focus-visible) .competition-badge { transform: scale(1.1); filter: drop-shadow(0 2px 4px #17204755); }
+.federation-club-link:hover > span { color: var(--fed-red); }
+.federation-your-club { font-size: 8px; color: #778198; white-space: nowrap; text-transform: uppercase; }
+.federation-points { font-weight: 750; }
+.federation-form { display: inline-flex; justify-content: center; gap: 5px; }
+.federation-outcome { display: inline-grid; flex-shrink: 0; place-items: center; width: 25px; height: 25px; background: #d7dadf; color: #fff; border-radius: 50%; font-size: 10px; font-weight: 700; }
+.federation-outcome.outcome-G { background: #46b875; }.federation-outcome.outcome-E { background: #f2b92c; color: #483a18; }.federation-outcome.outcome-P { background: #e65858; }
+.federation-note { color: #777e90; font-size: 11px; margin: 14px 0; }
+.federation-empty { padding: 26px 18px; color: #70788e; background: #fff; line-height: 1.7; }
+.federation-portal .matchday-selector { display: flex; align-items: center; gap: 4px; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; background: transparent; border: 0; border-bottom: 1px solid var(--fed-line); border-radius: 0; padding: 14px 0 0; box-shadow: none; margin: 8px 0 12px; }
+.federation-portal .matchday-selector > span { text-transform: uppercase; margin-right: 12px; font-size: 12px; }
+.federation-portal .matchday-selector button { flex: 0 0 38px; min-height: 45px; border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: transparent; font-size: 16px; }
+.federation-portal .matchday-selector button.is-active { color: var(--fed-red); border-bottom-color: var(--fed-red); box-shadow: none; }
+.federation-filter { display: flex; border: 1px solid var(--fed-line); border-radius: 22px; overflow: hidden; background: #fff; flex-shrink: 0; }
+.federation-filter button { padding: 7px 16px; border: 0; background: transparent; font-size: 12px; }
+.federation-filter button[aria-pressed="true"] { background: var(--fed-red); color: #fff; }
+.federation-fixtures { display: grid; gap: 13px; }
+.federation-fixture { display: grid; grid-template-columns: minmax(0, 1fr) 105px minmax(0, 1fr) minmax(180px, .8fr); align-items: center; gap: 20px; background: #fff; border: 1px solid var(--fed-line); border-radius: 9px; box-shadow: 0 2px 2px #1720470c; padding: 23px; }
+.federation-fixture-home { text-align: right; }.federation-fixture-home .federation-club-link { flex-direction: row-reverse; text-align: right; }
+.federation-fixture.is-next-match { border-color: #9da7bb; background: #f3f6fc; }
+.federation-score { display: grid; gap: 5px; text-align: center; }
+.federation-score strong { color: var(--fed-red); font-size: 26px; white-space: nowrap; }
+.federation-score small { font-size: 9px; color: #72788a; text-transform: uppercase; }
+.is-next-match .federation-score small { color: var(--fed-ink); font-weight: 700; }
+.federation-fixture-info { display: grid; gap: 5px; padding-left: 22px; border-left: 1px solid var(--fed-line); font-size: 11px; color: #71798c; }
+.federation-fixture-info time { color: var(--fed-ink); }
+.federation-match-link { justify-self: start; padding: 5px 0; border: 0; background: transparent; color: var(--fed-red) !important; text-transform: uppercase; font-size: 10px !important; font-weight: 700 !important; }
+.federation-match-link:hover { text-decoration: underline; }
+.federation-calendar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 24px; margin-top: 22px; }
+.federation-calendar-half { border: 1px solid var(--fed-line); border-radius: 7px; overflow: hidden; background: #fff; }
+.federation-calendar-half > h2, .federation-profile-matches > h2 { padding: 17px 22px; background: var(--fed-ink); color: #fff; font-size: 14px; }
+.federation-round > summary { display: flex; align-items: center; gap: 15px; padding: 20px; border-bottom: 1px solid var(--fed-line); cursor: pointer; list-style: none; font-size: 12px; }
+.federation-round > summary::-webkit-details-marker { display: none; }
+.federation-round > summary time { margin-left: auto; }
+.federation-round > summary > span { color: #8893a9; }
+.federation-round[open] > summary { color: var(--fed-red); }
+.federation-round .federation-fixtures { gap: 0; }
+.federation-round .federation-fixture, .federation-profile-matches .federation-fixture { grid-template-columns: minmax(0, 1fr) 65px minmax(0, 1fr); gap: 10px; padding: 13px; border-radius: 0; border: 0; border-bottom: 1px solid var(--fed-line); box-shadow: none; }
+.federation-round .federation-club-link, .federation-profile-matches .federation-club-link { gap: 7px; font-size: 11px; }
+.federation-round .federation-club-link .competition-badge, .federation-profile-matches .federation-club-link .competition-badge { width: 23px; height: 29px; }
+.federation-round .federation-fixture-info, .federation-profile-matches .federation-fixture-info { grid-column: 1 / -1; padding: 0; border: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; font-size: 9px; }
+.federation-round .federation-score strong, .federation-profile-matches .federation-score strong { font-size: 19px; }
+.federation-kits-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.federation-kit-card { padding: 25px; border: 1px solid var(--fed-line); background: #fff; border-radius: 14px; }
+.federation-kit-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; margin-top: 20px; border-top: 1px solid #edf0f3; padding-top: 20px; }
+.federation-kit-pair figure { display: grid; place-items: center; margin: 0; padding: 18px 10px 12px; background: #f7f8fa; border: 1px solid #f0f1f3; border-radius: 12px; }
+.federation-portal .federation-kit { display: block; width: 105px; height: 140px; max-width: 100%; filter: drop-shadow(0 3px 3px #17204720); }
+.federation-kit-pair figcaption { font-size: 10px; color: #7e8491; margin-top: 10px; }
+.federation-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 22px; color: #858ba0; }
+.federation-breadcrumb button { border: 0; background: transparent; padding: 5px 0; text-transform: uppercase; color: var(--fed-red); }
+.federation-club-banner { display: flex; align-items: center; gap: 32px; padding: 38px 45px; background: linear-gradient(115deg, var(--club-color), #101b33); color: #fff; border-radius: 9px 9px 0 0; }
+.federation-club-banner .competition-badge--large { width: 108px; height: 132px; }
+.federation-club-banner h1 { font-size: clamp(25px, 3vw, 44px); margin: 8px 0; text-transform: uppercase; }
+.federation-club-banner small { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: #d5dfea; }
+.federation-club-banner > div > span { font-size: 12px; color: #d5dfea; }
+.federation-club-info { padding: 24px 28px; background: #fff; border: 1px solid var(--fed-line); border-radius: 0 0 9px 9px; }
+.federation-club-info dl { display: flex; flex-wrap: wrap; gap: 22px 50px; margin: 0 0 22px; }
+.federation-club-info dt { font-size: 10px; text-transform: uppercase; color: #858ba0; }
+.federation-club-info dd { margin: 4px 0 0; font-size: 13px; }
+.federation-club-summary { display: flex; align-items: center; gap: 70px; border-top: 1px solid var(--fed-line); padding-top: 20px; }
+.federation-club-summary > div { display: grid; gap: 8px; }
+.federation-club-summary > div > span:first-child { font-size: 10px; text-transform: uppercase; color: #858ba0; }
+.federation-club-summary strong { font-size: 26px; }.federation-club-summary strong small { font-size: 12px; }
+.federation-portal .federation-profile-title { text-align: center; margin: 32px 0; font-size: 28px; }
+.federation-profile-columns { display: grid; grid-template-columns: minmax(230px, .6fr) minmax(0, 1.4fr); gap: 25px; align-items: start; }
+.federation-profile-kits { background: #fff; border: 1px solid var(--fed-line); border-radius: 12px; padding: 24px; display: grid; justify-items: center; gap: 25px; }
+.federation-profile-kits .federation-kit { width: 200px; height: 260px; }
+.federation-kit-selector { display: inline-flex; padding: 3px; border: 1px solid #d8dbe2; border-radius: 30px; background: #fff; }
+.federation-kit-selector button { border: 0; border-radius: 25px; padding: 8px 22px; background: transparent; }
+.federation-kit-selector button[aria-pressed="true"] { background: var(--fed-red); color: #fff; }
+.federation-profile-matches { background: #fff; border: 1px solid var(--fed-line); border-radius: 9px; overflow: hidden; }
+.federation-profile-matches .federation-fixtures { gap: 0; }
+.federation-squad { margin-top: 35px; }.federation-squad > h2 { text-align: center; margin-bottom: 20px; }
+.federation-report .competition-screen { --text-primary: var(--fed-ink); --text-secondary: #70788b; --paper: #fff; --paper-muted: #f2f3f5; --border: var(--fed-line); --competition-accent: var(--fed-red); --competition-navy: var(--fed-ink); display: grid; gap: 20px; min-width: 0; margin-top: 20px; background: #f5f5f6; color: var(--fed-ink); }
+.federation-report .match-report-screen .competition-report-header { background: #fff; }
+.app-shell .federation-portal .page-title h2 { border: 0; background: none; box-shadow: none; padding: 0; color: var(--fed-ink); font-size: 22px; }
+.app-shell .federation-portal .page-title-subtitle { background: none; padding: 0; }
+@media (max-width: 1500px) { .federation-context, .federation-page { margin-inline: 30px; } .federation-table th, .federation-table td { padding: 17px 10px; } }
+@media (max-width: 1000px) { .federation-tabs { justify-content: flex-start; } .federation-tabs button { padding: 10px 17px; font-size: 12px; } .federation-table { font-size: 12px; } .federation-table .federation-stat { display: none; } .federation-fixture { grid-template-columns: minmax(0, 1fr) 85px minmax(0, 1fr); } .federation-fixture-info { grid-column: 1 / -1; border: 0; padding: 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 14px; } .federation-kits-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) { .federation-header { min-height: 70px; padding: 15px; gap: 10px; } .federation-brand strong { font-size: 13px; }.federation-brand > div > span { font-size: 8px; } .federation-seal { width: 35px; height: 35px; font-size: 23px; }.federation-back { font-size: 10px !important; }.federation-context { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 14px; margin: 15px; }.federation-context dd { font-size: 12px; }.federation-page { margin-inline: 15px; padding-top: 16px; }.federation-section-heading { align-items: flex-start; flex-wrap: wrap; padding-block: 16px; }.federation-portal h2 { font-size: 14px; }.federation-section-heading p { font-size: 10px; }.federation-table { font-size: 11px; }.federation-table th, .federation-table td { padding: 12px 7px; }.federation-table thead th { font-size: 9px; }.federation-club-link { gap: 7px; }.federation-club-link .competition-badge { width: 24px; height: 30px; }.federation-team-cell { gap: 6px; }.federation-your-club { display: none; }.federation-table .federation-scorer-stat, .federation-table .federation-sanction-position { display: none; }.federation-fixture { padding: 13px 10px; gap: 9px; grid-template-columns: minmax(0, 1fr) 65px minmax(0, 1fr); }.federation-fixture .federation-club-link { font-size: 11px; }.federation-score strong { font-size: 20px; }.federation-score small { font-size: 7px; }.federation-fixture-info { gap: 6px; font-size: 9px; }.federation-calendar { grid-template-columns: minmax(0, 1fr); gap: 20px; }.federation-kits-grid { grid-template-columns: minmax(0, 1fr); }.federation-club-banner { gap: 16px; padding: 24px 20px; }.federation-club-banner .competition-badge--large { width: 65px; height: 80px; }.federation-club-banner h1 { font-size: 23px; }.federation-club-info { padding: 18px; }.federation-club-summary { gap: 20px; flex-wrap: wrap; }.federation-club-summary strong { font-size: 23px; }.federation-form { gap: 3px; }.federation-outcome { width: 20px; height: 20px; font-size: 9px; }.federation-profile-columns { grid-template-columns: minmax(0, 1fr); }.federation-profile-kits { gap: 12px; padding: 18px; }.federation-profile-kits .federation-kit { width: 130px; height: 170px; }.federation-portal .federation-profile-title { font-size: 21px; margin-block: 22px; } }
+/* The phone is a compact portal even when the host window is wide. */
+.federation-portal--compact { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding-bottom: 20px; font-size: 11px; }
+.federation-portal--compact .federation-header { min-height: 61px; padding: 12px; }.federation-portal--compact .federation-brand strong { font-size: 13px; }.federation-portal--compact .federation-brand > div > span { font-size: 7px; }.federation-portal--compact .federation-seal { width: 30px; height: 30px; font-size: 22px; }
+.federation-portal--compact .federation-context { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 12px; padding: 10px; gap: 10px; }.federation-portal--compact .federation-context dt { font-size: 8px; }.federation-portal--compact .federation-context dd { font-size: 11px; }
+.federation-portal--compact .federation-page { padding-top: 10px; margin-inline: 12px; }.federation-portal--compact .federation-tabs { justify-content: flex-start; gap: 6px; padding-bottom: 10px; }.federation-portal--compact .federation-tabs button { font-size: 10px; padding: 9px 12px; }
+.federation-portal--compact .federation-section-heading { align-items: flex-start; flex-wrap: wrap; padding-block: 12px; gap: 8px; }.federation-portal--compact h2 { font-size: 13px; }.federation-portal--compact .federation-section-heading p { font-size: 9px; }
+.federation-portal--compact .federation-table { font-size: 10px; }.federation-portal--compact .federation-table th, .federation-portal--compact .federation-table td { padding: 12px 6px; }.federation-portal--compact .federation-table thead th { font-size: 9px; }.federation-portal--compact :is(.federation-stat, .federation-scorer-stat, .federation-sanction-position, .federation-your-club) { display: none; }
+.federation-portal--compact .federation-club-link { font-size: 10px; gap: 6px; }.federation-portal--compact .federation-club-link .competition-badge { width: 22px; height: 27px; }.federation-portal--compact .federation-team-cell { gap: 5px; }
+.federation-portal--compact .federation-fixture { grid-template-columns: minmax(0, 1fr) 55px minmax(0, 1fr); gap: 7px; padding: 12px 8px; }.federation-portal--compact .federation-score strong { font-size: 17px; }.federation-portal--compact .federation-score small { font-size: 7px; }.federation-portal--compact .federation-fixture-info { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 5px; padding: 0; border: 0; font-size: 8px; }.federation-portal--compact .federation-fixture-info .federation-match-link { font-size: 8px !important; }
+.federation-portal--compact .federation-calendar, .federation-portal--compact .federation-kits-grid, .federation-portal--compact .federation-profile-columns { grid-template-columns: minmax(0, 1fr); gap: 15px; }.federation-portal--compact .federation-round > summary { padding: 14px 12px; font-size: 10px; }
+.federation-portal--compact .federation-breadcrumb { font-size: 9px; gap: 6px; margin-bottom: 12px; }.federation-portal--compact .federation-club-banner { gap: 12px; padding: 22px 15px; }.federation-portal--compact .federation-club-banner .competition-badge { width: 54px; height: 68px; }.federation-portal--compact .federation-club-banner h1 { font-size: 20px; }.federation-portal--compact .federation-club-banner small { font-size: 8px; }.federation-portal--compact .federation-club-banner > div > span { font-size: 10px; }
+.federation-portal--compact .federation-club-info { padding: 16px; }.federation-portal--compact .federation-club-info dl { gap: 12px 20px; }.federation-portal--compact .federation-club-info dd { font-size: 11px; }.federation-portal--compact .federation-club-summary { gap: 18px; flex-wrap: wrap; }.federation-portal--compact .federation-club-summary strong { font-size: 22px; }.federation-portal--compact .federation-club-summary > div > span:first-child { font-size: 8px; }.federation-portal--compact .federation-form { gap: 3px; }.federation-portal--compact .federation-outcome { width: 18px; height: 18px; font-size: 8px; }.federation-portal--compact .federation-profile-title { font-size: 19px; margin-block: 20px; }.federation-portal--compact .federation-profile-kits { padding: 15px; gap: 12px; }.federation-portal--compact .federation-profile-kits .federation-kit { width: 120px; height: 155px; }
+.federation-portal--compact .federation-squad { margin-top: 22px; }.federation-portal--compact .federation-note { font-size: 9px; }.federation-portal--compact .federation-filter button { padding: 6px 10px; font-size: 10px; }
+.federation-portal--compact .federation-report .screen-header { flex-wrap: wrap; gap: 10px; }.federation-portal--compact .federation-report .screen-header h2 { font-size: 15px; }.federation-portal--compact .federation-report .fixture-hero { padding: 18px 12px; }.federation-portal--compact .federation-report .fixture-versus { grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr); gap: 10px; }.federation-portal--compact .federation-report .fixture-team { flex-direction: column; gap: 8px; text-align: center; }.federation-portal--compact .federation-report .fixture-team--home { flex-direction: column-reverse; }.federation-portal--compact .federation-report .fixture-team strong { font-size: 11px; }.federation-portal--compact .federation-report .fixture-crest { width: 43px; height: 43px; }.federation-portal--compact .federation-report .fixture-score > strong { font-size: 24px; gap: 8px; }.federation-portal--compact .federation-report .fixture-score i { font-size: 18px; }.federation-portal--compact .federation-report .fixture-status { font-size: 8px; padding: 4px; }.federation-portal--compact .federation-report .fixture-details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 12px; }.federation-portal--compact .federation-report .fixture-details dd { font-size: 10px; }.federation-portal--compact .federation-report .report-team-grid { grid-template-columns: minmax(0, 1fr); }.federation-portal--compact .federation-report .report-goals li { grid-template-columns: 35px 22px minmax(0, 1fr) 25px; gap: 7px; padding: 12px; }.federation-portal--compact .federation-report .report-goal-number { display: none; }.federation-portal--compact .federation-report .report-stats { grid-template-columns: minmax(0, 1fr); padding: 10px 12px; }.federation-portal--compact .federation-report .competition-panel > h3 { padding: 12px; font-size: 10px; }.federation-portal--compact .federation-report .report-player-list li { padding: 12px; gap: 8px; }.federation-portal--compact .federation-report .competition-breadcrumb { font-size: 8px; }
+@media (prefers-reduced-motion: reduce) { .federation-tab-content { animation: none; }.federation-tabs button, .federation-club-link .competition-badge { transition: none; } }

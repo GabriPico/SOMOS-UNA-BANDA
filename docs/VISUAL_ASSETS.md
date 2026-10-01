@@ -1,5 +1,73 @@
 # Recursos ambientales del club
 
+## Tácticas · pizarra y archivador activos · 2026-09-28
+
+`public/assets/materials/tactics-board-portrait-v2.png` es la pizarra vertical
+activa: superficie crema ilustrada más amplia, marco oscuro, patas metálicas
+cortas y sombra de contacto, sin nombres ni interfaz pintados. Los fondos
+`tactics-dressing-room-closeup-day.png` y
+`tactics-dressing-room-closeup-night.png` derivan del interior del Vestuario:
+camisetas azul y blanco, bancos, pintura desgastada, suelo de baldosas y una
+mesa de madera a la derecha. Campo, diez ajustes, familiaridad, propuesta del
+segundo y once fichas son HTML y CSS interactivos dentro de la misma pizarra.
+
+El archivador negro es HTML/CSS. Titulares presenta once fundas ocupadas en dos
+columnas y seis filas, con el último bolsillo vacío y sin paginación. Suplentes
+y plantilla conservan pestañas y paginación. La hoja de sustitución aparece
+sobre las fundas y usa datos reales de disponibilidad, posición y condición.
+En móvil, ajustes, campo y archivador siguen un flujo vertical y al seleccionar
+un titular el archivador se desplaza a la vista.
+
+`tactics-board-portrait-blank.png`, `tactics-board-wide-blank.png`, `tactics-room-closeup.png` y
+`tactics-board-illustrated.png` son recursos de iteraciones anteriores.
+
+## Tácticas · sala de la pizarra · 2026-09-28
+
+`public/assets/materials/tactics-room-closeup.png` (1774×887) y
+`tactics-board-illustrated.png` (transparente) derivan de la ilustración vigente
+del Panel y de la ampliación de su pizarra. El primer recurso conserva ventana,
+camisetas, banco, estantería, puerta, pared desgastada y baldosas; el segundo
+aporta tablero crema, título, campo, marco y trípode sin jugadores. Las once
+fichas, nombres, estados y controles siguen renderizados por la aplicación.
+
+## Plantilla · pared histórica · 2026-09-28
+
+`public/assets/materials/club-squad-history-field.png` y
+`club-squad-history-field-night.png` (1774×887) son los fondos de Plantilla de
+día y de noche. Conservan la misma composición. La galería cabe en el tercio superior:
+trofeos humildes, banderín sin letras, fotografías antiguas en marcos
+desiguales, pizarra táctica sin texto y ventana al campo municipal amateur
+vecino. Sustituye la vista de casas y campanario del fondo anterior
+`club-squad-history.png`, conservado como histórico. La zona izquierda
+queda libre para los papeles HTML de título y contador; no hay datos ni texto
+decorativo horneados. Se generó con imagegen integrado usando como referencia
+de estilo el Panel ilustrado. Prompt final de ajuste: «conservar la habitación
+pintada y su paleta; concentrar todos los trofeos, fotos, banderín y pizarra
+completos por encima del 30% de altura; dejar vacío el 0–14% izquierdo para el
+título; respetar el mobiliario inferior y la ventana; sin UI ni escritura».
+La edición final se hizo con imagegen integrado sobre este mismo asset,
+manteniendo los objetos interiores y reemplazando la vista de la ventana por
+césped artificial usado, portería sencilla, valla metálica, focos municipales
+y edificios urbanos discretos. Sin rótulos, gradas ni estadio profesional.
+La variante nocturna se generó también con imagegen integrado sobre la escena
+del campo: luz cálida sobre los recuerdos, cielo azul oscuro y focos encendidos,
+manteniendo posiciones, materiales y escala de los objetos.
+
+En escritorio el fondo llena exactamente el área bajo la barra superior. En
+ancho estrecho se muestra el ancho completo de la galería y se prolonga el
+resto de la escena detrás mediante la misma imagen desenfocada, evitando un
+recorte agresivo. Los paneles no ocupan los bordes ni cubren el tercio superior.
+
+## Vestuario conectado al Panel · 2026-09-27
+
+La pareja activa es `club-dressing-room-illustrated.png` y
+`club-dressing-room-illustrated-night.png`, ambas de 1774×887. El fallback usa
+la primera. Sustituyen el fondo alicatado `club-dressing-room.png` y su noche
+`locker-room-night.png`, conservados como histórico. El vestuario visible por
+la puerta del Panel es la única referencia arquitectónica y de materiales.
+Registro, prompts exactos de imagegen integrado y QA en
+[DRESSING_ROOM_REFERENCE.md](DRESSING_ROOM_REFERENCE.md).
+
 ## Localizaciones sincronizadas · 26/09/2026
 
 Registro activo: `src/data/clubEnvironments.ts`; render común: `ClubEnvironment`.

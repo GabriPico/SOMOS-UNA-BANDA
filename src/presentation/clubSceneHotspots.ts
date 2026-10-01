@@ -1,6 +1,7 @@
-/** Registered coordinates of the user's new reference room, 1619 × 971. */
-const SCENE_SIZE = { width: 1619, height: 971 }
-export const CLUB_PANEL_SCENE = '/assets/materials/club-panel-reference.png'
+/** Native 2:1 artwork and registered physical objects; no viewport/UI in the raster. */
+export const CLUB_PANEL_SCENE_SIZE = { width: 1774, height: 887 }
+const SCENE_SIZE = CLUB_PANEL_SCENE_SIZE
+export const CLUB_PANEL_SCENE = '/assets/materials/club-panel-illustrated-wide.png'
 export const CLUB_PANEL_SCENE_RATIO = `${SCENE_SIZE.width} / ${SCENE_SIZE.height}`
 
 export type ClubSceneDestination = 'squad' | 'tactics' | 'training' | 'dressing-room' | 'next-match' | 'league' | 'staff'
@@ -19,47 +20,48 @@ export type ClubSceneHotspot = {
 }
 type PaintedObject = Omit<ClubSceneHotspot, 'left' | 'top' | 'width' | 'height'> & { bounds: [number, number, number, number] }
 const ROOM_OBJECTS: PaintedObject[] = [
-  { id: 'squad', label: 'Equipo', bounds: [150, 253, 369, 255],
-    outline: '6,2 98,0 99,23 89,24 88,35 99,63 95,69 91,65 90,99 70,99 69,66 68,100 47,100 47,66 45,99 25,99 25,66 23,98 5,98 6,65 0,62 7,42 15,25 6,24',
-    contourSize: [369, 255],
+  { id: 'squad', label: 'Equipo', bounds: [248, 223, 367, 242],
+    outline: '6,2 100,0 100,19 93,21 92,28 100,54 95,60 91,56 91,99 70,99 70,59 68,99 47,99 47,59 45,99 25,99 25,59 23,98 5,98 6,57 0,54 3,43 9,29 6,20',
+    contourSize: [367, 242], maskToContours: true,
     contours: [
-      'M22 103 L43 89 Q59 107 73 90 L89 107 L103 155 L88 165 L81 159 L82 247 L24 244 L26 161 L13 165 L3 156 L12 120 Z',
-      'M104 106 L121 89 Q137 108 151 92 L169 108 L181 157 L166 167 L160 161 L160 248 L99 247 L102 162 L87 165 L79 156 L90 118 Z',
-      'M183 107 L201 91 Q217 110 231 93 L249 109 L261 159 L246 169 L240 162 L240 249 L180 248 L181 163 L167 167 L158 158 L170 120 Z',
-      'M262 109 L281 94 Q297 111 311 95 L328 111 L346 162 L331 172 L323 164 L324 251 L260 250 L261 165 L247 171 L238 161 L251 123 Z',
+      'M24 4 L365 0 L365 47 L23 45 Z',
+      'M22 77 L39 63 Q55 81 68 64 L86 78 L103 127 L87 138 L81 131 L82 230 L24 228 L25 133 L11 139 L1 128 L10 94 Z',
+      'M106 77 L122 64 Q139 82 152 65 L169 80 L187 130 L171 141 L164 134 L163 233 L103 232 L105 135 L90 139 L80 130 L91 96 Z',
+      'M187 79 L204 66 Q220 84 233 67 L250 82 L268 132 L252 142 L244 135 L245 237 L185 236 L186 137 L171 142 L162 133 L173 98 Z',
+      'M271 81 L287 68 Q304 86 317 69 L334 84 L353 135 L338 145 L329 138 L329 239 L269 237 L269 138 L254 144 L245 135 L257 100 Z',
     ] },
-  { id: 'tactics', label: 'Tácticas', bounds: [521, 277, 184, 286], outline: '9,0 98,1 97,100 0,97 7,3' },
-  { id: 'training', label: 'Entrenamientos', bounds: [716, 160, 226, 543],
+  { id: 'tactics', label: 'Tácticas', bounds: [626, 235, 185, 274], outline: '9,0 98,1 97,100 0,97 7,3' },
+  { id: 'training', label: 'Entrenamientos', bounds: [826, 136, 230, 516],
     outline: '0,9 42,9 54,0 64,9 69,10 76,1 85,9 98,10 100,99 1,100',
-    contourSize: [226, 543], maskToContours: true,
+    contourSize: [230, 516], maskToContours: true,
     contours: [
-      'M121 2 L134 48 L141 54 L139 57 L146 60 L147 66 L97 68 L98 62 L105 59 L101 55 L107 50 Z',
-      'M172 7 L184 49 L193 55 L191 59 L198 64 L196 69 L146 69 L147 62 L155 58 L152 54 L160 48 Z',
-      'M20 79 L198 70 L197 153 L21 151 Z',
-      'M33 76 L47 70 L53 82 L39 89 Z M182 72 L196 73 L190 87 L179 83 Z',
-      'M32 154 L56 153 L55 205 L65 230 L59 247 L44 251 L35 244 L26 252 L16 245 L21 224 L15 206 L19 177 Z',
-      'M59 154 L87 153 L86 203 L100 231 L96 249 L73 252 L63 246 L52 252 L45 240 L51 220 L46 199 Z',
-      'M100 249 Q96 239 112 236 Q107 224 126 220 Q141 201 160 209 Q179 203 191 216 L201 226 L197 238 Q211 245 197 252 Z',
-      'M109 323 Q103 313 122 309 Q129 289 151 295 Q175 286 188 304 L200 309 L199 326 Z',
-      'M23 299 Q46 287 69 305 Q88 302 98 326 L101 356 L95 376 Q56 387 17 374 L13 352 L15 325 Z',
-      'M106 330 L185 327 L191 337 L190 380 L103 380 L100 342 Z',
-      'M31 439 Q48 427 69 437 Q88 450 80 472 Q76 491 55 492 Q32 490 26 473 Q19 452 31 439 Z',
-      'M90 437 Q111 427 128 442 L121 451 L121 481 Q113 493 107 491 Q85 486 83 466 Q79 449 90 437 Z',
-      'M138 410 L160 402 L188 404 L200 417 L199 438 L175 444 L153 441 L138 444 Z',
-      'M124 443 L203 443 L209 455 L207 523 L122 523 Z',
+      'M124 2 L138 48 L145 55 L143 59 L151 62 L152 68 L103 69 L104 62 L110 59 L107 55 L112 49 Z',
+      'M177 5 L189 50 L198 55 L195 60 L203 65 L201 70 L151 70 L152 63 L160 59 L157 54 L165 49 Z',
+      'M51 77 L176 76 L175 114 L51 114 Z',
+      'M43 66 L58 64 L65 80 L53 85 Z M165 64 L178 65 L171 81 L160 77 Z',
+      'M28 143 L50 141 L49 181 L61 219 L56 236 L40 239 L31 230 L22 240 L12 231 L18 208 L13 188 L20 160 Z',
+      'M57 142 L82 141 L81 184 L96 217 L91 237 L71 240 L60 230 L49 239 L44 224 L51 205 L47 184 Z',
+      'M101 233 Q96 225 111 220 Q108 207 127 204 Q142 184 159 191 Q178 185 191 198 L199 211 L195 220 Q207 226 197 237 Z',
+      'M103 310 Q101 300 119 296 Q128 274 149 280 Q174 270 190 289 L201 299 L199 310 Z',
+      'M22 288 Q47 275 69 287 Q90 295 95 318 L96 340 Q69 357 20 341 L13 318 Z',
+      'M105 311 L186 308 L192 320 L190 351 L103 351 L99 322 Z',
+      'M31 400 Q52 391 72 408 Q87 430 75 450 Q51 471 29 451 Q17 429 31 400 Z',
+      'M90 403 Q110 392 128 408 L122 420 L122 449 Q103 465 89 448 Q76 427 90 403 Z',
+      'M142 388 L164 381 L190 383 L199 396 L199 417 L173 424 L144 418 Z',
+      'M124 421 L202 420 L210 431 L207 488 L122 488 Z',
       // Open uprights and shelf edges, never an enclosing shelf-wide rectangle.
-      'M8 55 L8 537 M214 55 L214 537 M12 256 L210 256 M12 383 L210 383 M12 527 L210 529',
+      'M9 50 L9 512 M219 50 L219 513 M13 239 L215 239 M13 355 L215 355 M13 495 L215 498',
     ] },
-  { id: 'dressing-room', label: 'Vestuario', bounds: [965, 118, 294, 594], outline: '16,1 83,0 83,10 100,11 100,99 0,100 1,10 16,10' },
-  { id: 'next-match', label: 'Próximo partido', bounds: [1283, 191, 266, 187], outline: '1,1 100,0 100,99 0,100' },
-  { id: 'league', label: 'Clasificación', bounds: [1283, 384, 266, 181], outline: '1,0 100,1 100,100 0,99' },
-  { id: 'staff', label: 'Staff', bounds: [187, 660, 439, 229], outline: '0,1 64,7 72,76 100,78 95,89 72,100 9,87 2,61' },
+  { id: 'dressing-room', label: 'Vestuario', bounds: [1072, 103, 299, 546], outline: '20,1 83,0 83,9 98,10 100,99 0,100 1,10 20,10' },
+  { id: 'next-match', label: 'Próximo partido', bounds: [1394, 166, 251, 176], outline: '1,1 100,0 100,99 0,100' },
+  { id: 'league', label: 'Competición', bounds: [1422, 420, 138, 100], outline: '10,0 98,2 98,78 90,96 0,94 1,81 8,76' },
+  { id: 'staff', label: 'Staff', bounds: [275, 597, 299, 179], outline: '0,19 6,14 6,8 24,4 32,1 83,2 96,8 96,16 100,27 100,95 93,100 1,87' },
 ]
 export const CLUB_SCENE_HOTSPOTS: ClubSceneHotspot[] = ROOM_OBJECTS.map(({ bounds: [left, top, width, height], ...object }) => ({
   ...object, left: left / SCENE_SIZE.width * 100, top: top / SCENE_SIZE.height * 100,
   width: width / SCENE_SIZE.width * 100, height: height / SCENE_SIZE.height * 100,
 }))
-/** Framing clamps keep every complete object below the live HUD and inside the viewport. */
+/** Complete object bounds allow cover cropping to be checked against the artwork's safe area. */
 export const CLUB_PANEL_SAFE_AREA = {
   left: Math.min(...CLUB_SCENE_HOTSPOTS.map(object => object.left)) / 100,
   top: Math.min(...CLUB_SCENE_HOTSPOTS.map(object => object.top)) / 100,

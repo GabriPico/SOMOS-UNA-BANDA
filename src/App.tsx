@@ -1,10 +1,10 @@
 import { getEnvironmentMode } from './presentation/environment';
-import { Activity, lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { Activity, lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "./components/AppShell";
 import type { ScreenId, TacticalPlan } from "./domain/models";
 import {
   initialTacticalPlan,
-  leagueSeason,
+  clubStatus,
   leagueSanctions,
   leagueTeams,
   players,
@@ -22,10 +22,8 @@ import { FORMATION_SLOTS } from './domain/matchTactics';
 import { getPlayerStatus, getTrainingObservations } from './presentation/playerPresentation';
 import { getTacticalCardIndicators } from './presentation/tacticalPlayerPresentation';
 import { TrainingScreen } from "./screens/TrainingScreen";
-import { StandingsScreen } from "./screens/StandingsScreen";
-import { ResultsScreen } from "./screens/ResultsScreen";
-import { ScorersScreen } from "./screens/ScorersScreen";
-import { SanctionsScreen } from "./screens/SanctionsScreen";
+import { CompetitionPortal } from './components/CompetitionPortal';
+import { competitionTabForScreen, getCompetitionPortalData, isCompetitionScreen, type CompetitionTab } from './domain/competitionPortal';
 import { NextMatchScreen } from "./screens/NextMatchScreen";
 import { DressingRoomScreen } from "./screens/DressingRoomScreen";
 import { ClubPhone } from "./components/ClubPhone";
@@ -130,6 +128,8 @@ function App() {
   const [activeNarrative, setActiveNarrative] = useState<NarrativeScene | null>(() => createNewGameIntroductionScene(gameState));
   const [narrativeRuntime, setNarrativeRuntime] = useState<NarrativeRuntime | null>(null);
   const [activeScreen, setScreen] = useState<Exclude<ScreenId, 'inbox'>>("club-panel");
+  const [competitionEntry, setCompetitionEntry] = useState<{ tab: CompetitionTab; revision: number }>({ tab: 'standings', revision: 0 });
+  const competitionData = useMemo(() => getCompetitionPortalData(gameState, leagueTeams, players, rivalPlayers, leagueSanctions, { name: clubStatus.league, modality: 'Fútbol 11' }), [gameState]);
   const phone = useClubPhone(gameState, setGameState, Boolean(activeNarrative));
 
   function openPhoneAttention(state = gameState) {
@@ -150,7 +150,10 @@ function App() {
   // The legacy inbox identifier opens an overlay; it can never become a screen.
   function setActiveScreen(screen: ScreenId) {
     if (screen === 'inbox') openPhoneAttention();
-    else setScreen(screen);
+    else if (isCompetitionScreen(screen)) {
+      setCompetitionEntry(current => ({ tab: screen === 'competition' ? current.tab : competitionTabForScreen(screen), revision: current.revision + 1 }));
+      setScreen('competition');
+    } else setScreen(screen);
   }
   const [reportView, setReportView] = useState<{ matchId: string; afterMatch: boolean } | null>(null);
   const [resultsCompetition, setResultsCompetition] = useState<'league' | 'friendly'>('league');
@@ -192,7 +195,7 @@ function App() {
   const [preMatchErrors, setPreMatchErrors] = useState<string[]>([]);
   const trainingState = gameState.training;
   const [selectedLeagueMatchday, setSelectedLeagueMatchday] = useState(
-    leagueSeason.currentMatchday,
+    Math.max(1, getCurrentMatchday(gameState)),
   );
   const [devScenarioId, setDevScenarioId] = useState<DevScenarioId | null>(
     null,
@@ -819,7 +822,7 @@ function App() {
     setTrainingValidationAttempt(0);
     phone.reset();
     setPreMatchErrors([]);
-    setSelectedLeagueMatchday(leagueSeason.currentMatchday);
+    setSelectedLeagueMatchday(1);
     setDevScenarioId(null);
     setDevSeed(seed);
     setNavigationContext('NORMAL');
@@ -877,6 +880,8 @@ function App() {
         phone={<ClubPhone key={devScenarioRevision} phone={phone} conversations={gameState.conversations} calls={gameState.calls ?? []}
           currentDateTime={gameState.temporal.currentDateTime} staffMembers={gameState.staff.members} players={players}
           coachName={gameState.coachName} guide={getPhoneGuide(gameState)} onOpen={openClubPhone}
+          canOpenCompetition={isDevNavigation || canNavigateDuringTutorial(gameState.onboarding, 'standings')}
+          competitionPortal={<CompetitionPortal compact data={competitionData} game={gameState} players={players} rivals={rivalPlayers} />}
           onContinue={continueOnboardingScreen} suspended={Boolean(activeNarrative)} />}
       >
         <Activity mode={profilePlayer ? 'hidden' : 'visible'}>
@@ -1076,55 +1081,12 @@ function App() {
             />
           </>
         )}
-        {activeScreen === "standings" && (
-          <StandingsScreen
-            matches={gameState.temporal.calendar}
-            currentMatchday={getCurrentMatchday(gameState)}
-            onBack={() => setActiveScreen("club-panel")}
-            onOpenResults={() => setActiveScreen("league-results")}
-            onOpenSanctions={() => setActiveScreen("league-sanctions")}
-            onOpenScorers={() => setActiveScreen("league-scorers")}
-            selectedMatchday={selectedLeagueMatchday}
-            onMatchdayChange={setSelectedLeagueMatchday}
-          />
-        )}
-        {activeScreen === "league-results" && (
-          <ResultsScreen
-            onOpenMatch={openMatchReport}
-            competition={resultsCompetition}
-            onCompetitionChange={setResultsCompetition}
-            liveMatches={gameState.temporal.calendar}
-            currentMatchday={getCurrentMatchday(gameState)}
-            onBack={() => setActiveScreen("club-panel")}
-            onOpenStandings={() => setActiveScreen("standings")}
-            onOpenSanctions={() => setActiveScreen("league-sanctions")}
-            onOpenScorers={() => setActiveScreen("league-scorers")}
-            selectedMatchday={selectedLeagueMatchday}
-            onMatchdayChange={setSelectedLeagueMatchday}
-          />
-        )}
-        {activeScreen === "league-scorers" && (
-          <ScorersScreen
-            matches={gameState.temporal.calendar}
-            goalEvents={gameState.goalEvents}
-            currentMatchday={getCurrentMatchday(gameState)}
-            onBack={() => setActiveScreen("club-panel")}
-            onOpenResults={() => setActiveScreen("league-results")}
-            onOpenStandings={() => setActiveScreen("standings")}
-            onOpenSanctions={() => setActiveScreen("league-sanctions")}
-            selectedMatchday={selectedLeagueMatchday}
-            onMatchdayChange={setSelectedLeagueMatchday}
-          />
-        )}
-        {activeScreen === "league-sanctions" && (
-          <SanctionsScreen
-            onBack={() => setActiveScreen("club-panel")}
-            onOpenResults={() => setActiveScreen("league-results")}
-            onOpenStandings={() => setActiveScreen("standings")}
-            onOpenScorers={() => setActiveScreen("league-scorers")}
-            selectedMatchday={selectedLeagueMatchday}
-            onMatchdayChange={setSelectedLeagueMatchday}
-          />
+        {isCompetitionScreen(activeScreen) && (
+          <CompetitionPortal key={devScenarioRevision + ':' + competitionEntry.revision} data={competitionData} game={gameState}
+            players={players} rivals={rivalPlayers} initialTab={activeScreen === 'competition' ? competitionEntry.tab : competitionTabForScreen(activeScreen)}
+            initialMatchday={selectedLeagueMatchday} initialFriendly={resultsCompetition === 'friendly'}
+            onSelectionChange={(_tab, matchday, friendly) => { setSelectedLeagueMatchday(matchday); setResultsCompetition(friendly ? 'friendly' : 'league'); }}
+            onBack={() => setActiveScreen('club-panel')} />
         )}
         {activeScreen === 'post-match' && reportMatch && (
           <MatchReportScreen

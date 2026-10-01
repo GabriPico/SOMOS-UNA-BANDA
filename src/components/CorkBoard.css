@@ -1,0 +1,58 @@
+.cork-board {
+  position: relative;
+  isolation: isolate;
+  padding: 28px;
+  border: 2px solid #623b22;
+  border-radius: 3px;
+  background: url('/assets/materials/wood.svg') 0 0 / 190px 190px, #8b542e;
+  box-shadow: inset 0 0 0 3px #c18b5280, inset 0 0 0 9px #63391f55, 0 3px 7px #42271860;
+  color: #203d60;
+}
+.cork-board::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 14px;
+  border: 2px solid #714222;
+  background: linear-gradient(110deg, #b2753430, #75472325), url('/assets/materials/cork.svg') 0 0 / 130px 130px, #b4834e;
+  box-shadow: inset 0 2px 7px #54321c80, 0 1px 0 #edc28e88;
+}
+.pinned-paper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 22px 20px 15px;
+  border: 1px solid #d4bea0;
+  border-radius: 1px 3px 2px 1px;
+  background: url('/assets/materials/grain.svg') 0 0 / 160px 160px, linear-gradient(115deg, #f8efd9, #eee0bf);
+  box-shadow: 1px 3px 3px #4a2d2440, 0 1px 0 #fff6e8 inset;
+  transform: rotate(var(--paper-rotation, 0deg));
+  color: #203d60;
+}
+.pinned-paper--ruled {
+  background: repeating-linear-gradient(transparent 0 27px, #53718b26 27px 28px), url('/assets/materials/grain.svg') 0 0 / 160px 160px, linear-gradient(115deg, #faf0d8, #ecddbd);
+  background-position: 0 13px, 0 0, 0 0;
+}
+.pinned-paper-title { flex-shrink: 0; width: fit-content; margin: 0 0 10px; font: 600 28px/1.08 'Club Caveat', 'Segoe Print', cursive; color: #203d60; }
+.pinned-paper-content { min-height: 0; min-width: 0; }
+.push-pin {
+  --pin-color: #246792;
+  position: absolute;
+  top: 7px;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #20344970;
+  border-radius: 47% 53% 50% 46%;
+  background: radial-gradient(circle at 32% 26%, #ffffffb0 0 10%, transparent 30%), var(--pin-color);
+  box-shadow: inset -1px -2px 2px #132b4266, 1px 3px 2px #49301e70;
+  pointer-events: none;
+}
+.push-pin--red { --pin-color: #ad4439; }
+.push-pin--green { --pin-color: #387557; }
+.push-pin--yellow { --pin-color: #c4942b; }
+.paper-pin--left { left: 15px; transform: rotate(-9deg); }
+.paper-pin--right { right: 16px; top: 9px; transform: rotate(8deg); }
+.paper-tape { position: absolute; z-index: 1; top: -8px; left: 42%; width: 63px; height: 20px; background: linear-gradient(105deg, #d9c49e95, #ebd9b3be); box-shadow: 0 1px 1px #3c312319; transform: rotate(-5deg); clip-path: polygon(2% 0, 98% 4%, 96% 32%, 100% 56%, 97% 100%, 0 95%, 3% 65%, 0 30%); }

@@ -1,6 +1,8 @@
 ﻿/* The existing amateur dressing room is decoration only, with no lettering. */
 
 .club-material-theme .content.content--dressing-room::before { content: none; }
+/* The modal belongs above the sticky header, including its close button. */
+.club-material-theme .content--dressing-room:has(.player-modal-backdrop) { z-index: 6; }
 .dressing-room-screen { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .club-material-theme .dressing-room-dashboard {
   display: flex;
@@ -176,4 +178,21 @@
   .dressing-room-workspace { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'roster' 'problems' 'hierarchy' 'voices' 'commitments' 'history'; }
   .dressing-room-panel-heading { flex-wrap: wrap; padding-bottom: 6px; }
   .dressing-room-panel-heading > button { margin-left: 12px; }
+}
+
+/* Keep the rear window, jackets and right bench visible after crossing the
+   Panel door. These are the existing sheets, arranged along the left wall. */
+@media (min-width: 1281px) and (min-height: 650px) {
+  .club-material-theme .dressing-room-dashboard {
+    width: min(100%, clamp(900px, 48vw, 1040px));
+    max-width: 1040px;
+    --club-scene-gap: 12px;
+  }
+  .dressing-room-summary { width: 100%; margin-top: 12px; }
+  .dressing-room-workspace {
+    grid-template-columns: minmax(0, 2.15fr) repeat(2, minmax(0, 1fr));
+    grid-template-areas: 'roster problems hierarchy' 'history voices commitments';
+    grid-template-rows: minmax(0, 1.55fr) minmax(0, 1fr);
+  }
+  .dressing-room-dashboard .player-compact-indicator-heading { flex-wrap: wrap; gap: 2px 8px; }
 }

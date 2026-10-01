@@ -7,7 +7,7 @@ import type { InitialStaffOverrides } from './staffData'
 import { BETA_SEASON_OBJECTIVE } from '../domain/season'
 import { createPlayerCompensations, initialClubFinances } from './playerFinanceData'
 import { initialPhysiotherapyContacts } from './medicalServicesData'
-import { clubStatus, goalEvents, initialTacticalPlan, leagueMatches, players } from './mockData'
+import { clubStatus, initialTacticalPlan, leagueMatches, players } from './mockData'
 import { selectLineupForFormation } from '../domain/lineupSelection'
 import { createInitialTrainingState } from '../domain/trainingEngine'
 import { createInitialConsequenceState } from '../domain/consequences'
@@ -33,7 +33,9 @@ export function createNewGameState(seed: number, overrides: InitialGameOverrides
     clubFinances: { playerFees: Object.fromEntries(Object.entries(initialClubFinances.playerFees).filter(([id]) => !['13', '19', '20'].includes(id)).map(([id, plan]) => [id, { ...plan, payments: plan.payments.map((payment) => ({ ...payment })), missingMonths: [...plan.missingMonths] }])), playerCompensations: Object.fromEntries(Object.entries(createPlayerCompensations(seed)).filter(([id]) => !['13', '19', '20'].includes(id))) },
     staff, staffSearchRequests: [],
     physiotherapyContacts: initialPhysiotherapyContacts.map((contact) => ({ ...contact, availabilityNotes: [...contact.availabilityNotes] })), physiotherapyPlans: [],
-    completedScenes: [], coachEvidence: [], promises: [], narrativeFacts: [], teamChat: { unlocked: false, messages: [] }, favors: [], goalEvents: goalEvents.map((event) => ({ ...event })),
+    // The live calendar starts unplayed: historical mock goals must not become
+    // phantom scorers when a new match with the same fixture ID is completed.
+    completedScenes: [], coachEvidence: [], promises: [], narrativeFacts: [], teamChat: { unlocked: false, messages: [] }, favors: [], goalEvents: [],
     playerSeasonStats: Object.fromEntries(players.map((player) => [player.id, { appearances: player.appearances, goals: player.goals, yellowCards: 0, redCards: 0, ratings: [] }])),
     manager: { generalAuthority: clubStatus.authority },
     team: { cohesion: clubStatus.dressingRoomCohesion, recentResultsMood: 50 },

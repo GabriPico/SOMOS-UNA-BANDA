@@ -4,6 +4,8 @@
 .club-crest { width: 48px; height: 60px; flex-shrink: 0; }
 .club-brand h1 { margin: 0; font-size: clamp(24px, 2.5vw, 44px); font-weight: 750; letter-spacing: -.025em; text-transform: uppercase; white-space: nowrap; }
 .club-home-button { display: flex; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.topbar-panel-return { flex: 0 0 auto; padding: 7px 3px; border: 0; border-bottom: 1px solid currentColor; border-radius: 0; background: transparent; color: var(--club-blue, var(--ui-text)); font-size: 12px; font-weight: 650; white-space: nowrap; cursor: pointer; }
+.topbar-panel-return:hover { color: var(--ui-interactive); }
 .header-calendar { display: grid; gap: 5px; text-align: right; text-transform: uppercase; }
 .header-calendar strong { font-size: 14px; font-weight: 500; }
 .header-calendar span { color: var(--ui-text-secondary); font-size: 11px; letter-spacing: .05em; }
@@ -50,3 +52,13 @@
 @media (max-width: 1100px) { .header-next-match { display: none; } .club-brand { gap: 15px; } }
 @media (max-width: 800px) { :root { --ui-sidebar-width: 64px; --ui-header-height: 82px; } .sidebar { padding: 12px 6px; } .main-nav button { justify-content: center; padding: 12px 0; } .main-nav button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } .club-brand h1 { font-size: 23px; } .club-crest { width: 32px; height: 44px; } .header-calendar { font-size: 10px; } .header-calendar strong { font-size: 11px; } .global-continue { min-width: 138px; font-size: 14px; gap: 10px; } }
 @media (max-width: 600px) { .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px; } .header-calendar { order: 3; width: 100%; display: flex; justify-content: space-between; } .header-calendar span { font-size: 9px; } .club-brand h1 { font-size: 19px; } .global-continue { min-height: 36px; min-width: 122px; padding: 8px 12px; } .club-crest { height: 34px; width: 26px; } .onboarding-prompt { flex-wrap: wrap; } .screen-header { flex-wrap: wrap; } }
+@media (max-width: 850px) {
+  .app-shell:has(> .content--tactics) { --ui-header-height: 100px; }
+  .app-shell:has(> .content--tactics) .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 2px 12px; padding: 7px 12px; }
+  .app-shell:has(> .content--tactics) .club-brand { grid-column: 1; grid-row: 1; }
+  .app-shell:has(> .content--tactics) .club-brand h1 { overflow: hidden; text-overflow: ellipsis; }
+  .app-shell:has(> .content--tactics) .global-continue { grid-column: 2; grid-row: 1; }
+  .app-shell:has(> .content--tactics) .topbar-panel-return { grid-column: 1; grid-row: 2; justify-self: start; }
+  .app-shell:has(> .content--tactics) .header-calendar { grid-column: 2; grid-row: 2; width: auto; display: grid; gap: 1px; text-align: right; }
+  .app-shell:has(> .content--tactics) .header-next-match { display: none; }
+}

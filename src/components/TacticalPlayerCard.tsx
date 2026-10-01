@@ -26,29 +26,29 @@ export function TacticalPhysicalIndicators({ indicators }: { indicators?: Tactic
   </div>
 }
 
-export function TacticalPlayerCard({ player, position, source, selected = false, style, onSelect, onOpenPlayer, variant = 'card', rowLabel }: {
+export function TacticalPlayerCard({ player, position, source, selected = false, style, onSelect, onOpenPlayer, variant = 'card', rowLabel, proposalAffected = false }: {
   player: TacticalCardPlayer; position?: string; source: LineupSource; selected?: boolean; style?: CSSProperties
   onSelect?: () => void
   onOpenPlayer?: (id: number) => void
-  variant?: 'card' | 'row'; rowLabel?: string
+  variant?: 'card' | 'row' | 'album'; rowLabel?: string; proposalAffected?: boolean
 }) {
   const indicators = player.cardIndicators
   const dropClass = useTacticalDrop(source)
   const disabled = !onSelect
-  return <article className={`tactical-player-card${variant === 'row' ? ' lineup-player-row' : source.group === 'field' ? ' tactical-player-card--field' : ''}${selected ? ' is-selected' : ''}${player.unavailable ? ' is-unavailable' : ''}${indicators?.special ? ` has-${indicators.special.tone}` : ''}${dropClass}`}
+  return <article className={`tactical-player-card${variant === 'row' ? ' lineup-player-row' : variant === 'album' ? ' tactical-player-card--album' : source.group === 'field' ? ' tactical-player-card--field' : ''}${selected ? ' is-selected' : ''}${proposalAffected ? ' is-proposal-affected' : ''}${player.unavailable ? ' is-unavailable' : ''}${indicators?.special ? ` has-${indicators.special.tone}` : ''}${dropClass}`}
     style={style} data-player-id={player.id} data-slot={source.group === 'field' ? source.slot : undefined}
     data-lineup-source={JSON.stringify(source)} data-drag-disabled={disabled || (source.group === 'reserve' && player.unavailable)}
     onClick={event => { if (event.target instanceof Element && !event.target.closest('button') && !disabled) onSelect?.() }}>
     <button className="tactical-card-select" type="button" disabled={disabled} aria-pressed={selected}
       aria-label={`Seleccionar a ${player.name}${position ? `, ${position}` : ''}${player.unavailable ? ', no disponible' : ''}`}
       onClick={onSelect} />
-    {variant === 'row' && <span className={`lineup-row-slot${player.positionFit?.tone === 'warning' ? ' is-out-of-position' : ''}`} title={player.positionFit?.label}>{rowLabel ?? position}{player.positionFit?.tone === 'warning' && ' ⚠'}</span>}
+    {variant !== 'card' && <span className={`lineup-row-slot${player.positionFit?.tone === 'warning' ? ' is-out-of-position' : ''}`} title={player.positionFit?.label}>{rowLabel ?? position}{player.positionFit?.tone === 'warning' && ' ⚠'}</span>}
     <button className="tactical-card-portrait" type="button" aria-label={`Seleccionar a ${player.name}`} onClick={onSelect} disabled={disabled} tabIndex={-1}>
       <PlayerPortrait player={player} />
     </button>
     <span className="tactical-card-number" title={player.shirtNumber === undefined ? 'Dorsal no asignado' : 'Dorsal'}>{player.shirtNumber ?? '—'}</span>
     <button className={`tactical-card-name${onOpenPlayer ? ' player-profile-link' : ''}`} type="button" onClick={event => { event.stopPropagation(); if (onOpenPlayer) onOpenPlayer(player.id); else onSelect?.() }} disabled={!onOpenPlayer && disabled} tabIndex={onOpenPlayer ? 0 : -1} aria-label={onOpenPlayer ? `Ver perfil de ${player.name}` : undefined} title={`${player.name} · Posiciones naturales: ${player.positions}`}><span>{variant === 'card' ? player.name.split(' ')[0] : player.name}</span></button>
-    {variant === 'row' && <TacticalNaturalPositions player={player} />}
+    {variant !== 'card' && <TacticalNaturalPositions player={player} />}
     <span className={`tactical-card-position${player.positionFit?.tone === 'warning' ? ' is-out-of-position' : ''}`} title={position ? `Puesto ocupado: ${position} · ${player.positionFit?.label ?? player.secondary ?? ''} · Posiciones naturales: ${player.positions}` : player.positions}>{position ?? player.primaryPosition}{player.positionFit?.tone === 'warning' && ' ⚠'}</span>
     {variant === 'row' && player.generalRating !== undefined && <span className="lineup-row-quality" title="Calidad general"><StarRating value={player.generalRating} /></span>}
     <TacticalPhysicalIndicators indicators={indicators} />

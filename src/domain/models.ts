@@ -2,7 +2,7 @@ export type ScreenId =
   // 'inbox' is a legacy navigation command intercepted by App, never a page.
   | 'main-menu' | 'club-panel' | 'staff' | 'squad' | 'tactics' | 'training' | 'training-event'
   | 'match' | 'next-match' | 'post-match' | 'standings' | 'league-results' | 'league-scorers' | 'league-sanctions' | 'dressing-room' | 'inbox'
-  | 'friendly-call-up'
+  | 'competition' | 'friendly-call-up'
   | 'pre-match'
 
 export type PlayerPosition =
@@ -78,7 +78,12 @@ export type TacticalFamiliarity = { overall: number; formation: Record<Formation
 export type ProvisionalAttributeProgress = Partial<Record<PlayerAttribute, number>>
 export type MatchPreview = { homeTeam: string; awayTeam: string; venue: string; context: string; opponentNote: string }
 export type PostMatchSummary = { score: string; headline: string; notes: string[] }
-export type LeagueTeam = { id: string; name: string }
+export type ClubKit = { shirt: string; shorts: string; socks: string; trim: string; pattern?: 'plain' | 'stripes' }
+export type LeagueTeam = {
+  id: string; name: string
+  locality?: string; ground?: string; surface?: string; founded?: number; categorySeasons?: number
+  colors?: string; kits?: { home: ClubKit; away: ClubKit }
+}
 export type MatchOutcome = 'G' | 'E' | 'P'
 export type StandingRow = { position: number; teamId: LeagueTeam['id']; played: number; won: number; drawn: number; lost: number; goalsFor: number; goalsAgainst: number; goalDifference: number; points: number; recentForm: MatchOutcome[] }
 export type MatchStatus = 'played' | 'scheduled'

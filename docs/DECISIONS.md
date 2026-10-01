@@ -1,5 +1,12 @@
 # Registro de decisiones
 
+## Identidad del proyecto · 30 de septiembre de 2026
+
+- El nombre oficial del juego es **Míster** y su subtítulo es **Este año subimos**.
+  El identificador ASCII del paquete es `mister`.
+- El cambio de nombre es directo: no se mantienen alias, rutas ni claves antiguas,
+  ni se migran partidas o datos de desarrollo.
+
 ## Rediseño global y localizaciones sincronizadas · 26 de septiembre de 2026
 
 El rediseño global autorizado unifica títulos, tipografía Bahnschrift, papel crema
@@ -1461,3 +1468,278 @@ historial y los límites individuales de efectos.
   Tab, Enter/Espacio, teléfono con contador real, tutorial de Staff/Mensajes y
   ventanas 390×844 y 780×390. Cero errores de consola. Build, lint, diff check
   y 129 tests correctos; se conserva el aviso anterior de tamaño del bundle.
+
+## Panel: caligrafía de los carteles sin recomponer la escena · 2026-09-27
+
+- Por petición expresa se sustituyen únicamente los cinco títulos de pizarra,
+  papeles y post-it por gestos SVG específicos, con letras y trazo irregulares.
+  Se elige arte vectorial fijo para evitar depender de una fuente manuscrita
+  genérica y mantener legibilidad, registro sobre el soporte y reproducibilidad.
+- Imagegen integrado limpia la tinta previa. Se conservan solo cinco recortes
+  restaurados sobre el raster original: cero píxeles cambian fuera de ellos.
+  El original permanece guardado; EQUIPO rayado y VESTUARIO siguen idénticos.
+- Rotulador más grueso en Tácticas; presión, inclinación, proporciones y márgenes
+  propios para cada papel y el post-it. Datos del corcho con las fuentes locales
+  existentes y pequeños ajustes de escritura, sin modificar valores ni dominio.
+- No cambia composición, geometría de hotspots, encuadre, responsive, HUD,
+  navegación ni Mensajes. Sin dependencias nuevas ni funciones inactivas.
+  Inventario, solución, comprobaciones y prompt en CLUB_PANEL_REFERENCE.md.
+- App revisada visualmente en escritorio y móvil; build, lint, diff check y
+  129 tests correctos. Se mantiene el aviso anterior de bundle. Sin commit/push.
+
+## Competición: portal, fichas y consulta en el teléfono · 2026-09-27
+
+- Se convierte la antigua pantalla de Clasificación en Competición con seis
+  pestañas: Resultados, Clasificación, Calendario, Sanciones, Goleadores y
+  Equipaciones. El portal conserva HUD y móvil, pero excluye el fondo ilustrado
+  y los materiales de habitación. Su superficie blanca/gris, navy y roja sigue
+  las referencias federativas aportadas por el usuario.
+- Una proyección de dominio compartida consume el calendario y las actas de la
+  partida, eventos de gol, estadísticas, catálogos de clubes y jugadores y las
+  sanciones existentes. La clasificación actual también alimenta el monitor del
+  Panel; no depende de la jornada consultada en otra pestaña. No se duplican
+  números editables ni se generan resultados para imitar las capturas.
+- Los escudos y nombres de clubes enlazan por ID, con foco y hover nativos, a
+  fichas con banner, resumen deportivo, forma reciente, calendario, equipaciones
+  y jugadores públicos. El historial de navegación conserva origen, jornada,
+  filtros, desplegables, scroll y foco al volver, también en el teléfono.
+- Se mantienen los identificadores antiguos como comandos compatibles que App
+  transforma en `competition` con la pestaña adecuada. El onboarding y los
+  escenarios DEV no necesitan una migración destructiva ni React Router.
+- FCF es una app dentro del móvil: Activity conserva su consulta al alternar con
+  Mensajes; cerrar el teléfono no desmonta ni cambia Tácticas u otra pantalla.
+  Las guías y avisos obligatorios siguen usando la lógica anterior de Mensajes.
+- El Panel conserva su habitación y caligrafía previa. Imagegen sustituye el
+  cartel inferior por una mesa con un único portátil pequeño y barato, y el
+  portátil de Staff por un archivador. SVG alinea los datos vivos con la pantalla
+  en blanco y los gestos manuscritos con el post-it de Staff. Se actualizan los
+  hotspots y el texto del tutorial; no se añaden carteles ni botones flotantes.
+- Decisiones ante datos ausentes: grupo y datos históricos/administrativos no se
+  inventan; las plantillas rivales se presentan como parciales. LeagueTeam recibe
+  campos públicos opcionales compatibles. No existía sistema de kits: se crea
+  un render SVG reproducible desde la paleta ya usada por TeamBadge, admitiendo
+  equipaciones explícitas por club. No se añaden dependencias ni imágenes de kits.
+- PJ y goles/partido se derivan de actas con minutos cuando el historial es
+  completo. Los totales propios solo se usan si concuerdan con la liga disputada;
+  los identificadores agregados de goleadores rivales no se equiparan a jugadores
+  de partido. Los datos no registrados se muestran con «—».
+- Desviación necesaria para la fuente de verdad: createNewGameState ya no copia
+  goles del calendario mock a una liga que empieza sin disputar. Esos goles
+  reaparecían al finalizar partidos con el mismo ID. Solo cambia la creación de
+  nuevas partidas; no se elimina historial de una partida existente.
+- Se retiran las cuatro pantallas anteriores y sus CSS; se reutilizan
+  CompetitionHeader, LeagueTabs, TeamBadge, MatchdaySelector, MatchReportScreen
+  y sus cálculos. Inventario y límites en COMPETITION_SYSTEM.md; asset y registro
+  de objetos en CLUB_PANEL_REFERENCE.md. Persistencia a disco, sanciones completas
+  del motor y fichas federativas de jugadores siguen fuera de alcance.
+- QA aislada: seis pestañas, Staff, club/volver, actas y FCF sobre Tácticas en
+  1920×1080, 1366×768, 1024×768, 390×844 y 780×390, sin overflow del portal ni
+  errores de ejecución. Fixture de un partido real del motor para datos no vacíos.
+  Scripts/capturas locales excluidos de producción. Sin commit ni push.
+- Validación final: 133 tests correctos, build, lint y `git diff --check`
+  correctos. Se mantiene el aviso anterior de Vite por bundle superior a 500 kB.
+
+## Panel: encuadre fijo y proporciones · 2026-09-27
+
+- Por petición expresa se corrige únicamente la composición del Panel. El shell
+  mantiene `100dvh` con fila de HUD medida automáticamente y una fila restante
+  para la escena, sin margen negativo, doble descuento DEV ni scroll.
+- Una escala uniforme usa el tamaño del contenedor y los límites conjuntos de
+  los hotspots. Se recortan extremos decorativos mientras los siete objetos
+  completos conservan margen dentro del espacio útil. No cambia el diseño del
+  HUD, Mensajes, los otros objetos ni la navegación.
+- Staff sube 55 px y se desplaza 15 px a la izquierda; su caja, fichas y Post-it
+  mantienen el tamaño y caligrafía. El único portátil aumenta aproximadamente
+  un 30%; CLASIFICACIÓN domina su pantalla y mantiene tres filas de datos vivos.
+  Se registran los dos nuevos límites conservando IDs y acciones.
+- El asset nuevo conserva los píxeles originales fuera de las dos áreas de
+  objeto. Imagegen integrado restaura el escritorio y el empaquetado local
+  reutiliza el mismo archivador/portátil. Detalles y prompt en
+  CLUB_PANEL_REFERENCE.md. No se añaden dependencias ni funciones inactivas.
+- QA en viewports 1920×1080 y 1366×768, con y sin reserva DEV: siete accesos,
+  retornos, Mensajes, hit tests, margen inferior de Staff y separación del
+  portátil. Sin scroll, franjas vacías ni errores de ejecución. Build, lint,
+  diff check y 133 tests correctos. Persiste el aviso previo de bundle >500 kB.
+
+## Panel: fondo ilustrado regenerado en 2:1 · 2026-09-27
+
+- Por petición expresa se sustituye el fondo por una regeneración de la misma
+  habitación, con acabado 2D/2.5D pintado y proporción nativa 2:1. El área real
+  bajo la barra mide 1920×989,406 y 1366×685,203; 1,94056:1 y 1,99357:1.
+  Como las proporciones cambian con la altura del HUD, el nuevo raster deja
+  espacio decorativo para cover uniforme en ambas, sin deformar los objetos.
+- Imagegen integrado conserva el orden y los conceptos de los siete objetos,
+  coloca Staff completo dentro del encuadre y reduce el papel de Entrenamientos
+  a una sola línea. La salida 1774×887 se integra directamente, sin estirado,
+  padding ni letterboxing. Se mantienen los fondos anteriores como histórico.
+- Se elimina el límite de escala que podía producir márgenes laterales. La
+  escena siempre cubre el espacio disponible bajo la barra; las coordenadas,
+  contornos, títulos SVG y monitor se registran en la nueva imagen. TÁCTICAS
+  queda centrado, en mayúsculas y con tilde; se conservan los gestos manuales.
+- No se hornean datos ni UI global: próximo partido y clasificación siguen
+  consumiendo la partida, Staff sigue siendo un objeto físico y solo existe
+  un portátil. IDs, navegación, HUD, Mensajes, tutorial y dominio no cambian.
+- QA a 1920×1080 y 1366×768 confirma cobertura, ausencia de scroll/bandas,
+  siete accesos/retornos y separación de Mensajes. Staff deja 124/86 px de
+  margen inferior. Build, lint, diff check y 133 tests correctos. Sin nuevas
+  dependencias ni funciones inactivas; persiste el aviso previo del bundle.
+  Inventario, métricas y prompt exacto en CLUB_PANEL_REFERENCE.md.
+
+## Vestuario: misma habitación que la puerta del Panel · 2026-09-27
+
+- Por petición expresa, el interior visible desde el Panel define el canon.
+  Se sustituye el vestuario alicatado por una ilustración 2D/2.5D con paredes
+  crema y azul desgastado, bancos y percheros de madera, chaquetas navy,
+  ventana pequeña de seis paños y luz cálida. El Panel y su hotspot no cambian.
+- Se genera también la variante nocturna de la misma composición para evitar
+  recuperar la habitación antigua al cambiar la hora. La pareja y el fallback
+  se registran en clubEnvironments; los fondos antiguos quedan como histórico.
+- Las tarjetas HTML existentes se concentran en 900–1040 px a la izquierda en
+  escritorio, conservando componentes, datos, acciones y scrolls. El fondo
+  1774×887 llena el viewport con cover uniforme, sin bandas ni deformaciones.
+  El flujo responsive previo se conserva por debajo de 1281×650.
+- La QA detectó que la cabecera fija tapaba el cierre de la ficha modal del
+  vestuario. Solo mientras la ficha está abierta se eleva esa pantalla por
+  encima de la cabecera; no cambia la ficha compartida ni su lógica.
+- Ocho estados a 1920×1080 y 1366×768, día/noche, con/sin reserva DEV, verifican
+  cobertura, recortes periféricos, seis secciones, listas, expansión de
+  problemas, ficha/cierre, Mensajes, plantilla y retorno. Sin errores de
+  ejecución. Prompts, assets y límites en DRESSING_ROOM_REFERENCE.md.
+- Sin dependencias, cambios de dominio, aleatoriedad nueva ni funcionalidad
+  preparada pero inactiva. Sin commit ni push.
+
+## Próximo partido: ampliación del corcho del Panel · 2026-09-27
+
+- Por petición expresa se sustituye la presentación de Próximo partido por
+  un corcho grande con marco de madera, hojas crema, chinchetas, cinta y tinta
+  azul manuscrita. Reutiliza materiales, fuentes y TeamBadge existentes, sin
+  imagen nueva, dependencias ni datos horneados. AppShell omite el campo solo
+  en este destino; el HUD, el teléfono y el Panel conservan su comportamiento.
+- Se separan corcho/hojas reutilizables, presentación de datos y composición.
+  Los helpers de próximo partido, scouting, clasificación, resultados y actas
+  siguen siendo la fuente de verdad. No cambia el dominio ni la aleatoriedad.
+- Se decide ampliar la convocatoria en una hoja modal nativa para conservar
+  las veinte filas y todas sus acciones sin scroll de página en escritorio.
+  Su sección original se traslada sin alterar selección, elegibilidad,
+  validación, anuncio, reacciones ni bloqueo. Escape y botón cierran la hoja.
+- Diez estados a 1920×1080 y 1366×768 verifican datos reales, cobertura,
+  ausencia de scroll de página y espacio para Mensajes; las listas variables
+  pueden desplazarse dentro de sus hojas. Dos tamaños responsive adicionales
+  no desbordan horizontalmente. También se comprueban teléfono y navegación
+  en la aplicación completa. Sin errores de navegador.
+- 133 tests, build y lint correctos; permanece el aviso previo de tamaño del
+  bundle. Inventario y detalles en NEXT_MATCH_BOARD.md. Sin funciones inactivas,
+  commit ni push; no se rediseñan otras pantallas.
+
+## Plantilla: pared histórica del club · 2026-09-28
+
+- Plantilla usa una ilustración 2D de la pared social del FC Poblenou. Trofeos,
+  fotos, banderín y pizarra se agrupan en el tercio superior del asset, que
+  ocupa todo el contenido bajo el HUD con un recorte periférico mínimo en 16:9.
+  La ventana muestra el campo municipal amateur vecino, con césped artificial,
+  valla, portería y focos modestos, en vez del campanario de la versión anterior.
+  El título manuscrito y el contador siguen siendo HTML con datos reales.
+- La tabla y la ficha mantienen sus componentes, diez columnas, filtros,
+  selección, estadísticas y acciones. En escritorio 16:9 comienzan hacia el
+  42–45% de la altura útil, dejando visible la pared sin alejar la interfaz; comparten
+  el ancho inferior aproximadamente 70/30, con scroll local. Por debajo de
+  720 px de alto se reduce más la franja de escena para conservar una tabla usable;
+  en anchos estrechos recuperan el flujo vertical.
+- Día y noche usan dos variantes ilustradas de la misma sala. La nocturna
+  conserva el encuadre, aporta luz cálida al interior y muestra el campo
+  municipal bajo focos y cielo azul oscuro. El fondo antiguo con campanario
+  se conserva como histórico. No hay datos ni UI horneados en las imágenes.
+- QA aislada: 1920×1080 y 1366×768 con luz de 07:00/19:30 y con/sin barra
+  DEV; además 1366×700, 1024×768, 390×844 y 780×390. La tabla empieza
+  entre el 42% y el 45% de la altura útil en 16:9. Sin overflow horizontal ni
+  errores de ejecución. Selección, filtros, búsqueda, ordenación, regreso de
+  ficha, scroll, Mensajes y Continuar comprobados. 133 tests, build, lint y
+  `git diff --check` correctos; continúa el aviso previo del bundle >500 kB.
+
+## Tácticas: pizarra blanca en la sala del Panel · 2026-09-28
+
+- La corrección usa un acercamiento ilustrado de la zona de la pizarra del
+  Panel: ventana, camisetas, banco, estantería, pintura azul, pared ocre y
+  baldosas conservan las relaciones espaciales y la luz de la escena original.
+- La pizarra amplía la de la referencia mediante un recurso transparente con
+  superficie crema, marco usado, título manuscrito, campo y trípode. Las once
+  fichas y sus nombres, estados, selección, intercambio y arrastre permanecen
+  como HTML interactivo sobre el campo.
+- Configuración y alineación conservan sus controles en soportes de papel.
+  En móvil, la pizarra va primero y ambos paneles continúan en el flujo
+  vertical. En escritorio la escena tiene altura suficiente para mostrar el
+  trípode completo al desplazarse. Cabecera, navegación, Mensajes, datos y
+  lógica deportiva no cambian.
+
+## Tácticas: pizarra única y archivador paginado · 2026-09-28
+
+- Esta iteración sustituye la composición anterior de tres soportes. La
+  configuración y el campo vertical comparten una pizarra ancha, ilustrada y
+  sin título ni datos pintados. Los ajustes cerrados parecen anotaciones en
+  rotulador; los diez controles reales se abren desde sus grupos.
+- Las once tarjetas siguen el estado y las operaciones de alineación existentes.
+  Sus centros se calculan dentro del campo con puntos simétricos para cada
+  formación y margen suficiente para tarjetas completas. La selección, arrastre,
+  intercambio, propuesta del segundo y acceso al perfil se conservan.
+- La lista lateral pasa a un archivador negro con anillas, fundas y hasta ocho
+  fichas por página. Las pestañas separan titulares, suplentes y resto de
+  plantilla; la paginación evita omitir jugadores. La ficha resumida seleccionada
+  aparece debajo del archivador para no tapar los objetivos de intercambio.
+- En móvil, los controles y el campo ocupan una misma pizarra vertical en flujo
+  normal; el archivador va debajo. Se reutiliza la ilustración ambiental cercana
+  al Panel y todas las etiquetas, nombres y estados siguen siendo elementos de
+  la aplicación.
+
+## Tácticas: vestuario, pizarra vertical y sustitución integrada · 2026-09-28
+
+- Esta corrección sustituye la pizarra ancha y el fondo anterior por una pizarra
+  física vertical sin título pintado y el fondo ilustrado del Vestuario, también
+  en su variante nocturna. Ajustes y campo comparten la superficie crema; el
+  marco y las patas se ajustan a la altura bajo la cabecera en escritorio.
+- El archivador muestra los once titulares juntos en dos columnas y seis filas,
+  con un bolsillo vacío. Solo suplentes y plantilla se paginan. Al elegir un
+  titular, una hoja dentro del archivador propone sustitutos elegibles por
+  adecuación posicional, condición y valoración táctica; el primer candidato
+  muestra una razón derivada de los datos. Elegirlo ejecuta el intercambio
+  existente, y cancelar conserva el once.
+- En móvil la composición fluye verticalmente y seleccionar un titular lleva la
+  hoja del archivador al área visible. El nombre del titular también activa la
+  selección; la ficha completa tiene una acción secundaria en la hoja. Se
+  conservan las diez instrucciones, la propuesta del segundo, Mensajes,
+  navegación, alineación y operaciones de arrastre.
+
+## Tácticas: escala de la pizarra y apoyo en el vestuario · 2026-09-28
+
+- Se usa un acercamiento específico del mismo vestuario, de día y noche, con
+  camisetas azul y blanco, bancos, suelo de baldosas visible y una mesa de
+  madera para el archivador. La capa compartida de azulejos decorativos se
+  desactiva en esta pantalla para que no oculte el suelo ilustrado.
+- Una nueva pizarra vertical mantiene el material crema y el marco anterior,
+  pero reduce márgenes transparentes y la longitud de las patas. Ocupa casi
+  toda la altura útil bajo la cabecera y queda centrada en escritorio; los pies
+  terminan sobre el suelo y el archivador, más estrecho, descansa sobre la mesa.
+- Los ajustes y el campo siguen siendo elementos interactivos dentro del mismo
+  tablero. El título se dibuja con HTML sobre la superficie crema, y las fichas
+  aumentan de tamaño según el ancho del campo. Las once fichas caben en el campo
+  y en el archivador; la hoja de
+  sustitución mantiene su lista desplazable dentro de este último.
+
+## Tácticas: composición compacta del tablero y archivador · 2026-09-29
+
+- La pizarra y el archivador se centran como un único conjunto en escritorio,
+  con una separación pequeña. La pizarra conserva el formato vertical y gana
+  ancho útil para evitar cortes en las instrucciones; el archivador crece para
+  hacer legibles las once fichas simultáneas. El título funcional queda dentro
+  de la superficie crema, bajo el marco superior. A 1100 px o menos ambos
+  elementos se apilan para conservar la lectura y las acciones.
+
+## Tácticas: hoja de propuesta del segundo · 2026-09-29
+
+- La propuesta compara el plan y el once vigentes con los datos generados por
+  el segundo. Solo muestra formación e instrucciones modificadas, además de
+  entradas, salidas y cambios efectivos de puesto o zona. La pizarra marca los
+  puestos afectados mientras la hoja está abierta. Cancelar conserva el estado
+  y Aplicar usa la misma operación de plan y alineación existente.
+- La hoja tiene tamaño limitado, contenido desplazable y acciones siempre
+  visibles. El regreso al Panel del club se ofrece en la cabecera compartida
+  de Tácticas, con la navegación del juego y sus restricciones de tutorial.

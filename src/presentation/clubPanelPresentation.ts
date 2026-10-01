@@ -1,6 +1,6 @@
 import type { GameState } from '../domain/gameState'
 import { leagueTeams, players } from '../data/mockData'
-import { calculateStandings, getStandingsAroundTeam } from '../domain/leagueStandings'
+import { getCurrentLeagueStandings, getStandingsAroundTeam } from '../domain/leagueStandings'
 import { countPendingResponses, countUnreadConversations } from '../domain/messages'
 import { getNextMatch, getTeamName } from '../domain/nextMatch'
 import { getTeamAuthority, getTeamHappiness } from '../domain/trainingEngine'
@@ -9,9 +9,9 @@ import { getPlayerHappiness } from '../domain/trainingEngine'
 import { getPlayerStatus } from './playerPresentation'
 import { fixtureDate } from '../domain/competitionPresentation'
 
-export function getClubPanelPresentation(game: GameState, matchday: number) {
+export function getClubPanelPresentation(game: GameState, _matchday: number) {
   const match = getNextMatch(game.temporal.calendar, 'fc-poblenou')
-  const standings = calculateStandings(leagueTeams, game.temporal.calendar, matchday)
+  const standings = getCurrentLeagueStandings(leagueTeams, game.temporal.calendar)
   const happiness = getTeamHappiness(game.training)
   const authority = getTeamAuthority(game.training)
   const unhappy = Object.values(game.training.players).filter(player => getPlayerHappiness(player) < 58).length

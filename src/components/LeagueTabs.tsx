@@ -1,15 +1,9 @@
-import './LeagueTabs.css'
+import type { CompetitionTab } from '../domain/competitionPortal'
 
-type LeagueTab = 'results' | 'standings' | 'sanctions' | 'scorers'
-type LeagueTabsProps = { activeTab: LeagueTab; onSelect: (tab: LeagueTab) => void }
-
-export function LeagueTabs({ activeTab, onSelect }: LeagueTabsProps) {
-  return (
-    <nav className="league-tabs" aria-label="Secciones de la liga">
-      <button className={activeTab === 'results' ? 'is-active' : undefined} type="button" aria-current={activeTab === 'results' ? 'page' : undefined} onClick={() => onSelect('results')}>Resultados</button>
-      <button className={activeTab === 'standings' ? 'is-active' : undefined} type="button" aria-current={activeTab === 'standings' ? 'page' : undefined} onClick={() => onSelect('standings')}>Clasificación</button>
-      <button className={activeTab === 'sanctions' ? 'is-active' : undefined} type="button" aria-current={activeTab === 'sanctions' ? 'page' : undefined} onClick={() => onSelect('sanctions')}>Sanciones</button>
-      <button className={activeTab === 'scorers' ? 'is-active' : undefined} type="button" aria-current={activeTab === 'scorers' ? 'page' : undefined} onClick={() => onSelect('scorers')}>Goleadores</button>
-    </nav>
-  )
+const COMPETITION_TABS: { id: CompetitionTab; label: string }[] = [
+  { id: 'results', label: 'Resultados' }, { id: 'standings', label: 'Clasificación' }, { id: 'calendar', label: 'Calendario' },
+  { id: 'sanctions', label: 'Sanciones' }, { id: 'scorers', label: 'Goleadores' }, { id: 'kits', label: 'Equipaciones' },
+]
+export function LeagueTabs({ activeTab, onSelect }: { activeTab: CompetitionTab; onSelect: (tab: CompetitionTab) => void }) {
+  return <nav className="federation-tabs" aria-label="Secciones de Competición">{COMPETITION_TABS.map(tab => <button key={tab.id} type="button" aria-current={activeTab === tab.id ? 'page' : undefined} onClick={() => onSelect(tab.id)}>{tab.label}</button>)}</nav>
 }

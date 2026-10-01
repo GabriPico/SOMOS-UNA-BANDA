@@ -1,172 +1,418 @@
-.tactics-visual-layout { display: grid; grid-template-columns: minmax(165px, .37fr) minmax(0, 1fr) minmax(300px, .63fr); gap: clamp(8px, .7vw, 12px); align-items: stretch; flex: 1; min-height: 0; }
-.tactics-field-section, .tactical-instructions-panel, .tactics-lineup-panel { min-width: 0; min-height: 0; }
-.tactics-field-section { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 0; }
-.tactics-field-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.tactics-field-heading h3, .tactical-instructions-panel > h3, .tactics-lineup-panel > h3 { margin: 0; text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
-.tactics-field-heading h3 span { padding-left: 10px; color: var(--ui-interactive); }
-.tactics-physical-legend { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; color: var(--ui-text-secondary); }
-.tactics-physical-legend > span { color: var(--ui-positive); font-size: 13px; }
-.tactics-physical-legend i { width: 15px; height: 5px; background: var(--ui-positive); margin-left: 5px; border-radius: 1px; }
-.tactics-pitch-viewport { min-width: 0; min-height: 0; overflow: hidden; border-radius: 7px; container-type: size; }
-.tactics-screen--visual .tactical-pitch--cards { min-height: 0; height: 100%; border: 1px solid #4b8172; border-radius: 7px; background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgb(0 0 0 / 24%)), repeating-linear-gradient(0deg, rgb(94 164 104 / 8%) 0 12.5%, transparent 12.5% 25%), #184c39; }
-.tactics-screen--visual .tactical-pitch--cards::before { inset: 3%; border-color: #a1c6b1; opacity: .5; }
-.tactics-screen--visual .tactical-halfway { left: 3%; right: 3%; border-color: #a1c6b1; }
-.tactics-screen--visual .tactical-circle, .tactics-screen--visual .tactical-box { border-color: #a1c6b1; }
-.tactics-screen--visual .tactical-circle { width: 100px; }
-.tactics-screen--visual .tactical-box { width: 46%; left: 27%; height: 15%; }
-.tactics-screen--visual .tactical-box.top { top: 3%; }.tactics-screen--visual .tactical-box.bottom { bottom: 3%; }
-.tactical-empty-slot { position: absolute; transform: translate(-50%, -50%); width: 90px; padding: 9px; border: 1px dashed var(--ui-border); background: var(--ui-bg-secondary); color: var(--ui-text-secondary); font-size: 13px; }
-.tactical-empty-slot small { display: block; font-size: 10px; }
-.tactics-screen--visual .tactics-selection-hint { margin: 6px 0 0; color: var(--ui-text-secondary); font-size: 10px; min-height: 15px; }
-.tactics-selection-error { grid-row: 3; margin: 5px 0 0; color: var(--ui-danger); font-size: 11px; }
-.tactical-instructions-panel { overflow-y: auto; overscroll-behavior: contain; padding-right: 1px; }
-.tactical-instructions-panel > h3, .tactics-lineup-panel > h3 { min-height: 30px; display: flex; align-items: center; }
-.tactical-instruction-groups { display: grid; gap: 7px; }
-.tactical-instruction-card { border: 0; border-bottom: 1px solid var(--ui-border); border-radius: 0; background: none; padding: 10px 4px 12px; }
-.tactical-instruction-card h4 { display: flex; align-items: center; gap: 8px; color: var(--ui-text); font-size: 11px; font-weight: 550; text-transform: uppercase; margin: 0 0 8px; }
-.tactical-instruction-card h4 svg { color: var(--ui-interactive); width: 16px; height: 16px; }
-.tactical-general-settings h4 { display: none; }
-.tactical-instruction-controls { display: grid; gap: 8px; }
-.tactical-instruction-card label { display: grid; gap: 4px; color: var(--ui-text-secondary); font-size: 11px; }
-.tactical-general-settings label { text-transform: uppercase; font-size: 10px; letter-spacing: .04em; }
-.tactical-instruction-card select { width: 100%; min-width: 0; height: 32px; padding: 5px 8px; font: inherit; font-size: 12px; color: var(--ui-text); border: 1px solid var(--ui-border); border-radius: 4px; background: var(--ui-surface-elevated); cursor: pointer; }
-.tactical-instruction-card select:focus { border-color: var(--ui-accent); }
-.tactical-instruction-summary { display: grid; gap: 6px; margin: 0; }
-.tactical-instruction-summary > div { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); align-items: baseline; gap: 8px; }
-.tactical-instruction-summary dt { color: var(--ui-text-secondary); font-size: 10px; line-height: 1.3; }
-.tactical-instruction-summary dd { margin: 0; font-size: 12px; line-height: 1.3; text-align: right; }
-.tactical-instruction-card [hidden] { display: none; }
-.instruction-edit-toggle { display: block; width: 100%; border: 0; margin-top: 8px; padding: 4px 0 0; text-align: left; font-size: 10px; letter-spacing: .06em; color: var(--ui-interactive); background: none; cursor: pointer; }
-.tactics-lineup-panel { display: grid; grid-template-rows: 26px 26px minmax(0, 1fr); }
-.lineup-list-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; background: transparent; padding: 0; }
-.lineup-list-scroll h4 { position: sticky; top: 0; z-index: 5; margin: 0; padding: 9px 4px 7px; background: var(--ui-surface); color: var(--ui-text-secondary); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; font-weight: 500; }
-.lineup-list-scroll h4 span { float: right; font-variant-numeric: tabular-nums; }
-.lineup-bench { border-top: 1px solid var(--ui-border); margin-top: 7px; }
-.lineup-empty-note { margin: 2px 5px 10px; font-size: 11px; color: var(--ui-text-secondary); }
-.lineup-empty-slot { width: 100%; padding: 8px; border: 1px dashed var(--ui-border); background: none; color: var(--ui-text-secondary); text-align: left; font-size: 11px; }
-.tactics-candidates { margin-top: 8px; border-top: 1px solid var(--ui-border); }
-.tactics-candidates > summary { padding: 11px 5px; font-size: 11px; cursor: pointer; color: var(--ui-interactive); }
-.tactics-candidates > summary > span { color: var(--ui-text-secondary); margin-left: 5px; font-size: 10px; }
-.instruction-edit-toggle::after { content: ' ›'; }
-.tactics-right-column { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
-.tactics-right-column .tactics-lineup-panel { flex: 1; }
-.tactics-selected-player { position: relative; flex-shrink: 0; padding: 9px 11px; border: 0; border-bottom: 1px solid var(--ui-border); border-left: 2px solid var(--ui-interactive); background: color-mix(in srgb, var(--ui-interactive-bg) 30%, transparent); }
-.tactics-selected-player > header { display: flex; align-items: center; justify-content: space-between; color: var(--ui-text-secondary); text-transform: uppercase; font-size: 9px; letter-spacing: .08em; margin-bottom: 5px; }
-.tactics-selected-player > header button { border: 0; background: none; color: var(--ui-text-secondary); font-size: 19px; line-height: 1; padding: 0 3px; cursor: pointer; }
-.selected-player-identity { display: flex; align-items: center; gap: 10px; }
-.management-theme .selected-player-identity .player-portrait { flex-shrink: 0; width: 50px; height: 62px; }
-.selected-player-identity > div { min-width: 0; }
-.selected-player-identity h3 { font-size: clamp(14px, 1.1vw, 18px); margin: 0 0 2px; line-height: 1.2; }
-.selected-player-identity h3 > span { color: var(--ui-text-secondary); }
-.selected-player-identity .tactical-natural-positions { font-size: 11px; text-align: left; }
-.selected-player-quality { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 7px; margin-top: 3px; }
-.selected-player-quality > span:first-child { font-size: 9px; color: var(--ui-text-secondary); }
-.selected-player-quality .star-rating { font-size: 17px; }
-.selected-player-profile { margin: 7px 0; display: grid; gap: 4px; font-size: 11px; }
-.selected-player-profile > div { display: flex; gap: 8px; }
-.selected-player-profile dt { color: var(--ui-text-secondary); }
-.selected-player-profile dd { margin: 0; }
-.selected-player-wellbeing { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 11px; padding-top: 6px; border-top: 1px solid var(--ui-border); }
-.selected-player-wellbeing > div { width: 46%; }
-.selected-player-wellbeing .tactical-card-physical { padding: 0; }
-.selected-player-wellbeing small { display: block; font-size: 9px; color: var(--ui-text-secondary); margin-top: 3px; }
-.tactics-selected-player .is-positive { color: var(--ui-positive); }.tactics-selected-player .is-warning { color: var(--ui-warning); }.tactics-selected-player .is-negative { color: var(--ui-danger); }
-.selected-player-warning { margin: 5px 0 0; color: var(--ui-warning); font-size: 10px; }
-.selected-player-full { width: 100%; padding: 6px 8px; margin-top: 8px; border: 1px solid var(--ui-border); border-radius: 4px; color: var(--ui-interactive); background: var(--ui-interactive-bg); font-size: 10px; letter-spacing: .03em; cursor: pointer; }
-@media (max-height: 850px) and (min-width: 1101px) {
-  .tactics-screen--visual { gap: 6px; }
-  .tactics-screen--visual .tactics-header { min-height: 42px; }
-  .tactical-instruction-card { padding: 7px 8px; }
-  .tactical-instruction-groups { gap: 5px; }
-  .tactical-instruction-card h4 { margin-bottom: 6px; }
-  .tactical-instruction-summary { gap: 5px; }
-  .instruction-edit-toggle { margin-top: 6px; padding-top: 6px; }
-  .tactical-instruction-card select { height: 28px; padding-block: 3px; }
-  .tactics-selected-player { padding: 7px 9px; }
-  .management-theme .selected-player-identity .player-portrait { width: 42px; height: 52px; }
-  .selected-player-profile { margin-block: 5px; gap: 3px; }
-  .selected-player-wellbeing { padding-top: 4px; }
-  .selected-player-full { margin-top: 5px; padding-block: 5px; }
+/* A closer illustrated view of the same changing room, including its floor and workbench. */
+.club-material-theme.app-shell:has(> .content--tactics) { height: calc(100dvh - var(--ui-dev-offset, 0px)); }
+.club-material-theme .content.content--tactics {
+  min-height: 0;
+  padding: 0;
+  background: url('/assets/materials/tactics-dressing-room-closeup-day.png') center center / cover no-repeat;
 }
-@media (max-width: 1400px) and (min-width: 1101px) {
-  .tactics-visual-layout { grid-template-columns: minmax(165px, .37fr) minmax(0, 1fr) minmax(300px, .63fr); }
-  .tactics-screen--visual .tactical-summary { gap: 3px 10px; }
+.club-material-theme[data-environment='night'] .content.content--tactics {
+  background-image: url('/assets/materials/tactics-dressing-room-closeup-night.png');
 }
-@media (max-width: 1100px) {
-  .tactics-visual-layout { grid-template-columns: 190px minmax(0, 1fr); flex: auto; }
-  .tactics-field-section { height: 650px; }
-  .tactics-right-column { grid-column: 1 / -1; max-height: 700px; }
-  .tactics-right-column .tactics-lineup-panel { height: 460px; flex: auto; }
+.club-material-theme .content.content--tactics::before { content: none; display: none; }
+.club-material-theme .tactics-screen.tactics-screen--visual {
+  position: relative;
+  width: 100%; height: 100%; min-height: 0;
+  margin: 0; padding: 0;
+  border: 0; border-radius: 0;
+  background: transparent;
 }
-@media (max-width: 720px) {
-  .tactics-visual-layout { grid-template-columns: minmax(0, 1fr); }
-  .tactics-field-section { grid-row: 1; height: 590px; }
-  .tactical-instruction-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tactics-physical-legend { display: none; }
-  .tactics-pitch-viewport { overflow: auto; }
-  .tactics-screen--visual .tactical-pitch--cards { min-width: 430px; }
+.tactics-visual-layout {
+  width: 100%; height: 100%; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(10px, .8vw, 16px);
+  padding: 4px clamp(18px, 3vw, 48px);
+}
+.tactics-master-board {
+  position: relative;
+  flex: 0 0 auto;
+  height: min(calc(100% - 8px), calc((100vw - 500px) * 1402 / 1178));
+  aspect-ratio: 1178 / 1402;
+  min-width: 0;
+  background: url('/assets/materials/tactics-board-portrait-v2.png') center / 100% 100% no-repeat;
+  filter: drop-shadow(5px 7px 6px #1d171377);
+}
+.tactics-board-title {
+  position: absolute; z-index: 2;
+  top: 4.6%; left: 10.5%;
+  margin: 0;
+  color: #15396f;
+  font: 400 clamp(21px, 1.7vw, 32px)/1.12 'Club Kalam', 'Segoe Print', cursive;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  transform: rotate(-1.5deg);
+  pointer-events: none;
+}
+.tactics-master-board-content {
+  position: absolute;
+  inset: 10.5% 10% 12% 10%;
+  display: grid;
+  grid-template-columns: minmax(0, 39%) minmax(0, 59%);
+  gap: 2%;
+  min-height: 0;
+}
+.tactics-master-board-content::before {
+  content: '';
+  position: absolute; top: 2%; bottom: 2%; left: 40%;
+  border-left: 1.5px solid #153e75;
+  pointer-events: none;
+}
+.club-material-theme .tactics-master-board .tactical-instructions-panel {
+  min-width: 0; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: 2px 5px 3px 1px;
+  color: #163a70;
+  font-family: 'Club Kalam', 'Segoe Print', cursive;
+  scrollbar-color: #a79b8588 transparent;
+}
+.tactics-master-board .tactical-instructions-panel > h3 { display: none; }
+.tactics-master-board .tactical-instruction-groups { display: grid; gap: 0; }
+.tactics-master-board .tactical-instruction-card {
+  margin: 0; padding: clamp(3px, .37vw, 7px) 0;
+  border: 0; border-bottom: 1.5px solid #204675;
+  background: transparent;
+}
+.tactics-master-board .tactical-general-settings { padding-top: 0; }
+.tactics-master-board .tactical-instruction-card h4 {
+  display: flex; align-items: center; gap: 4px;
+  margin: 0 0 2px;
+  color: #15396f;
+  font: 400 clamp(11px, .88vw, 17px)/1.2 'Club Kalam', 'Segoe Print', cursive;
+  text-transform: uppercase;
+}
+.tactics-master-board .tactical-instruction-card h4 svg { width: 16px; height: 16px; color: #15396f; }
+.tactics-master-board .tactical-general-settings h4 { display: none; }
+.tactics-master-board .tactical-instruction-controls { display: grid; gap: 3px; }
+.tactics-master-board .tactical-instruction-card label {
+  display: grid; gap: 1px;
+  color: #15396f;
+  font: 400 clamp(11px, .78vw, 15px)/1.2 'Club Kalam', 'Segoe Print', cursive;
+}
+.tactics-master-board .tactical-general-settings label { font-size: clamp(12px, .9vw, 17px); }
+.tactics-master-board .tactical-instruction-card select {
+  width: 100%; min-width: 0; height: 25px;
+  padding: 1px 14px 1px 3px;
+  border: 1px solid transparent; border-bottom: 1.5px solid #153e75;
+  border-radius: 1px;
+  background: #f2e4ca55;
+  color: #15396f;
+  font: inherit; font-size: .97em;
+  cursor: pointer;
+}
+.tactics-master-board .tactical-instruction-card select:hover,
+.tactics-master-board .tactical-instruction-card select:focus-visible { border-color: #153e75; background: #e9d8b7aa; }
+.tactics-master-board .tactical-instruction-card option { font-family: var(--club-font); background: #f4e9d2; }
+.tactics-master-board .tactical-instruction-summary { display: grid; gap: 1px; margin: 0; }
+.tactics-master-board .tactical-instruction-summary > div {
+  display: grid; grid-template-columns: minmax(72px, 44%) minmax(0, 1fr);
+  align-items: baseline; gap: 2px 5px;
+  color: #15396f;
+  font: 400 clamp(10px, .7vw, 14px)/1.2 'Club Kalam', 'Segoe Print', cursive;
+}
+.tactics-master-board .tactical-instruction-summary dt { margin: 0; color: inherit; font: inherit; text-align: left; white-space: nowrap; }
+.tactics-master-board .tactical-instruction-summary dd { margin: 0; color: inherit; font: inherit; text-align: left; overflow-wrap: normal; }
+.tactics-master-board .tactical-instruction-card [hidden] { display: none; }
+.tactics-master-board .instruction-edit-toggle {
+  display: inline-block; width: auto;
+  margin: 2px 0 0; padding: 0;
+  border: 0; background: transparent; color: #0a4c9b;
+  font: 400 clamp(10px, .65vw, 13px) 'Club Kalam', 'Segoe Print', cursive;
+  text-decoration: underline; cursor: pointer;
+}
+.tactics-master-board .instruction-edit-toggle::after { content: ' ›'; }
+.tactics-master-board .tactical-familiarity { margin-top: 4px; padding: 0; border: 0; }
+.tactics-master-board .tactical-familiarity > div { display: grid; gap: 1px; margin-bottom: 2px; }
+.tactics-master-board .tactical-familiarity h4 { display: block; margin: 0; font-size: clamp(11px, .75vw, 15px); text-transform: none; }
+.tactics-master-board .tactical-familiarity strong { font-size: 11px; }
+.tactics-master-board .tactical-familiarity .management-status-bar { width: 100%; height: 7px; border: 1px solid #224b80; background: #e8ddc7; }
+.tactics-master-board .assistant-lineup-proposal {
+  display: grid; grid-template-columns: 16px minmax(0, 1fr);
+  gap: 3px; align-items: center;
+  margin: 5px 0 0; padding: 3px 0 0;
+  border: 0; border-top: 1px solid #204675;
+  background: transparent; color: #15396f;
+}
+.tactics-master-board .assistant-lineup-proposal .management-icon { width: 14px; height: 14px; color: #15396f; }
+.tactics-master-board .assistant-lineup-proposal > div { display: grid; gap: 1px; }
+.tactics-master-board .assistant-lineup-proposal span { font-size: 8px; color: #355779; }
+.tactics-master-board .assistant-lineup-proposal strong { font-size: 10px; line-height: 1.1; }
+.tactics-master-board .assistant-lineup-proposal button {
+  grid-column: 1 / -1; width: 100%; margin: 2px 0 0; padding: 4px;
+  border: 1px solid #153e75; background: #e5d5b794; color: #15396f; font-size: 9px;
+}
+.tactics-field-section, .tactics-pitch-viewport { min-width: 0; min-height: 0; height: 100%; }
+.tactics-pitch-viewport { container-type: size; }
+.club-material-theme .tactics-master-board .tactical-pitch--cards {
+  position: relative; width: 100%; height: 100%; min-height: 0;
+  margin: 0; overflow: visible;
+  border: 2px solid #173d73; border-radius: 0;
+  background: transparent; box-shadow: none;
+  color: #173d73; container-type: size;
+}
+.club-material-theme .tactics-master-board .tactical-pitch--cards::before,
+.club-material-theme .tactics-master-board .tactical-pitch--cards::after { content: none; }
+.club-material-theme .tactics-master-board .tactical-pitch--cards :is(.tactical-halfway, .tactical-circle, .tactical-box, .tactical-goal) { opacity: .9; border-color: #173d73; }
+.tactics-master-board .tactical-halfway { left: 0; right: 0; border-width: 1.5px; }
+.tactics-master-board .tactical-circle { width: 25%; border-width: 1.5px; }
+.tactics-master-board .tactical-box { width: 52%; left: 24%; height: 15%; border-width: 1.5px; }
+.tactics-master-board .tactical-box.top { top: 0; }
+.tactics-master-board .tactical-box.bottom { bottom: 0; }
+.tactics-master-board .tactical-goal { position: absolute; left: 41%; width: 18%; height: 2%; border: 1.5px solid #173d73; }
+.tactics-master-board .tactical-goal.top { top: 0; border-top: 0; }
+.tactics-master-board .tactical-goal.bottom { bottom: 0; border-bottom: 0; }
+.club-material-theme .tactics-master-board .tactical-player-card--field {
+  width: clamp(44px, 18cqw, 70px); min-height: 0;
+  padding: 3px; gap: 0 2px;
+  grid-template-columns: 17px minmax(0, 1fr);
+  grid-template-rows: 11px 9px 12px 10px 8px;
+  border: 1px solid #26506f; border-top: 2px solid #24567d; border-radius: 2px;
+  background: var(--club-texture-grain), #f8f0db;
+  box-shadow: 1px 2px 2px #0c263a66, 2px 4px 5px #0c263a47;
+  color: #173c54;
+}
+.club-material-theme .tactics-master-board .tactical-player-card--field::before {
+  top: -6px; left: calc(50% - 5px); width: 9px; height: 9px;
+  border-color: #173e69; background: #256198;
+  box-shadow: inset 1px 1px #9bc2de, 0 1px 2px #162d3a;
+}
+.tactics-master-board .tactical-player-card--field .tactical-card-number { font-size: 11px; color: #173c54; }
+.tactics-master-board .tactical-player-card--field .tactical-card-name { font-size: 9px; color: #16476d; }
+.tactics-master-board .tactical-player-card--field .tactical-card-position { font-size: 8px; color: #265267; }
+.tactics-master-board .tactical-player-card--field .tactical-natural-positions { display: none; }
+.tactics-master-board .tactical-player-card--field .tactical-card-physical { grid-row: 5; gap: 2px; padding: 0; }
+.tactics-master-board .tactical-player-card--field .tactical-card-condition svg { width: 9px; height: 9px; }
+.tactics-master-board .tactical-player-card--field .tactical-card-stamina { height: 4px; }
+.management-theme .tactics-master-board .tactical-player-card--field .player-portrait { width: 17px; height: 20px; }
+.tactics-master-board .tactical-player-card--field .tactical-card-special { top: -5px; right: -5px; width: 14px; height: 14px; font-size: 9px; }
+.tactics-master-board .tactical-empty-slot { width: 42px; padding: 3px; font-size: 8px; background: #f6eedc; color: #274655; }
+.tactics-master-board .tactical-empty-slot small { font-size: 7px; }
+.club-material-theme .tactics-master-board :is(.tactical-player-card--field, .tactical-empty-slot).is-proposal-affected {
+  outline: 2px solid #c07832;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px #f5d7a79c, 2px 4px 7px #5b321a88;
+}
+.tactics-master-board .tactics-selection-hint { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tactics-master-board .tactics-selection-error {
+  position: absolute; z-index: 4; left: 13%; right: 7%; top: 4%;
+  margin: 0; padding: 5px 7px;
+  background: #f4e3c8; color: #9b3127; font-size: 11px;
+  box-shadow: 1px 2px 4px #1d171355;
 }
 
-.tactical-instructions-panel { padding-right: 9px; border-right: 1px solid var(--ui-border); }
-.tactical-instructions-panel > h3 { font-size: 11px; }
-.tactical-instruction-groups { gap: 0; }
-.tactical-instruction-card:last-child { border-bottom: 0; }
-.tactical-general-settings { padding-top: 4px; }
-.tactics-screen--visual .tactical-pitch--cards { width: min(100%, 82cqh); margin-inline: auto; container-type: size; border-radius: 3px; }
-.tactics-screen--visual .tactical-goal { position: absolute; width: 18%; height: 2.3%; left: 41%; border: 1px solid #a1c6b1; background: repeating-linear-gradient(90deg, transparent 0 7px, #a1c6b133 7px 8px); opacity: .65; }
-.tactics-screen--visual .tactical-goal.top { top: .7%; border-bottom: 0; }.tactics-screen--visual .tactical-goal.bottom { bottom: .7%; border-top: 0; }
-.tactics-selected-player > header { height: 0; margin: 0; }
-.tactics-selected-player > header > span { display: none; }
-.tactics-selected-player > header > button { position: absolute; right: 5px; top: 5px; }
-.selected-player-identity h3 { padding-right: 10px; }
-.management-theme .selected-player-identity .player-portrait { height: 50px; width: 40px; }
-.selected-player-profile { margin-block: 5px; gap: 3px; }
-.selected-player-full { margin-top: 5px; padding-block: 5px; }
-.lineup-table-heading { display: grid; grid-template-columns: 29px 24px minmax(0, 1fr) 52px 27px 43px 17px; align-items: center; gap: 4px; padding: 3px 12px 6px 4px; border-bottom: 1px solid var(--ui-border); font-size: 8px; letter-spacing: .02em; color: var(--ui-text-secondary); }
-.lineup-table-heading > span:nth-child(2) { grid-column: 2 / 4; }
-@media (max-height: 900px) {
-  .tactical-instruction-card { padding-block: 8px; }
-  .tactics-screen--visual .tactics-header { min-height: 42px; }
-  .tactics-screen--visual .assistant-lineup-proposal { min-height: 36px; padding-block: 3px; }
+.tactics-right-column {
+  position: relative; flex: 0 0 auto;
+  width: clamp(410px, 28vw, 540px);
+  height: 74%; min-height: 0;
+  align-self: flex-start; margin-top: 5%;
 }
-@media (max-height: 800px) {
-  .tactical-instruction-card { padding-block: 7px; }
-  .tactical-instruction-summary { gap: 4px; }
-  .selected-player-wellbeing { padding-top: 3px; }
+.tactics-right-column::after {
+  content: ''; position: absolute; z-index: -1;
+  left: 3%; right: 0; bottom: -2px; height: 14px;
+  border-radius: 50%; background: #180f0ba8; filter: blur(5px);
+  pointer-events: none;
 }
-@media (min-width: 1101px) {
-  .tactics-visual-layout { grid-template-columns: minmax(185px, .43fr) minmax(0, 1fr) minmax(300px, .64fr); }
+.tactics-binder { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; color: #eee5d5; }
+.tactics-binder-tabs { display: flex; align-items: end; gap: 3px; padding: 0 8px; flex: 0 0 auto; }
+.tactics-binder-tabs button {
+  flex: 1; min-width: 0; padding: 6px 2px 5px;
+  border: 2px solid #0e1015; border-bottom: 0; border-radius: 6px 6px 0 0;
+  background: #20232b; color: #ded7c8;
+  font: 700 clamp(10px, .8vw, 14px) var(--club-font);
+  text-transform: uppercase; cursor: pointer;
 }
-.tactical-general-settings .tactical-familiarity { margin-top: 12px; padding-top: 10px; }
-.tactical-general-settings .tactical-familiarity h4 { display: block; font-size: 10px; margin: 0; letter-spacing: .035em; }
-.tactical-familiarity > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
-.tactical-familiarity strong { font-size: 13px; white-space: nowrap; }
-.tactical-familiarity .management-status-bar { width: 100%; height: 10px; }
-.tactics-screen--visual .tactical-instructions-panel .assistant-lineup-proposal { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 7px; border-bottom: 0; border-top: 1px solid var(--ui-border); padding: 12px 4px 4px; margin-top: 4px; }
-.tactical-instructions-panel .assistant-lineup-proposal > .management-icon { width: 18px; height: 18px; }
-.tactical-instructions-panel .assistant-lineup-proposal > div { display: grid; gap: 4px; }
-.tactical-instructions-panel .assistant-lineup-proposal strong { font-size: 11px; }
-.tactical-instructions-panel .assistant-lineup-proposal span { font-size: 9px; }
-.tactical-instructions-panel .assistant-lineup-proposal button { grid-column: 1 / -1; width: 100%; margin: 0; padding-block: 6px; }
-.tactics-screen--visual .assistant-lineup-preview { top: 53px; }
-.tactical-player-card--field .player-profile-link { color: var(--ui-interactive); }
-.tactical-player-card .tactical-card-name.player-profile-link { color: var(--ui-interactive); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 2px; cursor: pointer; }
-.tactical-player-card .tactical-card-name.player-profile-link:hover { text-decoration-color: currentColor; }
-.lineup-player-row > .tactical-natural-positions { grid-column: 3; grid-row: 1; align-self: end; margin: 0; }
-.lineup-player-row .tactical-card-name { align-self: start; margin-top: 1px; }
-.tactical-player-card--field { border-color: transparent; background: color-mix(in srgb, var(--ui-bg-secondary) 88%, transparent); box-shadow: 0 2px 5px rgb(0 0 0 / 15%); }
-@media (max-height: 900px) and (min-width: 1101px) {
-  .tactical-instruction-card { padding-block: 6px; }
-  .tactical-instruction-card h4 { margin-bottom: 5px; }
-  .tactical-general-settings .tactical-familiarity { margin-top: 8px; padding-top: 4px; }
-  .tactical-instructions-panel .assistant-lineup-proposal { padding-top: 8px; }
-  .tactical-instructions-panel { display: flex; flex-direction: column; overflow: hidden; }
-  .tactical-instructions-panel > h3 { flex-shrink: 0; }
-  .tactical-instruction-groups { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-  .tactical-instructions-panel .assistant-lineup-proposal { flex-shrink: 0; }
-  .tactical-general-settings label { gap: 3px; }
-  .tactical-general-settings select { height: 26px; }
-  .tactical-instruction-controls { gap: 6px; }
-  .tactical-instruction-summary { gap: 3px; }
-  .instruction-edit-toggle { margin-top: 5px; padding-top: 3px; }
+.tactics-binder-tabs button span { margin-left: 3px; color: #e3bb78; }
+.tactics-binder-tabs button.is-active { background: #3c404a; color: #fff7e7; }
+.tactics-binder-cover {
+  position: relative; flex: 1; min-height: 0;
+  padding: 11px 11px 11px 25px;
+  border: 9px solid #15171b; border-radius: 12px 12px 8px 8px;
+  background: var(--club-texture-grain), #30343c;
+  box-shadow: 4px 6px 0 #11131999, 7px 10px 13px #140e0a88, inset 0 0 0 2px #6d6c69;
+}
+.tactics-binder-cover::before, .tactics-binder-cover::after {
+  content: ''; position: absolute; inset: 5px 6px 4px 12px;
+  border: 1px solid #999c9e; border-radius: 4px;
+  transform: translate(6px, 4px) rotate(.7deg);
+  background: #e6e2d11c; pointer-events: none;
+}
+.tactics-binder-cover::after { transform: translate(3px, 2px) rotate(-.4deg); }
+.tactics-binder-sheet {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  width: 100%; height: 100%; min-height: 0;
+  padding: 7px 7px 8px 10px;
+  border: 1px solid #8c929a; border-radius: 4px;
+  background: #e6e4dd24;
+  box-shadow: inset 1px 1px #ffffff66, 0 3px 8px #080a0d77;
+}
+.tactics-binder-sheet > header { display: flex; justify-content: space-between; gap: 10px; flex: 0 0 auto; margin: 0 0 5px; padding: 0 2px 3px; border-bottom: 1px solid #d5d7d966; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.tactics-binder-rings { position: absolute; z-index: 4; top: 10%; bottom: 10%; left: 3px; display: flex; flex-direction: column; justify-content: space-around; pointer-events: none; }
+.tactics-binder-rings i { display: block; width: 32px; height: 11px; border: 3px solid #b8b9b6; border-radius: 50%; box-shadow: 1px 2px 1px #090b0e; background: #2e3338; }
+.tactics-binder-pockets {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr)); gap: 5px;
+  overflow: visible;
+}
+.tactics-binder-pocket { min-width: 0; min-height: 0; padding: 3px; border: 1px solid #c2c5c8aa; border-radius: 4px; background: #e7e9e54a; box-shadow: inset 0 2px 2px #ffffff6e, 0 1px 3px #0a0c1077; }
+.tactics-binder-pocket--spare { background: #f1f0e522; }
+.tactics-binder-pocket .tactical-player-card--album {
+  width: 100%; height: 100%; min-height: 0;
+  display: grid; grid-template-columns: 35px minmax(0, 1fr) 19px;
+  grid-template-rows: 14px 20px 16px 12px;
+  align-content: center; gap: 0 3px; padding: 2px 4px;
+  border: 1px solid #aea18e; border-radius: 2px;
+  background: var(--club-texture-grain), #f7efe0;
+  color: #173b65; box-shadow: 1px 2px 3px #14191e55;
+}
+.tactical-player-card--album .lineup-row-slot { grid-column: 2; grid-row: 1; font-size: 9px; font-weight: 700; color: #194f88; }
+.tactical-player-card--album .tactical-card-portrait { grid-column: 1; grid-row: 1 / 4; }
+.management-theme .tactical-player-card--album .player-portrait { width: 34px; height: 42px; }
+.tactical-player-card--album .tactical-card-number { grid-column: 3; grid-row: 1; font-size: 14px; color: #194f88; }
+.tactical-player-card--album .tactical-card-name { grid-column: 2 / 4; grid-row: 2; font-size: clamp(11px, .72vw, 13px); color: #133963; }
+.tactical-player-card--album .tactical-natural-positions { grid-column: 2 / 4; grid-row: 3; font-size: clamp(9px, .62vw, 11px); text-align: left; }
+.tactical-player-card--album .tactical-card-position { display: none; }
+.tactical-player-card--album .tactical-card-physical { grid-column: 1 / 4; grid-row: 4; gap: 5px; padding: 0; }
+.tactical-player-card--album .tactical-card-condition svg { width: 10px; height: 10px; }
+.tactical-player-card--album .tactical-card-stamina { height: 4px; }
+.tactical-player-card--album .tactical-card-special { top: -5px; right: -5px; width: 15px; height: 15px; font-size: 10px; }
+.tactics-binder-empty { width: 100%; height: 100%; border: 1px dashed #b4a895; background: #f2ecdc; color: #173b65; text-align: center; cursor: pointer; }
+.tactics-binder-empty span { display: block; font-size: 10px; }
+.tactics-binder-note { grid-column: 1 / -1; margin: 0; padding: 16px 10px; color: #eee5d5; text-align: center; font-size: 12px; }
+.tactics-binder-pages { display: flex; justify-content: space-between; align-items: center; flex: 0 0 auto; gap: 5px; margin-top: 7px; padding: 5px 7px; border: 1px solid #15171b; border-radius: 3px; background: #292e35; box-shadow: 2px 3px 4px #120e0c66; font-size: 10px; }
+.tactics-binder-pages button { border: 0; background: none; color: #f3e5cd; font-size: 10px; cursor: pointer; }
+.tactics-binder-pages button:disabled { color: #868783; cursor: default; }
+
+.tactics-substitution-sheet {
+  position: absolute; z-index: 5; inset: 8px 7px 8px 24px;
+  display: flex; flex-direction: column; min-height: 0;
+  padding: 12px;
+  border: 2px solid #b7a283; border-radius: 3px;
+  background: var(--club-texture-grain), #f4ead7;
+  color: #173b65;
+  box-shadow: 0 8px 18px #080a0dc9;
+}
+.tactics-substitution-sheet > header { display: flex; justify-content: space-between; gap: 8px; flex: 0 0 auto; border-bottom: 2px solid #315a80; padding-bottom: 5px; }
+.tactics-substitution-sheet > header small { font-size: 9px; letter-spacing: .06em; }
+.tactics-substitution-sheet h3 { margin: 2px 0 0; font: 400 clamp(16px, 1.3vw, 22px) 'Club Kalam', 'Segoe Print', cursive; }
+.tactics-substitution-sheet > header button { align-self: start; border: 0; background: none; color: #173b65; font-size: 24px; line-height: 1; cursor: pointer; }
+.tactics-substitution-current { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; margin: 8px 0 3px; }
+.management-theme .tactics-substitution-current .player-portrait { width: 35px; height: 42px; }
+.tactics-substitution-current > div { min-width: 0; display: grid; gap: 1px; font-size: 11px; }
+.tactics-substitution-current > div > span { font-size: 10px; }
+.tactics-substitution-current .tactical-card-physical { width: 110px; padding: 0; }
+.tactics-substitution-profile { align-self: start; flex: 0 0 auto; padding: 2px 0; border: 0; background: none; color: #0a4c9b; font-size: 10px; text-decoration: underline; cursor: pointer; }
+.tactics-substitution-source { flex: 0 0 auto; margin: 6px 0; padding: 4px 0; border-top: 1px solid #b7a283; border-bottom: 1px solid #b7a283; font-size: 10px; }
+.tactics-substitution-options { flex: 1; min-height: 0; display: grid; align-content: start; gap: 5px; overflow-y: auto; overscroll-behavior: contain; padding: 2px 1px; }
+.tactics-substitution-entry { display: flex; align-items: stretch; gap: 3px; min-width: 0; }
+.tactics-substitution-option { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; padding: 4px 5px; border: 1px solid #bba98a; background: #fcf6e9; color: #173b65; text-align: left; cursor: pointer; }
+.tactics-substitution-option:hover { border-color: #24577f; background: #e8eef0; }
+.management-theme .tactics-substitution-option .player-portrait { flex: 0 0 auto; width: 30px; height: 36px; }
+.tactics-substitution-option-copy { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.tactics-substitution-option-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.tactics-substitution-option-copy small { font-size: 9px; line-height: 1.15; }
+.tactics-substitution-option-copy em { width: fit-content; padding: 1px 4px; background: #c8dccd; color: #1c5e3c; font-size: 9px; font-style: normal; font-weight: 700; }
+.tactics-substitution-option .tactical-card-physical { width: 45px; gap: 3px; padding: 0; }
+.tactics-substitution-option .tactical-card-condition svg { width: 10px; height: 10px; }
+.tactics-substitution-option .tactical-card-stamina { height: 4px; }
+.tactics-substitution-option-profile { flex: 0 0 auto; padding: 2px 4px; border: 1px solid #bba98a; background: #ece3d3; color: #173b65; font-size: 9px; cursor: pointer; }
+.tactics-substitution-empty { margin: 10px 0; font-size: 12px; line-height: 1.4; }
+.tactics-substitution-cancel { flex: 0 0 auto; align-self: end; margin-top: 7px; padding: 4px 10px; border: 1px solid #325a7b; background: #f1e6d2; color: #173b65; font-size: 10px; cursor: pointer; }
+.assistant-proposal-sheet {
+  position: absolute; z-index: 9;
+  top: clamp(90px, 12vh, 140px);
+  left: max(16px, calc(50% - 780px));
+  display: flex; flex-direction: column;
+  width: min(390px, calc(100% - 32px));
+  max-height: min(560px, calc(100% - 110px));
+  min-height: 0;
+  padding: 12px 15px 10px;
+  border: 2px solid #8a6948;
+  border-top: 8px solid #29435a;
+  border-radius: 4px;
+  background: var(--club-texture-grain), #f5ead4;
+  color: #173b65;
+  box-shadow: 3px 5px 0 #8d7456, 8px 12px 22px #1f1611a8;
+}
+.assistant-proposal-sheet-header { flex: 0 0 auto; border-bottom: 1px solid #a99678; padding-bottom: 7px; }
+.assistant-proposal-sheet-header span { font-size: 9px; font-weight: 750; letter-spacing: .09em; }
+.assistant-proposal-sheet-header h3 { margin: 2px 0 0; font: 400 20px/1.15 'Club Kalam', 'Segoe Print', cursive; }
+.assistant-proposal-sheet-content { display: grid; gap: 8px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 9px 2px 10px 0; }
+.assistant-proposal-sheet-content section { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 8px; border-bottom: 1px solid #b3a48886; padding-bottom: 6px; }
+.assistant-proposal-sheet-content h4 { margin: 0; color: #76552d; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.assistant-proposal-sheet-content ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.assistant-proposal-sheet-content li, .assistant-proposal-sheet-content section p { margin: 0; font-size: 12px; line-height: 1.25; font-weight: 650; }
+.assistant-proposal-sheet-content li span { color: #52667a; font-weight: 450; }
+.assistant-proposal-sheet-reason, .assistant-proposal-sheet-unchanged { margin: 0; font-size: 11px; line-height: 1.35; }
+.assistant-proposal-sheet-reason { font-family: 'Club Kalam', 'Segoe Print', cursive; font-size: 13px; }
+.assistant-proposal-actions { display: flex; justify-content: flex-end; gap: 8px; flex: 0 0 auto; padding-top: 8px; border-top: 1px solid #a99678; }
+.assistant-proposal-actions button { min-width: 78px; padding: 7px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.assistant-proposal-actions button:first-child { border: 1px solid #8a6948; background: #eadcc2; color: #173b65; }
+
+@media (max-width: 1100px) {
+  .assistant-proposal-sheet { position: fixed; top: calc(var(--ui-header-height) + var(--ui-dev-offset, 0px) + 8px); left: 12px; width: min(390px, calc(100vw - 24px)); max-height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px) - 20px); }
+}
+
+@media (max-width: 1100px) {
+  .club-material-theme.app-shell:has(> .content--tactics) { height: auto; min-height: calc(100dvh - var(--ui-dev-offset, 0px)); }
+  .club-material-theme .content.content--tactics { min-height: calc(100dvh - var(--ui-header-height) - var(--ui-dev-offset, 0px)); }
+  .club-material-theme .tactics-screen.tactics-screen--visual { height: auto; min-height: inherit; }
+  .tactics-visual-layout { height: auto; flex-direction: column; gap: 12px; padding: 65px 12px 28px; }
+  .tactics-master-board { width: min(100%, 650px); height: auto; aspect-ratio: 1178 / 1402; }
+  .tactics-right-column { width: min(100%, 575px); height: 740px; margin: 0; align-self: center; }
+}
+@media (min-width: 1101px) and (max-width: 1450px) {
+  .tactics-screen--visual .tactics-header .tactical-summary { display: none; }
+  .tactics-master-board .tactical-instruction-card h4 { font-size: 13px; }
+  .tactics-master-board .tactical-instruction-card label { font-size: 12px; }
+  .tactics-master-board .tactical-instruction-summary > div { font-size: 11px; }
+  .tactics-master-board .tactical-instruction-card select { height: 27px; }
+  .tactics-master-board .instruction-edit-toggle { font-size: 11px; }
+}
+@media (max-width: 720px) {
+  .club-material-theme .content.content--tactics { background-position: 57% center; }
+  .tactics-visual-layout { gap: 55px; padding: 100px 8px 30px; }
+  .tactics-master-board {
+    z-index: 0; width: 100%; height: auto; aspect-ratio: auto;
+    border: 11px solid #333b40; border-radius: 10px;
+    background: var(--club-texture-grain), #f5e9d2;
+    box-shadow: inset 0 0 0 3px #9d978d, 4px 7px 10px #1e191675;
+    filter: none;
+  }
+  .tactics-master-board::before, .tactics-master-board::after {
+    content: ''; position: absolute; z-index: -1; bottom: -43px;
+    width: 10px; height: 49px; border: 2px solid #1d252c; border-radius: 0 0 3px 3px;
+    background: #676763; box-shadow: inset 2px 0 #c1b6a5, 2px 2px 3px #15120f77;
+  }
+  .tactics-master-board::before { left: 9%; transform: rotate(13deg); }
+  .tactics-master-board::after { right: 9%; transform: rotate(-13deg); }
+  .tactics-board-title { position: static; margin: 13px 11px 0; font-size: 27px; }
+  .tactics-master-board-content { position: static; display: flex; flex-direction: column; gap: 13px; padding: 15px 11px 10px; }
+  .tactics-master-board-content::before { display: none; }
+  .club-material-theme .tactics-master-board .tactical-instructions-panel { overflow: visible; padding: 0; }
+  .tactics-master-board .tactical-instruction-card { padding: 7px 0; }
+  .tactics-master-board .tactical-instruction-card label { font-size: 14px; }
+  .tactics-master-board .tactical-general-settings label { font-size: 17px; }
+  .tactics-master-board .tactical-instruction-card h4 { font-size: 17px; }
+  .tactics-master-board .tactical-instruction-summary > div { font-size: 13px; }
+  .tactics-master-board .tactical-familiarity > div { display: flex; }
+  .tactics-field-section { height: 550px; }
+  .tactics-right-column { width: 100%; height: 660px; }
+  .tactics-binder-pocket .tactical-player-card--album { grid-template-columns: 28px minmax(0, 1fr) 14px; padding-inline: 2px; }
+  .management-theme .tactical-player-card--album .player-portrait { width: 27px; height: 34px; }
+  .tactical-player-card--album .tactical-card-name { font-size: 9px; }
+  .club-material-theme.app-shell:has(> .content--tactics) .club-phone:not(.is-open) {
+    top: calc(var(--ui-header-height) + var(--ui-dev-offset, 0px) + 30px);
+    right: calc(50% - 57px); bottom: auto;
+  }
+  .club-material-theme.app-shell:has(.assistant-proposal-sheet) .club-phone:not(.is-open) {
+    top: auto; right: 12px; bottom: 12px;
+  }
+  .club-material-theme.app-shell:has(> .content--tactics) .club-phone:not(.is-open) .club-phone-dock { width: 114px; min-height: 34px; gap: 4px; padding: 5px 7px; font-size: 10px; }
+}
+@media (max-width: 380px) {
+  .tactics-master-board-content { padding-inline: 7px; }
+  .tactics-field-section { height: 530px; }
+  .tactics-binder-cover { padding-right: 5px; }
+  .tactics-binder-pocket { padding: 2px; }
+  .tactical-player-card--album .tactical-card-name { font-size: 8px; }
 }

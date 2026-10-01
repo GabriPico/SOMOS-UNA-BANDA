@@ -50,6 +50,47 @@ test('la propuesta del segundo reconstruye un 5-4-1 natural para la formación a
   assert.deepEqual(familiarityFor('5-4-1', proposal.lineupIds), Array(11).fill('PREFERRED'))
 })
 
+test('el resumen de Toni omite formación e instrucciones cuando no cambian', () => {
+  const current = lineup.selectLineupForFormation(data.players, '4-4-2')
+  const plan = data.initialTacticalPlan
+  const identical = assistantLineup.summarizeAssistantLineupProposal(
+    { assistantName: 'Toni Casals', plan, lineupIds: current, reasons: [] }, plan, current, data.players,
+  )
+  assert.equal(identical.hasChanges, false)
+  assert.equal(identical.formationChange, undefined)
+  assert.deepEqual(identical.affectedSlots, [])
+
+  const replacement = data.players.find(player => !current.includes(player.id))
+  assert.ok(replacement)
+  const proposedIds = [...current]
+  proposedIds[1] = replacement.id
+  ;[proposedIds[5], proposedIds[6]] = [proposedIds[6], proposedIds[5]]
+  const changed = assistantLineup.summarizeAssistantLineupProposal(
+    { assistantName: 'Toni Casals', plan: { ...plan, passingStyle: 'Directo' }, lineupIds: proposedIds, reasons: [] },
+    plan, current, data.players,
+  )
+  assert.equal(changed.formationChange, undefined)
+  assert.deepEqual(changed.entering.map(player => player.playerId), [replacement.id])
+  assert.deepEqual(changed.leaving.map(player => player.playerId), [current[1]])
+  assert.deepEqual(changed.affectedSlots, [1, 5, 6])
+  assert.deepEqual(changed.instructionChanges, [{ label: 'Pase', from: plan.passingStyle, to: 'Directo' }])
+  assert.equal(changed.positionChanges.length, 2)
+})
+
+test('el resumen señala la formación solo cuando Toni la cambia', () => {
+  const current = lineup.selectLineupForFormation(data.players, '4-4-2')
+  const plan = data.initialTacticalPlan
+  const summary = assistantLineup.summarizeAssistantLineupProposal(
+    { assistantName: 'Toni Casals', plan: { ...plan, formation: '4-3-3' }, lineupIds: current, reasons: [] },
+    plan, current, data.players,
+  )
+  assert.deepEqual(summary.formationChange, { from: '4-4-2', to: '4-3-3' })
+  assert.equal(summary.entering.length, 0)
+  assert.equal(summary.leaving.length, 0)
+  assert.ok(summary.affectedSlots.length > 0)
+  assert.ok(summary.positionChanges.some(player => !player.samePosition))
+})
+
 test('la compatibilidad gana frente a una ventaja deportiva de un jugador improvisado', () => {
   const ids = lineup.selectLineupForFormation(data.players, '4-4-2', (player, position) => {
     const familiarity = positions.getPositionFamiliarity(player, position)

@@ -4,6 +4,12 @@ export function getMatchesByMatchday(matches: LeagueMatch[], matchday: number): 
   return matches.filter((match) => match.competitionType !== 'FRIENDLY' && match.matchday === matchday)
 }
 
+/** Current league table, independent of any presentation's selected round. */
+export function getCurrentLeagueStandings(teams: LeagueTeam[], matches: LeagueMatch[]): StandingRow[] {
+  const league = matches.filter(match => match.competitionType !== 'FRIENDLY' && !match.playoffRound)
+  return calculateStandings(teams, league, Math.max(0, ...league.map(match => match.matchday)))
+}
+
 export function calculateStandings(teams: LeagueTeam[], matches: LeagueMatch[], throughMatchday: number): StandingRow[] {
   const rows = new Map(teams.map((team) => [team.id, {
     position: 0, teamId: team.id, played: 0, won: 0, drawn: 0, lost: 0,
